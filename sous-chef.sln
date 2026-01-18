@@ -1,15 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "view", "view\view.csproj", "{5335A974-A4C4-4CB4-B31E-37809831FEA7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "entrypoint", "entrypoint\entrypoint.csproj", "{5335A974-A4C4-4CB4-B31E-37809831FEA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{C11C9E2C-F34C-49C0-98B5-4224EF5A7126}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		ReadMe.md = ReadMe.md
 		views.drawio = views.drawio
+		compose.yaml = compose.yaml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "migrations", "migrations\migrations.csproj", "{D3463D57-6D3A-4C66-9664-3EF48A6B2CE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "core", "core\core.csproj", "{6956D25A-19AD-47CF-8E33-7555A0FFAE14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "services", "services\services.csproj", "{11999DB6-6E85-497F-B2BE-AD1D1D92E73E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,5 +30,13 @@ Global
 		{D3463D57-6D3A-4C66-9664-3EF48A6B2CE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3463D57-6D3A-4C66-9664-3EF48A6B2CE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3463D57-6D3A-4C66-9664-3EF48A6B2CE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6956D25A-19AD-47CF-8E33-7555A0FFAE14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6956D25A-19AD-47CF-8E33-7555A0FFAE14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6956D25A-19AD-47CF-8E33-7555A0FFAE14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6956D25A-19AD-47CF-8E33-7555A0FFAE14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11999DB6-6E85-497F-B2BE-AD1D1D92E73E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11999DB6-6E85-497F-B2BE-AD1D1D92E73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11999DB6-6E85-497F-B2BE-AD1D1D92E73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11999DB6-6E85-497F-B2BE-AD1D1D92E73E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
