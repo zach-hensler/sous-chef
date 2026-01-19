@@ -1,3 +1,4 @@
+using System.Net;
 using core;
 using core.Models;
 using FluentMigrator.Runner;
@@ -14,7 +15,7 @@ public class MigrationService {
         return await Utils.SafeRun(() => {
             if (string.IsNullOrWhiteSpace(_connectionString)) {
                 return Task.FromResult(new Response(
-                    StatusCodes.Status500InternalServerError,
+                    HttpStatusCode.InternalServerError,
                     "Connection String not configured"));
             }
 

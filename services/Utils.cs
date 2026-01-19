@@ -1,3 +1,4 @@
+using System.Net;
 using core;
 using core.Models;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +11,7 @@ public static class Utils {
             return await handle();
         }
         catch (Exception ex) {
-            return new Response(StatusCodes.Status500InternalServerError, ex.Message);
+            return new Response(HttpStatusCode.InternalServerError, ex.Message);
         }
     }
     public static async Task<Response<T>> SafeRun<T>(Func<Task<Response<T>>> handle, bool recordError = true) {
@@ -18,7 +19,7 @@ public static class Utils {
             return await handle();
         }
         catch (Exception ex) {
-            return new Response<T>(StatusCodes.Status500InternalServerError, ex.Message);
+            return new Response<T>(HttpStatusCode.InternalServerError, ex.Message);
         }
     }
 }
