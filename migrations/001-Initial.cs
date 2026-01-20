@@ -11,15 +11,14 @@ CREATE TABLE recipes (
     name text NOT NULL,
     description text NOT NULL,
     time_minutes int NOT NULL,
-    effort_level text NOT NULL,
-    created_at timestamp NOT NULL
+    effort_level text NOT NULL
 );
 
 CREATE TABLE recipe_versions (
     version_id SERIAL PRIMARY KEY,
     version_number text NOT NULL,
     recipe_id int NOT NULL,
-    rating int NOT NULL,
+    rating int NULL,
     created_at timestamp NOT NULL,
 
     UNIQUE (recipe_id, version_number),

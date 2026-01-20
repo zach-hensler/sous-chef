@@ -6,8 +6,8 @@ namespace core.Models;
 
 public class Response {
     private readonly object? _data;
-    private readonly HttpStatusCode _statusCode = HttpStatusCode.OK;
-    private readonly string _errorMessage = "";
+    public readonly HttpStatusCode StatusCode = HttpStatusCode.OK;
+    public readonly string ErrorMessage = "";
 
     public Response() {}
     
@@ -16,13 +16,13 @@ public class Response {
     }
     
     public Response(HttpStatusCode statusCode, string message) {
-        _statusCode = statusCode;
-        _errorMessage = message;
+        StatusCode = statusCode;
+        ErrorMessage = message;
     }
     public async Task WriteResponse(HttpResponse response) {
-        response.StatusCode = (int)_statusCode;
-        if (!string.IsNullOrWhiteSpace(_errorMessage)) {
-            await response.WriteAsync(_errorMessage);
+        response.StatusCode = (int)StatusCode;
+        if (!string.IsNullOrWhiteSpace(ErrorMessage)) {
+            await response.WriteAsync(ErrorMessage);
             return;
         }
         if (_data != null) {

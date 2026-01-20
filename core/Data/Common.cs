@@ -17,6 +17,18 @@ public static class Common {
                 """,
                 new { recipe.Name, recipe.Description, recipe.TimeMinutes, recipe.EffortLevel });
         }
+
+        public static async Task<List<string>> ListVersions(int recipeId, DbConnection conn) {
+            return
+                (await conn.QueryAsync<string>(
+                    """
+                    SELECT version_number
+                    FROM recipe_versions
+                    WHERE recipe_id = @recipeId
+                    """,
+                    new { recipeId }))
+                .ToList();
+        }
     }
 
     public static class RecipeVersion {
@@ -52,6 +64,18 @@ public static class Common {
                     step.Step
                 });
         }
+
+        public static async Task<List<RecipeStepDb>> Get(int versionId, DbConnection conn) {
+            return
+                (await conn.QueryAsync<RecipeStepDb>(
+                    """
+                    SELECT *
+                    FROM recipe_steps
+                    WHERE version_id = @versionId
+                    """,
+                    new { versionId }))
+                .ToList();
+        }
     }
 
     public static class RecipeIngredients {
@@ -72,6 +96,17 @@ public static class Common {
                 });
         }
         
+        public static async Task<List<RecipeIngredientDb>> Get(int versionId, DbConnection conn) {
+            return
+                (await conn.QueryAsync<RecipeIngredientDb>(
+                    """
+                    SELECT *
+                    FROM recipe_ingredients
+                    WHERE version_id = @versionId
+                    """,
+                    new { versionId }))
+                .ToList();
+        }
     }
 }
 

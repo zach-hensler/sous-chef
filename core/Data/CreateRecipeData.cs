@@ -12,6 +12,7 @@ public class CreateRecipeData(IConnectionFactory connectionFactory) {
     public async Task CreateRecipe(CreateRecipeRequest request) {
 
         await using var conn = connectionFactory.GetConnection();
+        await conn.OpenAsync();
         var transaction = await conn.BeginTransactionAsync();
         var recipeId = await Common.Recipe.Create(request.Recipe, conn);
 
@@ -30,5 +31,6 @@ public class CreateRecipeData(IConnectionFactory connectionFactory) {
         }
 
         await transaction.CommitAsync();
+        await conn.CloseAsync();
     }
 }

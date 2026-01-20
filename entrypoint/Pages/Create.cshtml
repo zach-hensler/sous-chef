@@ -1,0 +1,22 @@
+@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Create New Recipe";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <form method="post">
+        <div class="container">
+            <label for="name">Recipe Name: </label>
+            <input asp-for="RecipeData.Name" id="name" required />
+        </div>
+        <div class="container">
+            <label for="description">Description: </label>
+            <input asp-for="RecipeData.Description" id="description" required />
+        </div>
+        <div class="container">
+            <input type="submit" value="Submit" />
+        </div>
+    </form>
+</div>
