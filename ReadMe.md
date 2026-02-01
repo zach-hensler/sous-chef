@@ -1,8 +1,25 @@
 # Sous Chef
 A kitchen helper with recipe versioning
+---
+# Missing Features
+## Current Priorities
+- Edit existing recipes
+- Recipe drafts
+  - it's scary spending 10 minutes typing it all out and worrying that an error might happen
+- Recipe Creation UX
+  - Large Input Fields
+  - Remove Step/Instruction
+  - Re-order instructions
+- Create new recipe versions
+
+## Secondary Priorities
+- Rename EffortLevels from (Low, Medium, High) -> (Easy, Medium, Hard)
+- Better Error Handling
+- Admin Panel
+
 
 ---
-# Features
+# Initial Roadmap
 ## v1.0 Features
 1. Recipe versioning
 2. UI for recipe viewing
@@ -21,23 +38,3 @@ A kitchen helper with recipe versioning
 - can view the steps/ingredients for each version
 - can view the notes/rating for each version
 - can compare the differences between versions
-
----
-# Entities
-- recipes
-  - Top level entity
-  - name, description, time, effort level
-- recipe_versions
-  - 1:M recipe:recipe_versions
-  - version_number, rating, created_at
-- recipe_comments
-    - 1:M recipe_version:comments
-    - notes about that version (goods and bads)
-- recipe_steps
-  - 1:M recipe_version:steps
-  - steps to follow for a specific recipe version
-  - name, step_number, instruction
-- recipe_ingredients
-  - 1:M recipe_version:ingredients
-  - ingredients for a specific recipe version
-  - name, note, quantity, unit
