@@ -5,34 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - sous_chef</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/sous_chef.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/entrypoint.styles.css" />
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Create">Create</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+    <!-- TODO fix this error dialog -->
+    @if (!string.IsNullOrWhiteSpace(ViewData["ErrorMessage"]?.ToString())) {
+        <dialog show>
+            <p>@ViewData["ErrorMessage"]</p>
+        </dialog>
+    }
+    <nav class="nav-container">
+        <a class="nav-item" asp-page="/Index">Recipes</a>
+        <a class="nav-item" asp-page="/Create">Create</a>
     </nav>
 </header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
+<main>
+    @RenderBody()
+</main>
 
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 @await RenderSectionAsync("Scripts", required: false)

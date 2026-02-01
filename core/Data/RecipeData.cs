@@ -1,0 +1,35 @@
+using System.Data.Common;
+using core.Models;
+using Dapper;
+
+namespace core.Data;
+
+public static class RecipeData {
+    public static async Task<int> CountRecipes(DbConnection conn) {
+        return await conn.QuerySingleAsync<int>("SELECT count(*) FROM recipes");
+    }
+
+    public static async Task<List<RecipeDb>> ListRecipes(int limit, int offset, DbConnection conn) {
+        // TODO do something w/ limit and offset
+        return (await conn.QueryAsync<RecipeDb>(
+            """
+            WITH latest_versions AS (
+                SELECT
+                    recipe_id,
+                    version_number,
+                    created_at,
+                    ROW_NUMBER() OVER (PARTITION BY recipe_id ORDER BY created_at DESC) as row
+                FROM recipe_versions
+            )
+            SELECT r.*
+            FROM recipes r
+            INNER JOIN latest_versions lv ON lv.recipe_id = r.recipe_id
+            WHERE lv.row = 1
+            ORDER BY lv.created_at DESC
+            LIMIT @limit
+            OFFSET @offset;
+            """,
+            new { limit, offset }))
+            .ToList();
+    }
+}

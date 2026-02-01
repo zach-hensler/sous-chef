@@ -1,10 +1,31 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Recipes";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <h1>Recipes</h1>
+    @if (Model.Error != null) {
+        <div>
+            <p>An error occured while fetching recipes.</p>
+            <p>@Model.Error.Value.Item1 - @Model.Error.Value.Item2</p>
+        </div>
+    }
+    else if (Model.RecipeData != null) {
+        <div class="recipe-list-container">
+            @foreach (var recipe in Model.RecipeData.Items) {
+                <div class="recipe-list-container">
+                    <hr />
+                    <p class="recipe-list-header">@recipe.Name - @recipe.EffortLevel.ToString()</p>
+                    <p>@recipe.Description</p>
+                </div>
+            }
+        </div>
+    }
+    else {
+        <div>
+            <p>An unexpected error occured while fetching recipes.</p>
+        </div>
+    }
 </div>

@@ -34,7 +34,7 @@ CREATE TABLE recipe_comments (
     CONSTRAINT fk_version FOREIGN KEY (version_id) REFERENCES recipe_versions(version_id)
 );
 
-CREATE TABLE recipes_steps (
+CREATE TABLE recipe_steps (
     version_id int NOT NULL,
     name text NOT NULL,
     step_number text NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE recipe_ingredients (
     name text NOT NULL,
     note text NOT NULL,
     quantity float NOT NULL,
-    unit text NOT NULL,
+    unit text NULL,
     
     PRIMARY KEY (version_id, name),
     CONSTRAINT fk_version FOREIGN KEY (version_id) REFERENCES recipe_versions(version_id)

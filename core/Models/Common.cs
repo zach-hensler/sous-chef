@@ -21,6 +21,6 @@ public record CreateRecipeStepDb {
 public record CreateRecipeIngredientDb {
     public required string Name { get; init; }
     public required string Note { get; init; }
-    public required double Quantity { get; init; }
-    public required string Unit { get; init; }
+    public required float Quantity { get; init; }
+    public string? Unit { get; init; }
 }

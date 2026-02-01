@@ -1,22 +1,66 @@
 @page
+@using core
 @model CreateModel
 @{
     ViewData["Title"] = "Create New Recipe";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+<div>
+    <h1>Welcome</h1>
     <form method="post">
-        <div class="container">
+        <h2>Metadata</h2>
+        <div>
             <label for="name">Recipe Name: </label>
-            <input asp-for="RecipeData.Name" id="name" required />
+            <input asp-for="RecipeMetadata.Name" id="name" required/>
         </div>
-        <div class="container">
+        <div>
             <label for="description">Description: </label>
-            <input asp-for="RecipeData.Description" id="description" required />
+            <input asp-for="RecipeMetadata.Description" id="description" required/>
         </div>
-        <div class="container">
-            <input type="submit" value="Submit" />
+        <div>
+            <label for="effortLevel">Effort Level: </label>
+            <select asp-for="RecipeMetadata.EffortLevel" id="effortLevel">
+                <option value="@EffortLevels.Low">@EffortLevels.Low</option>
+                <option value="@EffortLevels.Medium">@EffortLevels.Medium</option>
+                <option value="@EffortLevels.High">@EffortLevels.High</option>
+            </select>
+        </div>
+        <h2>Ingredients</h2>
+        <div>
+            @for (var i = 0; i < Model.RecipeIngredients.Count; i++) {
+                <hr/>
+                <div>
+                    <label for="name">Name: </label>
+                    <input asp-for="@Model.RecipeIngredients[i].Name" id="name" required/>
+                </div>
+                <div>
+                    <label for="quantity">Quantity: </label>
+                    <input asp-for="@Model.RecipeIngredients[i].Quantity" id="quantity" required/>
+                </div>
+                <div>
+                    <label for="unit">Unit: </label>
+                    <input asp-for="@Model.RecipeIngredients[i].Unit" id="unit"/>
+                </div>
+            }
+            <input formaction="Create?action=@PostActions.NewIngredient" formnovalidate type="submit" value="Add Ingredient"/>
+        </div>
+        <h2>Steps</h2>
+        <div>
+            @for (var i = 1; i <= Model.RecipeSteps.Count; i++) {
+                <hr/>
+                <div>
+                    <label for="name">@i: Name: </label>
+                    <input asp-for="@Model.RecipeSteps[i].Name" id="name" required/>
+                </div>
+                <div>
+                    <label for="step">Step: </label>
+                    <input asp-for="@Model.RecipeSteps[i].Step" id="step" required/>
+                </div>
+            }
+            <input formaction="Create?action=@PostActions.NewStep" formnovalidate type="submit" value="Add Step"/>
+        </div>
+        <div>
+            <input formaction="Create?action=@PostActions.Submit" type="submit" value="Submit"/>
         </div>
     </form>
 </div>

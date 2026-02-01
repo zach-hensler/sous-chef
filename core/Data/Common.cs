@@ -13,9 +13,9 @@ public static class Common {
                     (name, description, time_minutes, effort_level)
                 VALUES
                     (@Name, @Description, @TimeMinutes, @EffortLevel)
-                RETURNING recipe_id
+                RETURNING recipe_id;
                 """,
-                new { recipe.Name, recipe.Description, recipe.TimeMinutes, recipe.EffortLevel });
+                new { recipe.Name, recipe.Description, recipe.TimeMinutes, EffortLevel = recipe.EffortLevel.ToString() });
         }
 
         public static async Task<List<string>> ListVersions(int recipeId, DbConnection conn) {
@@ -36,9 +36,10 @@ public static class Common {
             return await conn.ExecuteScalarAsync<int>(
                 """
                 INSERT INTO recipe_versions
-                    (version_number, recipe_id, created_at)
+                (version_number, recipe_id, created_at)
                 VALUES
                     (@versionNumber, @recipeId, @createdAt)
+                RETURNING version_id;
                 """,
                 new {
                     version.RecipeId,
@@ -82,7 +83,7 @@ public static class Common {
         public static async Task Create(CreateRecipeIngredientDb ingredient, int versionId, DbConnection conn) {
             await conn.ExecuteAsync(
                 """
-                INSERT INTO recipe_steps
+                INSERT INTO recipe_ingredients
                     (version_id, name, note, quantity, unit)
                 VALUES
                     (@versionId, @name, @note, @quantity, @unit)

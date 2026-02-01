@@ -1,31 +1,62 @@
-html {
-  font-size: 14px;
-}
+:root {
+  /* colors */
+  --font-color: #000;
+  --main-bg-color: #FEF9FF;
+  --darker-bg-color: #9F9FED;
+  --darkest-bg-color: #736CED;
+  --accent-color: #D4C1EC;
+  /* alt option: #F2DFD7 */
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+  /* spacing - each level should double */
+  --small: 10px;
+  --medium: 20px;
+  --large: 40px;
 }
 
 body {
-  margin-bottom: 60px;
+  margin: 0 0 var(--large) 0;
+  color: var(--font-color);
+  background-color: var(--main-bg-color);
+  font-family: Roboto, sans-serif;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+h1 {
+  margin: var(--large) 0 0 0;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+h2 {
+  margin: var(--medium) 0 0 0;
+}
+
+h3 {
+  margin: var(--small) 0 0 0;
+}
+
+hr {
+  margin: var(--small) 0;
+  color: var(--accent-color);
+}
+
+.nav-container {
+  background-color: var(--darker-bg-color);
+  color: var(--font-color);
+
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-bottom: 1px solid var(--darkest-bg-color);
+}
+
+.nav-item {
+  color: var(--font-color);
+  padding: var(--medium);
+  text-decoration: underline;
+}
+.nav-item:hover {
+  background-color: var(--darkest-bg-color);
+}
+
+main {
+  width: 80%;
+  margin: auto;
 }
