@@ -53,8 +53,8 @@
                     <input asp-for="@Model.RecipeSteps[i].Name" id="name" required/>
                 </div>
                 <div>
-                    <label for="step">Step: </label>
-                    <input asp-for="@Model.RecipeSteps[i].Step" id="step" required/>
+                    <label for="instruction">Instruction: </label>
+                    <input asp-for="@Model.RecipeSteps[i].Instruction" id="instruction" required/>
                 </div>
             }
             <input formaction="Create?action=@PostActions.NewStep" formnovalidate type="submit" value="Add Step"/>

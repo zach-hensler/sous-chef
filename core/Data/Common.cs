@@ -6,6 +6,12 @@ namespace core.Data;
 
 public static class Common {
     public static class Recipe {
+        public static async Task<RecipeDb> Get(int recipeId, DbConnection conn) {
+            return await conn.QuerySingleAsync<RecipeDb>(
+                "SELECT * FROM recipes WHERE recipe_id = @recipeId LIMIT 1;",
+                new { recipeId });
+        }
+
         public static async Task<int> Create(CreateRecipeDb recipe, DbConnection conn) {
             return await conn.ExecuteScalarAsync<int>(
                 """
@@ -32,6 +38,17 @@ public static class Common {
     }
 
     public static class RecipeVersion {
+        public static async Task<RecipeVersionDb> GetLatest(int recipeId, DbConnection conn) {
+            return await conn.QuerySingleAsync<RecipeVersionDb>(
+                """
+                SELECT *
+                FROM recipe_versions
+                WHERE recipe_id = @recipeId
+                ORDER BY created_at
+                LIMIT 1;
+                """,
+                new { recipeId });
+        }
         public static async Task<int> Create(CreateRecipeVersionDb version, DbConnection conn) {
             return await conn.ExecuteScalarAsync<int>(
                 """
@@ -54,15 +71,15 @@ public static class Common {
             await conn.ExecuteAsync(
                 """
                 INSERT INTO recipe_steps
-                    (version_id, name, step_number, step)
+                    (version_id, name, step_number, instruction)
                 VALUES
-                    (@versionId, @name, @stepIndex, @step)
+                    (@versionId, @name, @stepIndex, @instruction)
                 """,
                 new {
                     versionId,
                     stepIndex,
                     step.Name,
-                    step.Step
+                    step.Instruction
                 });
         }
 

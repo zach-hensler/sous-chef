@@ -15,7 +15,7 @@ public record CreateRecipeVersionDb {
 
 public record CreateRecipeStepDb {
     public required string Name { get; init; }
-    public required string Step { get; init; }
+    public required string Instruction { get; init; }
 }
 
 public record CreateRecipeIngredientDb {

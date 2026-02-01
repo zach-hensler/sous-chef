@@ -29,7 +29,7 @@ public record RecipeStepDb {
     public required int version_id { get; init; }
     public required string name { get; init; }
     public required string step_number { get; init; }
-    public required string step { get; init; }
+    public required string instruction { get; init; }
 }
 
 public record RecipeIngredientDb {
@@ -37,6 +37,6 @@ public record RecipeIngredientDb {
     public required int version_id { get; init; }
     public required string name { get; init; }
     public required string note { get; init; }
-    public required double quantity { get; init; }
+    public required float quantity { get; init; }
     public required string unit { get; init; }
 }

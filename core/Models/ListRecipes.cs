@@ -2,6 +2,7 @@ namespace core.Models;
 
 public record ListRecipesResponse {
     public record RecipeItem {
+        public required int Id { get; init; }
         public required string Name { get; init; }
         public required string Description { get; init; }
         public required EffortLevels EffortLevel { get; init; }

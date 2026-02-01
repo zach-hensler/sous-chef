@@ -5,6 +5,7 @@ using core.Models;
 
 namespace services;
 
+
 public class RecipeService(IConnectionFactory connectionFactory) {
     
     public async Task<Response> CreateRecipe(CreateRecipeRequest request) {
@@ -38,6 +39,20 @@ public class RecipeService(IConnectionFactory connectionFactory) {
         }
     }
 
+    public async Task<Response<RecipeDetails>> GetRecipe(int recipeId) {
+        try {
+            await using var conn = connectionFactory.GetConnection();
+            await conn.OpenAsync();
+
+            var data = await GetRecipeDetails.Get(recipeId, conn);
+
+            return new Response<RecipeDetails>(data);
+        }
+        catch (Exception ex) {
+            return new Response<RecipeDetails>(HttpStatusCode.InternalServerError, ex.Message);
+        }
+    }
+
     public async Task<Response<ListRecipesResponse>> ListRecipes(ListRecipesRequest request) {
         try {
             await using var conn = connectionFactory.GetConnection();
@@ -50,6 +65,7 @@ public class RecipeService(IConnectionFactory connectionFactory) {
                 Total = total,
                 Items =
                     recipes.Select(r => new ListRecipesResponse.RecipeItem {
+                            Id = r.recipe_id,
                             Name = r.name,
                             Description = r.description,
                             EffortLevel = r.effort_level

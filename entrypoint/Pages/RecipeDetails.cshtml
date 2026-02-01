@@ -1,0 +1,15 @@
+@page "{id:int}"
+@model RecipeDetailsModel
+@{
+    ViewData["Title"] = "";
+}
+
+<div>
+    @if (Model.Details == null) {
+        <p>Unable to load recipe</p>
+    }
+    else {
+        <h1>@Model.Details.Name</h1>
+        
+    }
+</div>

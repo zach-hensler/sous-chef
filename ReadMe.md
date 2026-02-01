@@ -36,7 +36,7 @@ A kitchen helper with recipe versioning
 - recipe_steps
   - 1:M recipe_version:steps
   - steps to follow for a specific recipe version
-  - name, step_number, step
+  - name, step_number, instruction
 - recipe_ingredients
   - 1:M recipe_version:ingredients
   - ingredients for a specific recipe version

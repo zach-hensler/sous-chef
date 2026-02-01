@@ -14,7 +14,7 @@ public record ViewIngedient {
 
 public record ViewStep {
     public required string Name { get; init; }
-    public required string Step { get; init; }
+    public required string Instruction { get; init; }
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -59,7 +59,7 @@ public class CreateModel : PageModel {
     private IActionResult HandleNewStep() {
         RecipeSteps.Add(new ViewStep {
             Name = "",
-            Step = ""
+            Instruction = ""
         });
         return Page();
     }
@@ -85,7 +85,7 @@ public class CreateModel : PageModel {
                 RecipeSteps
                     .Select(s => new CreateRecipeStepDb {
                         Name = s.Name,
-                        Step = s.Step
+                        Instruction = s.Instruction
                     })
                     .ToList(),
             Ingredients =

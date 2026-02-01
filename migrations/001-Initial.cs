@@ -38,7 +38,7 @@ CREATE TABLE recipe_steps (
     version_id int NOT NULL,
     name text NOT NULL,
     step_number text NOT NULL,
-    step text NOT NULL,    
+    instruction text NOT NULL,    
 
     PRIMARY KEY (version_id, step_number),
     CONSTRAINT fk_version FOREIGN KEY (version_id) REFERENCES recipe_versions(version_id)
