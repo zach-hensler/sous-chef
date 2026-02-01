@@ -1,7 +1,7 @@
 @page "{id:int}"
 @model RecipeDetailsModel
 @{
-    ViewData["Title"] = "";
+    ViewData["Title"] = Model.Details?.Name;
 }
 
 <div>
@@ -9,7 +9,22 @@
         <p>Unable to load recipe</p>
     }
     else {
-        <h1>@Model.Details.Name</h1>
-        
+        <h1>@Model.Details.Name - @($"v{Model.Details.VersionNumber}")</h1>
+        <p>Effort: @Model.Details.EffortLevel, Time: @Model.Details.Time Minutes</p>
+        <h2>Ingredients</h2>
+        <ul>
+            @foreach(var ingredient in Model.Details.Ingredients) {
+                <li>@ingredient.Name - @ingredient.Quantity @ingredient.Unit</li>
+            }
+        </ul>
+        <h2>Steps</h2>
+        <ol>
+            @foreach (var step in Model.Details.Steps) {
+                <li>
+                    <p><b>@step.Name</b></p>
+                    <p>@step.Instruction</p>
+                </li>
+            }
+        </ol>
     }
 </div>

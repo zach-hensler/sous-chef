@@ -6,7 +6,7 @@
 }
 
 <div>
-    <h1>Welcome</h1>
+    <h1>Create Recipe</h1>
     <form method="post">
         <h2>Metadata</h2>
         <div>
@@ -30,34 +30,49 @@
             @for (var i = 0; i < Model.RecipeIngredients.Count; i++) {
                 <hr/>
                 <div>
-                    <label for="name">Name: </label>
-                    <input asp-for="@Model.RecipeIngredients[i].Name" id="name" required/>
+                    <label for="ingredient-name-@i">Name: </label>
+                    <input
+                        asp-for="@Model.RecipeIngredients[i].Name"
+                        id="ingredient-name-@i"
+                        autofocus=@(Model.RecipeIngredients.Count == (i + 1) && string.IsNullOrWhiteSpace(Model.RecipeIngredients[i].Name))
+                        required/>
                 </div>
                 <div>
-                    <label for="quantity">Quantity: </label>
-                    <input asp-for="@Model.RecipeIngredients[i].Quantity" id="quantity" required/>
+                    <label for="quantity-@i">Quantity: </label>
+                    <input asp-for="@Model.RecipeIngredients[i].Quantity" id="quantity-@i" required/>
                 </div>
                 <div>
-                    <label for="unit">Unit: </label>
-                    <input asp-for="@Model.RecipeIngredients[i].Unit" id="unit"/>
+                    <label for="unit-@i">Unit: </label>
+                    <input asp-for="@Model.RecipeIngredients[i].Unit" id="unit-@i"/>
                 </div>
             }
-            <input formaction="Create?action=@PostActions.NewIngredient" formnovalidate type="submit" value="Add Ingredient"/>
+            <input
+                formaction="Create?action=@PostActions.NewIngredient"
+                formnovalidate
+                type="submit"
+                value="Add Ingredient"/>
         </div>
         <h2>Steps</h2>
         <div>
-            @for (var i = 1; i <= Model.RecipeSteps.Count; i++) {
+            @for (var i = 0; i < Model.RecipeSteps.Count; i++) {
                 <hr/>
                 <div>
-                    <label for="name">@i: Name: </label>
-                    <input asp-for="@Model.RecipeSteps[i].Name" id="name" required/>
+                    <label for="step-name-@i">@(i+1): Name: </label>
+                    <input
+                        asp-for="@Model.RecipeSteps[i].Name"
+                        id="step-name-@i"
+                        autofocus=@(Model.RecipeSteps.Count == (i + 1) && string.IsNullOrWhiteSpace(Model.RecipeSteps[i].Name))
+                        required/>
                 </div>
-                <div>
-                    <label for="instruction">Instruction: </label>
-                    <input asp-for="@Model.RecipeSteps[i].Instruction" id="instruction" required/>
+                <div class="instructionInput">
+                    <input class="instructionInput" asp-for="@Model.RecipeSteps[i].Instruction" required/>
                 </div>
             }
-            <input formaction="Create?action=@PostActions.NewStep" formnovalidate type="submit" value="Add Step"/>
+            <input
+                formaction="Create?action=@PostActions.NewStep"
+                formnovalidate
+                type="submit"
+                value="Add Step"/>
         </div>
         <div>
             <input formaction="Create?action=@PostActions.Submit" type="submit" value="Submit"/>

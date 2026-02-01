@@ -9,6 +9,7 @@ public record RecipeDetails {
     public required string Description { get; init; }
     public required EffortLevels EffortLevel { get; init; }
     public required int Time { get; init; }
+    public required string VersionNumber { get; init; }
     public required List<Step> Steps { get; init; }
     public required List<Ingredient> Ingredients { get; init; }
 
@@ -37,6 +38,7 @@ public static class GetRecipeDetails {
             Description = recipe.description,
             EffortLevel = recipe.effort_level,
             Time = recipe.time_minutes,
+            VersionNumber = latestVersion.version_number,
             Steps =
                 steps
                     .OrderBy(s => s.step_number)

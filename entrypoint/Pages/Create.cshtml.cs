@@ -48,6 +48,7 @@ public class CreateModel : PageModel {
         Request.Query.TryGetValue("action", out var action);
         Enum.TryParse<PostActions>(action.ToString(), out var postAction);
 
+        // TODO support removing steps from the list
         return postAction switch {
             PostActions.Submit => await HandleSubmit(),
             PostActions.NewIngredient => HandleNewIngredient(),
