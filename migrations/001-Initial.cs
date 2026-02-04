@@ -22,7 +22,7 @@ CREATE TABLE recipe_versions (
     created_at timestamp NOT NULL,
 
     UNIQUE (recipe_id, version_number),
-    CONSTRAINT fk_recipe FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
+    CONSTRAINT fk_recipe FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
 );
 
 CREATE TABLE recipe_comments (
@@ -31,7 +31,7 @@ CREATE TABLE recipe_comments (
     comment text NOT NULL,
     created_at timestamp NOT NULL,
 
-    CONSTRAINT fk_version FOREIGN KEY (version_id) REFERENCES recipe_versions(version_id)
+    CONSTRAINT fk_version FOREIGN KEY (version_id) REFERENCES recipe_versions(version_id) ON DELETE CASCADE
 );
 
 CREATE TABLE recipe_steps (
@@ -41,7 +41,7 @@ CREATE TABLE recipe_steps (
     instruction text NOT NULL,    
 
     PRIMARY KEY (version_id, step_number),
-    CONSTRAINT fk_version FOREIGN KEY (version_id) REFERENCES recipe_versions(version_id)
+    CONSTRAINT fk_version FOREIGN KEY (version_id) REFERENCES recipe_versions(version_id) ON DELETE CASCADE
 );
 
 CREATE TABLE recipe_ingredients (
@@ -52,7 +52,7 @@ CREATE TABLE recipe_ingredients (
     unit text NULL,
     
     PRIMARY KEY (version_id, name),
-    CONSTRAINT fk_version FOREIGN KEY (version_id) REFERENCES recipe_versions(version_id)
+    CONSTRAINT fk_version FOREIGN KEY (version_id) REFERENCES recipe_versions(version_id) ON DELETE CASCADE
 )
 
 ");

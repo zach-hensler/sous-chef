@@ -1,0 +1,23 @@
+.header-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.header-action-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: var(--small);
+}
+.header-action {
+    margin: var(--small);
+}
+
+.dialog-button-wrapper {
+    margin: var(--small);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}

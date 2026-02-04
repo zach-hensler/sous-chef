@@ -8,7 +8,7 @@ namespace services;
 
 public class RecipeService(IConnectionFactory connectionFactory) {
     
-    public async Task<Response> CreateRecipe(CreateRecipeRequest request) {
+    public async Task<Response<int>> CreateRecipe(CreateRecipeRequest request) {
         try {
             await using var conn = connectionFactory.GetConnection();
             await conn.OpenAsync();
@@ -32,10 +32,10 @@ public class RecipeService(IConnectionFactory connectionFactory) {
             await transaction.CommitAsync();
             await conn.CloseAsync();;
 
-            return new Response();
+            return new Response<int>(recipeId);
         }
         catch (Exception ex) {
-            return new Response(HttpStatusCode.InternalServerError, ex.Message);
+            return new Response<int>(HttpStatusCode.InternalServerError, ex.Message);
         }
     }
 
@@ -51,6 +51,21 @@ public class RecipeService(IConnectionFactory connectionFactory) {
         catch (Exception ex) {
             return new Response<RecipeDetails>(HttpStatusCode.InternalServerError, ex.Message);
         }
+    }
+
+    public async Task<Response> DeleteRecipe(int recipeId) {
+        try {
+            await using var conn = connectionFactory.GetConnection();
+            await conn.OpenAsync();
+
+            await Common.Recipe.DeleteCascade(recipeId, conn);
+
+            return new Response();
+        }
+        catch (Exception ex) {
+            return new Response(HttpStatusCode.InternalServerError, ex.Message);
+        }
+
     }
 
     public async Task<Response<ListRecipesResponse>> ListRecipes(ListRecipesRequest request) {

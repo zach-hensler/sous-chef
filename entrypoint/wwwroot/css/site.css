@@ -5,7 +5,8 @@
   --darker-bg-color: #9F9FED;
   --darkest-bg-color: #736CED;
   --accent-color: #D4C1EC;
-  /* alt option: #F2DFD7 */
+  --warning-color: #F2DFD7;
+  --warning-darker: #C9AAA3;
 
   /* spacing - each level should double */
   --small: 10px;
@@ -59,4 +60,25 @@ hr {
 main {
   width: 80%;
   margin: auto;
+}
+
+button {
+  border-radius: 10px;
+  padding: var(--small);
+}
+
+.primary {
+  background-color: var(--darker-bg-color);
+}
+
+.primary:hover {
+  background-color: var(--darkest-bg-color);
+}
+
+.warning {
+  background-color: var(--warning-color);
+}
+
+.warning:hover {
+  background-color: var(--warning-darker);
 }

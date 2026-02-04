@@ -24,6 +24,12 @@ public static class Common {
                 new { recipe.Name, recipe.Description, recipe.TimeMinutes, EffortLevel = recipe.EffortLevel.ToString() });
         }
 
+        public static async Task DeleteCascade(int recipeId, DbConnection conn) {
+            await conn.ExecuteAsync(
+                "DELETE FROM recipes WHERE recipe_id = @recipeId",
+                new { recipeId });
+        }
+
         public static async Task<List<string>> ListVersions(int recipeId, DbConnection conn) {
             return
                 (await conn.QueryAsync<string>(

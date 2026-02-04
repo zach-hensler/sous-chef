@@ -101,7 +101,7 @@ public class CreateModel : PageModel {
         });
 
         if (response.StatusCode == HttpStatusCode.OK) {
-            return RedirectToPage("./Create");
+            return RedirectToPage("Index");
         }
 
         Console.WriteLine(response.ErrorMessage);

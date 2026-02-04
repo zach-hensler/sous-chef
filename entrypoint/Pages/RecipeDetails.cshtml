@@ -4,12 +4,27 @@
     ViewData["Title"] = Model.Details?.Name;
 }
 
+<script>
+    function ConfirmDelete() {
+        const dialog = document.getElementById("deleteDialog")
+        dialog.showModal();
+    }
+    
+</script>
+
 <div>
     @if (Model.Details == null) {
         <p>Unable to load recipe</p>
     }
     else {
-        <h1>@Model.Details.Name - @($"v{Model.Details.VersionNumber}")</h1>
+        <div class="header-wrapper">
+            <h1>@Model.Details.Name - @($"v{Model.Details.VersionNumber}")</h1>
+            <div class="header-action-wrapper">
+                <button class="header-action primary">New Version</button>
+                <button class="header-action">Edit</button>
+                <button class="header-action warning" onclick="ConfirmDelete()">Delete</button>
+            </div>
+        </div>
         <p>Effort: @Model.Details.EffortLevel, Time: @Model.Details.Time Minutes</p>
         <h2>Ingredients</h2>
         <ul>
@@ -27,4 +42,21 @@
             }
         </ol>
     }
+    <dialog id="deleteDialog">
+        <p>Are you sure you'd like to delete this?</p>
+        <div class="dialog-footer">
+            <hr />
+            <div class="dialog-button-wrapper">
+                <form method="dialog">
+                    <button class="primary">Cancel</button>
+                </form>
+                <form method="post">
+                    <button
+                        class="warning"
+                        formaction="?action=@RecipeDetailsAction.DeleteConfirmation"
+                        type="submit">DELETE</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
 </div>
