@@ -1,4 +1,4 @@
-@page "{versionId:int?}"
+@page "{id:int?}"
 @using core
 @model CreateModel
 @{
@@ -6,7 +6,12 @@
 }
 
 <div>
-    <h1>Create Recipe</h1>
+    @if (Model.VersionId == null) {
+        <h1>Create New Recipe</h1>
+    }
+    else {
+        <h1>Edit Version Id: @Model.VersionId</h1>
+    }
     <form method="post">
         <h2>Metadata</h2>
         <div>
@@ -51,7 +56,7 @@
                 </div>
             }
             <input
-                formaction="Create?action=@PostActions.NewIngredient"
+                formaction="@Model.GetBaseRoute()?action=@PostActions.NewIngredient"
                 formnovalidate
                 type="submit"
                 value="Add Ingredient"/>
@@ -61,7 +66,7 @@
             @for (var i = 0; i < Model.RecipeSteps.Count; i++) {
                 <hr/>
                 <div>
-                    <label for="step-name-@i">@(i+1): Name: </label>
+                    <label for="step-name-@i">@(i + 1): Name: </label>
                     <input
                         asp-for="@Model.RecipeSteps[i].Name"
                         id="step-name-@i"
@@ -73,13 +78,13 @@
                 </div>
             }
             <input
-                formaction="Create?action=@PostActions.NewStep"
+                formaction="@Model.GetBaseRoute()?action=@PostActions.NewStep"
                 formnovalidate
                 type="submit"
                 value="Add Step"/>
         </div>
         <div>
-            <input formaction="Create?action=@PostActions.Submit" type="submit" value="Submit"/>
+            <input formaction="@Model.GetBaseRoute()?action=@PostActions.Submit" type="submit" value="Submit"/>
         </div>
     </form>
 </div>

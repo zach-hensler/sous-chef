@@ -7,12 +7,16 @@ public interface IConnectionFactory {
     public DbConnection GetConnection();
 }
 
-public class ConnectionFactory : IConnectionFactory {
+public class ConnectionFactory(bool testEnv = false) : IConnectionFactory {
     private readonly string? _connectionString = Environment.GetEnvironmentVariable(EnvironmentVariables.ConnectionString);
 
     public DbConnection GetConnection() {
-        return string.IsNullOrWhiteSpace(_connectionString)
-            ? throw new ArgumentNullException(nameof(_connectionString), "Connection string not found.")
-            : new NpgsqlConnection(_connectionString);
+        if (string.IsNullOrWhiteSpace(_connectionString)) {
+            throw new ArgumentNullException(nameof(_connectionString), "Connection string not found.");
+        }
+        if (testEnv && !_connectionString.Contains("test")) {
+            throw new Exception("Configured to run as a test env, but a real connection string was provided.");
+        }
+        return new NpgsqlConnection(_connectionString);
     }
 }

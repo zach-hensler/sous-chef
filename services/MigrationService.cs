@@ -11,12 +11,15 @@ namespace services;
 public class MigrationService {
     private readonly string? _connectionString = Environment.GetEnvironmentVariable(EnvironmentVariables.ConnectionString);
 
-    public async Task<Response> Migrate() {
+    public async Task<Response> Migrate(bool testEnv = false) {
         return await Utils.SafeRun(() => {
             if (string.IsNullOrWhiteSpace(_connectionString)) {
                 return Task.FromResult(new Response(
                     HttpStatusCode.InternalServerError,
                     "Connection String not configured"));
+            }
+            if (testEnv && !_connectionString.Contains("test")) {
+                throw new Exception("Configured to run as a test env, but a real connection string was provided.");
             }
 
             var sp = new ServiceCollection()
