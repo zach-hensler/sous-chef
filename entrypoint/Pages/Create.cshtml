@@ -1,4 +1,4 @@
-@page
+@page "{versionId:int?}"
 @using core
 @model CreateModel
 @{
@@ -24,6 +24,10 @@
                 <option value="@EffortLevels.Medium">@EffortLevels.Medium</option>
                 <option value="@EffortLevels.High">@EffortLevels.High</option>
             </select>
+        </div>
+        <div>
+            <label for="time">Time (minutes): </label>
+            <input asp-for="RecipeMetadata.Time" id="time" type="number" required/>
         </div>
         <h2>Ingredients</h2>
         <div>

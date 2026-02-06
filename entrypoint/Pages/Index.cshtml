@@ -18,7 +18,7 @@
                 <div class="recipe-list-container">
                     <hr />
                     <p class="recipe-list-header">
-                        <a asp-page="/RecipeDetails" asp-route-id="@recipe.Id">@recipe.Name - @recipe.EffortLevel.ToString()</a>
+                        <a asp-page="/Recipe" asp-route-id="@recipe.Id">@recipe.Name - @recipe.EffortLevel.ToString()</a>
                     </p>
                     <p>@recipe.Description</p>
                 </div>

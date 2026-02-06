@@ -17,6 +17,9 @@ A kitchen helper with recipe versioning
 - Better Error Handling
 - Admin Panel
 
+# Tech Debt
+- Better logging
+- Better response model (current isn't wrong, just odd)
 
 ---
 # Initial Roadmap

@@ -1,5 +1,5 @@
 @page "{id:int}"
-@model RecipeDetailsModel
+@model Recipe
 @{
     ViewData["Title"] = Model.Details?.Name;
 }
@@ -21,7 +21,9 @@
             <h1>@Model.Details.Name - @($"v{Model.Details.VersionNumber}")</h1>
             <div class="header-action-wrapper">
                 <button class="header-action primary">New Version</button>
-                <button class="header-action">Edit</button>
+                <a asp-page="/Create" asp-route-id="@Model.Id">
+                    <button class="header-action">Edit</button>
+                </a>
                 <button class="header-action warning" onclick="ConfirmDelete()">Delete</button>
             </div>
         </div>

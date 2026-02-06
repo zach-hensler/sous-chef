@@ -24,6 +24,16 @@ public static class Common {
                 new { recipe.Name, recipe.Description, recipe.TimeMinutes, EffortLevel = recipe.EffortLevel.ToString() });
         }
 
+        public static async Task Update(int id, CreateRecipeDb recipe, DbConnection conn) {
+            await conn.ExecuteAsync(
+                """
+                UPDATE recipes
+                SET name = @Name, description = @Description, time_minutes = @TimeMinutes, effort_level = @EffortLevel
+                WHERE recipe_id = @id;
+                """,
+                new { id, recipe.Name, recipe.Description, recipe.EffortLevel, recipe.TimeMinutes });
+        }
+
         public static async Task DeleteCascade(int recipeId, DbConnection conn) {
             await conn.ExecuteAsync(
                 "DELETE FROM recipes WHERE recipe_id = @recipeId",
@@ -44,6 +54,11 @@ public static class Common {
     }
 
     public static class RecipeVersion {
+        public static async Task<RecipeVersionDb> Get(int versionId, DbConnection conn) {
+            return await conn.QuerySingleAsync<RecipeVersionDb>(
+                "SELECT * FROM recipe_versions WHERE version_id = @versionId",
+                new { versionId });
+        }
         public static async Task<RecipeVersionDb> GetLatest(int recipeId, DbConnection conn) {
             return await conn.QuerySingleAsync<RecipeVersionDb>(
                 """
@@ -89,6 +104,12 @@ public static class Common {
                 });
         }
 
+        public static async Task Delete(int versionId, DbConnection conn) {
+            await conn.ExecuteAsync(
+                "DELETE FROM recipe_steps WHERE version_id = @versionId;",
+                new { versionId });
+        }
+        
         public static async Task<List<RecipeStepDb>> Get(int versionId, DbConnection conn) {
             return
                 (await conn.QueryAsync<RecipeStepDb>(
@@ -118,6 +139,12 @@ public static class Common {
                     ingredient.Quantity,
                     ingredient.Unit
                 });
+        }
+        
+        public static async Task Delete(int versionId, DbConnection conn) {
+            await conn.ExecuteAsync(
+                "DELETE FROM recipe_ingredients WHERE version_id = @versionId;",
+                new { versionId });
         }
         
         public static async Task<List<RecipeIngredientDb>> Get(int versionId, DbConnection conn) {

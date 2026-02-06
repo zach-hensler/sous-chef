@@ -10,7 +10,7 @@ public enum RecipeDetailsAction {
     DeleteConfirmation
 }
 
-public class RecipeDetailsModel : PageModel {
+public class Recipe : PageModel {
     private readonly RecipeService _recipeService = new(new ConnectionFactory());
     public RecipeDetails? Details { get; set; }
     public int Id { get; set; }

@@ -5,9 +5,7 @@ using core.Models;
 
 namespace services;
 
-
 public class RecipeService(IConnectionFactory connectionFactory) {
-    
     public async Task<Response<int>> CreateRecipe(CreateRecipeRequest request) {
         try {
             await using var conn = connectionFactory.GetConnection();
@@ -20,7 +18,7 @@ public class RecipeService(IConnectionFactory connectionFactory) {
                 VersionNumber = "1.0",
                 CreatedAt = DateTime.UtcNow
             }, conn);
-        
+
             for (var i = 0; i < request.Steps.Count; i++) {
                 await Common.RecipeSteps.Create(request.Steps[i], i + 1, version, conn);
             }
@@ -30,12 +28,43 @@ public class RecipeService(IConnectionFactory connectionFactory) {
             }
 
             await transaction.CommitAsync();
-            await conn.CloseAsync();;
+            await conn.CloseAsync();
+            ;
 
             return new Response<int>(recipeId);
         }
         catch (Exception ex) {
             return new Response<int>(HttpStatusCode.InternalServerError, ex.Message);
+        }
+    }
+
+    public async Task<Response> UpdateRecipe(int versionId, CreateRecipeRequest request) {
+        try {
+            await using var conn = connectionFactory.GetConnection();
+            await conn.OpenAsync();
+            var transaction = await conn.BeginTransactionAsync();
+
+            var version = await Common.RecipeVersion.Get(versionId, conn);
+            await Common.Recipe.Update(version.recipe_id, request.Recipe, conn);
+
+            await Common.RecipeSteps.Delete(versionId, conn);
+            for (var i = 0; i < request.Steps.Count; i++) {
+                await Common.RecipeSteps.Create(request.Steps[i], i + 1, versionId, conn);
+            }
+
+            await Common.RecipeIngredients.Delete(versionId, conn);
+            foreach (var ingredient in request.Ingredients) {
+                await Common.RecipeIngredients.Create(ingredient, versionId, conn);
+            }
+
+            await transaction.CommitAsync();
+            await conn.CloseAsync();
+            ;
+
+            return new Response();
+        }
+        catch (Exception ex) {
+            return new Response(HttpStatusCode.InternalServerError, ex.Message);
         }
     }
 
@@ -65,7 +94,6 @@ public class RecipeService(IConnectionFactory connectionFactory) {
         catch (Exception ex) {
             return new Response(HttpStatusCode.InternalServerError, ex.Message);
         }
-
     }
 
     public async Task<Response<ListRecipesResponse>> ListRecipes(ListRecipesRequest request) {

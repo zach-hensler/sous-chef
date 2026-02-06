@@ -8,3 +8,11 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: sous-chef
+  sous-chef-tests-db:
+    image: 'postgres:latest'
+    ports:
+      - 5432:5433
+    environment:
+      POSTGRES_USER: test-user
+      POSTGRES_PASSWORD: test-pass
+      POSTGRES_DB: tests
