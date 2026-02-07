@@ -18,10 +18,14 @@ public record ViewStep {
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum PostActions {
+public enum CreateActions {
     Submit,
     NewIngredient,
-    NewStep
+    RemoveIngredient,
+    NewStep,
+    RemoveStep,
+    MoveStepDown,
+    MoveStepUp
 }
 
 public class CreateModel : PageModel {
@@ -90,18 +94,57 @@ public class CreateModel : PageModel {
 
     public async Task<IActionResult> OnPostAsync(int? id) {
         VersionId = id;
-        Request.Query.TryGetValue("action", out var action);
-        Enum.TryParse<PostActions>(action.ToString(), out var postAction);
+        foreach (var kvp in Request.Query) {
+            if (!Enum.TryParse<CreateActions>(kvp.Key, out var action)) {
+                Console.WriteLine($"Unexpected action: {kvp.Key} = {kvp.Value}");
+                return Page();
+            }
 
-        // TODO support removing steps from the list
-        return postAction switch {
-            PostActions.Submit => await HandleSubmit(id),
-            PostActions.NewIngredient => HandleNewIngredient(),
-            PostActions.NewStep => HandleNewStep(),
-            _ => throw new ArgumentOutOfRangeException()
-        };
+            return action switch {
+                CreateActions.Submit => await HandleSubmit(id),
+                CreateActions.NewIngredient => HandleNewIngredient(),
+                CreateActions.NewStep => HandleNewStep(),
+                CreateActions.RemoveIngredient => RemoveIngredient(kvp.Value.ToString()),
+                CreateActions.RemoveStep => RemoveStep(kvp.Value.ToString()),
+                CreateActions.MoveStepDown => MoveStepDown(kvp.Value.ToString()),
+                CreateActions.MoveStepUp => MoveStepUp(kvp.Value.ToString()),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        return Page();
     }
 
+    private IActionResult MoveStepDown(string idx) {
+        if (int.TryParse(idx, out var parsedIdx)) {
+            var step = RecipeSteps[parsedIdx];
+            RecipeSteps.RemoveAt(parsedIdx);
+            RecipeSteps.Insert(parsedIdx + 1, step);
+        }
+        return Page();
+    }
+
+    private IActionResult MoveStepUp(string idx) {
+        if (int.TryParse(idx, out var parsedIdx)) {
+            var step = RecipeSteps[parsedIdx];
+            RecipeSteps.RemoveAt(parsedIdx);
+            RecipeSteps.Insert(parsedIdx - 1, step);
+        }
+        return Page();
+    }
+
+    private IActionResult RemoveStep(string idx) {
+        if (int.TryParse(idx, out var parsedIdx)) {
+            RecipeSteps.RemoveAt(parsedIdx);
+        }
+        return Page();
+    }
+    private IActionResult RemoveIngredient(string idx) {
+        if (int.TryParse(idx, out var parsedIdx)) {
+            RecipeIngredients.RemoveAt(parsedIdx);
+        }
+        return Page();
+    }
     private IActionResult HandleNewStep() {
         RecipeSteps.Add(new ViewStep {
             Name = "",

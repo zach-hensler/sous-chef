@@ -39,24 +39,37 @@
             @for (var i = 0; i < Model.RecipeIngredients.Count; i++) {
                 <hr/>
                 <div>
+                    <input
+                        formaction="@Model.GetBaseRoute()?@CreateActions.RemoveIngredient=@i"
+                        formnovalidate
+                        type="submit"
+                        value="X"/>
                     <label for="ingredient-name-@i">Name: </label>
                     <input
                         asp-for="@Model.RecipeIngredients[i].Name"
                         id="ingredient-name-@i"
                         autofocus=@(Model.RecipeIngredients.Count == (i + 1) && string.IsNullOrWhiteSpace(Model.RecipeIngredients[i].Name))
+                        value="@Model.RecipeIngredients[i].Name"
                         required/>
                 </div>
                 <div>
                     <label for="quantity-@i">Quantity: </label>
-                    <input asp-for="@Model.RecipeIngredients[i].Quantity" id="quantity-@i" required/>
+                    <input
+                        asp-for="@Model.RecipeIngredients[i].Quantity"
+                        id="quantity-@i"
+                        value="@Model.RecipeIngredients[i].Quantity"
+                        required/>
                 </div>
                 <div>
                     <label for="unit-@i">Unit: </label>
-                    <input asp-for="@Model.RecipeIngredients[i].Unit" id="unit-@i"/>
+                    <input
+                        asp-for="@Model.RecipeIngredients[i].Unit"
+                        id="unit-@i"
+                        value="@Model.RecipeIngredients[i].Unit"/>
                 </div>
             }
             <input
-                formaction="@Model.GetBaseRoute()?action=@PostActions.NewIngredient"
+                formaction="@Model.GetBaseRoute()?@CreateActions.NewIngredient"
                 formnovalidate
                 type="submit"
                 value="Add Ingredient"/>
@@ -66,25 +79,51 @@
             @for (var i = 0; i < Model.RecipeSteps.Count; i++) {
                 <hr/>
                 <div>
+                    <div>
+                        <input
+                            formaction="@Model.GetBaseRoute()?@CreateActions.RemoveStep=@i"
+                            formnovalidate
+                            type="submit"
+                            value="X"/>
+                        @if (i < Model.RecipeSteps.Count - 1) {
+                            <input
+                                formaction="@Model.GetBaseRoute()?@CreateActions.MoveStepDown=@i"
+                                formnovalidate
+                                type="submit"
+                                value="Down"/>
+                        }
+                        @if (i > 0) {
+                            <input
+                                formaction="@Model.GetBaseRoute()?@CreateActions.MoveStepUp=@i"
+                                formnovalidate
+                                type="submit"
+                                value="Up"/>
+                        }
+                    </div>
                     <label for="step-name-@i">@(i + 1): Name: </label>
                     <input
                         asp-for="@Model.RecipeSteps[i].Name"
                         id="step-name-@i"
                         autofocus=@(Model.RecipeSteps.Count == (i + 1) && string.IsNullOrWhiteSpace(Model.RecipeSteps[i].Name))
+                        value="@Model.RecipeSteps[i].Name"
                         required/>
                 </div>
                 <div class="instructionInput">
-                    <input class="instructionInput" asp-for="@Model.RecipeSteps[i].Instruction" required/>
+                    <input
+                        class="instructionInput"
+                        asp-for="@Model.RecipeSteps[i].Instruction"
+                        value="@Model.RecipeSteps[i].Instruction"
+                        required/>
                 </div>
             }
             <input
-                formaction="@Model.GetBaseRoute()?action=@PostActions.NewStep"
+                formaction="@Model.GetBaseRoute()?@CreateActions.NewStep"
                 formnovalidate
                 type="submit"
                 value="Add Step"/>
         </div>
         <div>
-            <input formaction="@Model.GetBaseRoute()?action=@PostActions.Submit" type="submit" value="Submit"/>
+            <input formaction="@Model.GetBaseRoute()?@CreateActions.Submit" type="submit" value="Submit"/>
         </div>
     </form>
 </div>
