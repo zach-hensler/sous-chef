@@ -3,8 +3,10 @@
 
 <div>
     <h1>Admin Panel</h1>
-    <input
-        formaction="Admin?action=@AdminActions.Migrate"
-        type="submit"
-        value="Migrate"/>
+    <form method="post">
+        <input
+            formaction="Admin?@AdminActions.Migrate"
+            type="submit"
+            value="Migrate"/>
+    </form>
 </div>

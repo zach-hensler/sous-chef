@@ -12,12 +12,18 @@ public class AdminModel : PageModel {
     private readonly MigrationService _migrationService = new MigrationService();
 
     public async Task<IActionResult> OnPostAsync() {
-        Request.Query.TryGetValue("action", out var action);
-        Enum.TryParse<AdminActions>(action.ToString(), out var postAction);
-        return postAction switch {
-            AdminActions.Migrate => await HandleMigrate(),
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        foreach (var kvp in Request.Query) {
+            if (!Enum.TryParse<AdminActions>(kvp.Key, out var action)) {
+                Console.WriteLine($"Unexpected action: {kvp.Key} = {kvp.Value}");
+                return Page();
+            }
+            return action switch {
+                AdminActions.Migrate => await HandleMigrate(),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        return Page();
     }
 
     public async Task<IActionResult> HandleMigrate() {

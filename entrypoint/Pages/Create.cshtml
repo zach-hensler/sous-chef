@@ -108,13 +108,13 @@
                         value="@Model.RecipeSteps[i].Name"
                         required/>
                 </div>
-                <div class="instructionInput">
-                    <input
-                        class="instructionInput"
-                        asp-for="@Model.RecipeSteps[i].Instruction"
-                        value="@Model.RecipeSteps[i].Instruction"
-                        required/>
-                </div>
+                <textarea
+                    rows="5"
+                    asp-for="@Model.RecipeSteps[i].Instruction"
+                    value="@Model.RecipeSteps[i].Instruction"
+                    required>
+
+                </textarea>
             }
             <input
                 formaction="@Model.GetBaseRoute()?@CreateActions.NewStep"

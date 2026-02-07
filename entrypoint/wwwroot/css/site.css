@@ -9,9 +9,12 @@
   --warning-darker: #C9AAA3;
 
   /* spacing - each level should double */
+  --extra-small: 5px;
   --small: 10px;
   --medium: 20px;
   --large: 40px;
+  
+  --border-radius: 5px;
 }
 
 body {
@@ -63,9 +66,22 @@ main {
 }
 
 button {
-  border-radius: 10px;
-  padding: var(--small);
+  border-radius: var(--border-radius);
+  padding: var(--extra-small);
   height: var(--large);
+}
+
+select, input {
+  border-radius: var(--border-radius);
+  margin: var(--small) 0;
+  padding: var(--extra-small);
+}
+
+textarea {
+  padding: var(--extra-small);
+  margin: var(--small) 0;
+  resize: vertical;
+  width: 100%;
 }
 
 .primary {
