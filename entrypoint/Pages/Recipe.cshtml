@@ -2,14 +2,20 @@
 @model Recipe
 @{
     ViewData["Title"] = Model.Details?.Name;
+    const string deleteDialog = "deleteDialog";
+    const string madeItDialog = "madeItDialog";
 }
 
 <script>
     function ConfirmDelete() {
-        const dialog = document.getElementById("deleteDialog")
+        const dialog = document.getElementById("@deleteDialog")
         dialog.showModal();
     }
     
+    function MadeItPopUp() {
+        const dialog = document.getElementById("@madeItDialog")
+        dialog.showModal();
+    }
 </script>
 
 <div>
@@ -20,7 +26,7 @@
         <div class="header-wrapper">
             <h1>@Model.Details.Name - @($"v{Model.Details.VersionNumber}")</h1>
             <div class="header-action-wrapper">
-                <button class="header-action primary">New Version</button>
+                <button class="header-action primary" onclick="MadeItPopUp()">Made It!</button>
                 <a asp-page="/Create" asp-route-id="@Model.Id">
                     <button class="header-action">Edit</button>
                 </a>
@@ -44,13 +50,30 @@
             }
         </ol>
     }
-    <dialog id="deleteDialog">
+    <dialog id="@madeItDialog">
+        <input
+        <div class="dialog-footer">
+            <hr />
+            <div class="dialog-button-wrapper">
+                <form method="dialog">
+                    <button>Cancel</button>
+                </form>
+                <form method="post">
+                    <button
+                        class="primary"
+                        formaction="?action=@RecipeDetailsAction.AddComment"
+                        type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+    <dialog id="@deleteDialog">
         <p>Are you sure you'd like to delete this?</p>
         <div class="dialog-footer">
             <hr />
             <div class="dialog-button-wrapper">
                 <form method="dialog">
-                    <button class="primary">Cancel</button>
+                    <button>Cancel</button>
                 </form>
                 <form method="post">
                     <button

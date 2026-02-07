@@ -7,14 +7,20 @@ using services;
 namespace sous_chef.Pages;
 
 public enum RecipeDetailsAction {
+    AddComment,
     DeleteConfirmation
+}
+
+public record NewComment {
+    public required int Rating { get; init; }
+    public required string? Message { get; init; }
 }
 
 public class Recipe : PageModel {
     private readonly RecipeService _recipeService = new(new ConnectionFactory());
     public RecipeDetails? Details { get; set; }
+    public NewComment? NewComment { get; set; }
     public int Id { get; set; }
-    public bool DeleteRequested { get; set; } = false;
 
     private async Task LoadPageData(int id) {
         var res = await _recipeService.GetRecipe(id);
@@ -41,14 +47,17 @@ public class Recipe : PageModel {
 
         return postAction switch {
             RecipeDetailsAction.DeleteConfirmation => await HandleDelete(id),
+            RecipeDetailsAction.AddComment => await HandleAddComment(),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public IActionResult HandleDeleteRequest() {
-        DeleteRequested = true;
-        return Page();
-    } 
+    public async Task<IActionResult> HandleAddComment() {
+        if (NewComment == null) {
+            return Page();
+        }
+        // TODO
+    }
 
     public async Task<IActionResult> HandleDelete(int id) {
         var res = await _recipeService.DeleteRecipe(id);
