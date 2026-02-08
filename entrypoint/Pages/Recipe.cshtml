@@ -12,9 +12,13 @@
         dialog.showModal();
     }
     
-    function MadeItPopUp() {
+    function OpenMadeIt() {
         const dialog = document.getElementById("@madeItDialog")
         dialog.showModal();
+    }
+    function CloseMadeIt() {
+        const dialog = document.getElementById("@madeItDialog")
+        dialog.close();
     }
 </script>
 
@@ -26,7 +30,7 @@
         <div class="header-wrapper">
             <h1>@Model.Details.Name - @($"v{Model.Details.VersionNumber}")</h1>
             <div class="header-action-wrapper">
-                <button class="header-action primary" onclick="MadeItPopUp()">Made It!</button>
+                <button class="header-action primary" onclick="OpenMadeIt()">Made It!</button>
                 <a asp-page="/Create" asp-route-id="@Model.Id">
                     <button class="header-action">Edit</button>
                 </a>
@@ -50,22 +54,47 @@
             }
         </ol>
     }
-    <dialog id="@madeItDialog">
-        <input
-        <div class="dialog-footer">
+    <h1>Comments</h1>
+    @if (Model.Comments.Count == 0) {
+        <p>No comments yet!</p>
+    }
+    else {
+        foreach (var comment in Model.Comments) {
             <hr />
-            <div class="dialog-button-wrapper">
-                <form method="dialog">
-                    <button>Cancel</button>
-                </form>
-                <form method="post">
+            <p>Rating: @($"{comment.Rating}/5")</p>
+            @if (!string.IsNullOrWhiteSpace(comment.Comment)) {
+                <p>Comment: @comment.Comment</p>
+            }
+        }
+    }
+    <dialog id="@madeItDialog">
+        <form method="post">
+            <div>
+                <label for="rating">Rating (out of 5):</label>
+                <input
+                    asp-for="@Model.NewComment.Rating"
+                    id="rating"
+                    required/>
+            </div>
+            <div>
+                <label for="comment">Comment (optional)</label>
+                <input
+                    asp-for="@Model.NewComment.Comment"
+                    id="comment" />
+            </div>
+            <div class="dialog-footer">
+                <hr />
+                <div class="dialog-button-wrapper">
+                    <button onclick="CloseMadeIt()">Cancel</button>
                     <button
                         class="primary"
                         formaction="?action=@RecipeDetailsAction.AddComment"
-                        type="submit">Submit</button>
-                </form>
+                        type="submit">
+                        Submit
+                    </button>
+                </div>
             </div>
-        </div>
+        </form>
     </dialog>
     <dialog id="@deleteDialog">
         <p>Are you sure you'd like to delete this?</p>
