@@ -3,19 +3,35 @@ A kitchen helper with recipe versioning
 ---
 # Missing Features
 ## Current Priorities
-- Edit existing recipes
-- Recipe drafts
-  - it's scary spending 10 minutes typing it all out and worrying that an error might happen
-- Recipe Creation UX
-  - Large Input Fields
-  - Remove Step/Instruction
-  - Re-order instructions
-- Create new recipe versions
+- pipeline to create executable for local deployment
+  - gh action to generate a build?
+  - expose to local network from raspberry pi via tailscale
+  - need to actually start using this to identify pain points
+- database backups
 
 ## Secondary Priorities
+- Show avg rating (for latest version?) on home page
+- Recipe drafts
+  - it's scary spending 10 minutes typing it all out and worrying that an error might happen
+  - de-prioritized because editing helps fill this gap
+- Create new recipe versions
 - Rename EffortLevels from (Low, Medium, High) -> (Easy, Medium, Hard)
 - Better Error Handling
 - Admin Panel
+
+## Completed Features
+- ~~Create New Recipes~~
+- ~~List Recipes~~
+- ~~Delete Recipes (with confirmation modal)~~
+- ~~Basic Theming (css vars for colors and spacing)~~
+- ~~Improved UX on Recipe creation~~
+  - ~~Autofocus when adding new steps/ingredients~~
+  - ~~Larger inputs & text areas~~
+  - ~~Step deletion/re-ordering~~
+  - ~~Ingredient re-ordering~~
+- ~~Basic Admin Panel~~
+- ~~Adding Comments with ratings~~
+- ~~Viewing Comments on Recipes~~
 
 # Tech Debt
 - Better logging

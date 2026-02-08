@@ -67,18 +67,18 @@ main {
 
 button {
   border-radius: var(--border-radius);
-  padding: var(--extra-small);
+  padding: var(--extra-small) var(--small);
   height: var(--large);
 }
 
 select, input {
   border-radius: var(--border-radius);
   margin: var(--small) 0;
-  padding: var(--extra-small);
+  padding: var(--extra-small) var(--small);
 }
 
 textarea {
-  padding: var(--extra-small);
+  padding: var(--extra-small) var(--small);
   margin: var(--small) 0;
   resize: vertical;
   width: 100%;

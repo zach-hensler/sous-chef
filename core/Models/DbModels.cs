@@ -12,15 +12,14 @@ public record RecipeVersionDb {
     public required int version_id { get; init; }
     public required string version_number { get; init; }
     public required int recipe_id { get; init; }
-    public required int rating { get; init; }
     public required DateTime created_at { get; init; }
 }
 
 public record RecipeCommentDb {
     public required int comment_id { get; init; }
-    public required int recipe_id { get; init; }
     public required int version_id { get; init; }
-    public required string comment { get; init; }
+    public required int rating { get; init; }
+    public string? comment { get; init; }
     public required DateTime created_at { get; init; }
 }
 

@@ -24,3 +24,11 @@ public record CreateRecipeIngredientDb {
     public required float Quantity { get; init; }
     public string? Unit { get; init; }
 }
+
+public record CreateRecipeCommentDb {
+    public required int VersionId { get; init; }
+    public required int Rating { get; init; }
+    public string? Comment { get; init; }
+    public required DateTime CreatedAt { get; init; }
+    
+}

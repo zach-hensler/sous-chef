@@ -120,4 +120,47 @@ public class RecipeService(IConnectionFactory connectionFactory) {
             return new Response<ListRecipesResponse>(HttpStatusCode.InternalServerError, ex.Message);
         }
     }
+
+    public async Task<Response> AddComment(CreateRecipeCommentDb request) {
+        try {
+            await using var conn = connectionFactory.GetConnection();
+            await conn.OpenAsync();
+
+            if (!await Common.RecipeVersion.Exists(request.VersionId, conn)) {
+                return new Response(HttpStatusCode.NotFound, $"Version '{request.VersionId}' not found");
+            }
+
+            await Common.RecipeComments.Create(request, conn);
+
+            return new Response();
+        }
+        catch (Exception ex) {
+            return new Response(HttpStatusCode.InternalServerError, ex.Message);
+        }
+    }
+
+    public async Task<Response<List<GetCommentsResponse>>> GetComments(int versionId) {
+        try {
+            await using var conn = connectionFactory.GetConnection();
+            await conn.OpenAsync();
+
+            if (!await Common.RecipeVersion.Exists(versionId, conn)) {
+                return new Response<List<GetCommentsResponse>>(
+                    HttpStatusCode.NotFound, $"Version '{versionId}' not found");
+            }
+
+            var comments = await Common.RecipeComments.Get(versionId, conn);
+            return new Response<List<GetCommentsResponse>>(
+                comments.Select(c => new GetCommentsResponse {
+                        CommentId = c.comment_id,
+                        Comment = c.comment,
+                        Rating = c.rating,
+                        CreatedAt = c.created_at
+                    })
+                    .ToList());
+        }
+        catch (Exception ex) {
+            return new Response<List<GetCommentsResponse>>(HttpStatusCode.InternalServerError, ex.Message);
+        }
+    }
 }

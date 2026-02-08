@@ -2,14 +2,24 @@
 @model Recipe
 @{
     ViewData["Title"] = Model.Details?.Name;
+    const string deleteDialog = "deleteDialog";
+    const string madeItDialog = "madeItDialog";
 }
 
 <script>
     function ConfirmDelete() {
-        const dialog = document.getElementById("deleteDialog")
+        const dialog = document.getElementById("@deleteDialog")
         dialog.showModal();
     }
     
+    function OpenMadeIt() {
+        const dialog = document.getElementById("@madeItDialog")
+        dialog.showModal();
+    }
+    function CloseMadeIt() {
+        const dialog = document.getElementById("@madeItDialog")
+        dialog.close();
+    }
 </script>
 
 <div>
@@ -20,7 +30,7 @@
         <div class="header-wrapper">
             <h1>@Model.Details.Name - @($"v{Model.Details.VersionNumber}")</h1>
             <div class="header-action-wrapper">
-                <button class="header-action primary">New Version</button>
+                <button class="header-action primary" onclick="OpenMadeIt()">Made It!</button>
                 <a asp-page="/Create" asp-route-id="@Model.Id">
                     <button class="header-action">Edit</button>
                 </a>
@@ -44,13 +54,55 @@
             }
         </ol>
     }
-    <dialog id="deleteDialog">
+    <h1>Comments</h1>
+    @if (Model.Comments.Count == 0) {
+        <p>No comments yet!</p>
+    }
+    else {
+        foreach (var comment in Model.Comments) {
+            <hr />
+            <p>Rating: @($"{comment.Rating}/5")</p>
+            @if (!string.IsNullOrWhiteSpace(comment.Comment)) {
+                <p>Comment: @comment.Comment</p>
+            }
+        }
+    }
+    <dialog id="@madeItDialog">
+        <form method="post">
+            <div>
+                <label for="rating">Rating (out of 5):</label>
+                <input
+                    asp-for="@Model.NewComment.Rating"
+                    id="rating"
+                    required/>
+            </div>
+            <div>
+                <label for="comment">Comment (optional)</label>
+                <input
+                    asp-for="@Model.NewComment.Comment"
+                    id="comment" />
+            </div>
+            <div class="dialog-footer">
+                <hr />
+                <div class="dialog-button-wrapper">
+                    <button onclick="CloseMadeIt()">Cancel</button>
+                    <button
+                        class="primary"
+                        formaction="?action=@RecipeDetailsAction.AddComment"
+                        type="submit">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+    <dialog id="@deleteDialog">
         <p>Are you sure you'd like to delete this?</p>
         <div class="dialog-footer">
             <hr />
             <div class="dialog-button-wrapper">
                 <form method="dialog">
-                    <button class="primary">Cancel</button>
+                    <button>Cancel</button>
                 </form>
                 <form method="post">
                     <button

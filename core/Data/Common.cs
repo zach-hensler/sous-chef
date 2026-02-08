@@ -54,6 +54,12 @@ public static class Common {
     }
 
     public static class RecipeVersion {
+        public static async Task<bool> Exists(int versionId, DbConnection conn) {
+            var count = await conn.QuerySingleAsync<int>(
+                "SELECT count(*) FROM recipe_versions WHERE version_id = @versionId",
+                new { versionId });
+            return count > 0;
+        }
         public static async Task<RecipeVersionDb> Get(int versionId, DbConnection conn) {
             return await conn.QuerySingleAsync<RecipeVersionDb>(
                 "SELECT * FROM recipe_versions WHERE version_id = @versionId",
@@ -156,6 +162,27 @@ public static class Common {
                     WHERE version_id = @versionId
                     """,
                     new { versionId }))
+                .ToList();
+        }
+    }
+
+    public static class RecipeComments {
+        public static async Task<int> Create(CreateRecipeCommentDb comment, DbConnection conn) {
+            return await conn.ExecuteScalarAsync<int>(
+                """
+                INSERT INTO recipe_comments
+                    (version_id, rating, comment, created_at)
+                VALUES
+                    (@versionId, @rating, @comment, @createdAt)
+                RETURNING comment_id
+                """,
+                new { comment.VersionId, comment.Rating, comment.Comment, comment.CreatedAt });
+        }
+
+        public static async Task<List<RecipeCommentDb>> Get(int versionId, DbConnection conn) {
+            return (await conn.QueryAsync<RecipeCommentDb>(
+                "SELECT * FROM recipe_comments WHERE version_id = @versionId",
+                new { versionId }))
                 .ToList();
         }
     }
