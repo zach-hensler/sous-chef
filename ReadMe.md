@@ -3,11 +3,6 @@ A kitchen helper with recipe versioning
 ---
 # Missing Features
 ## Current Priorities
-- version comment support
-  - leave a star rating w/ optional comment for a version
-  - should show avg ratings on main feed
-  - show all comments on recipe details page
-  - ability to add comments from "recipe details"
 - pipeline to create executable for local deployment
   - gh action to generate a build?
   - expose to local network from raspberry pi via tailscale
@@ -15,6 +10,7 @@ A kitchen helper with recipe versioning
 - database backups
 
 ## Secondary Priorities
+- Show avg rating (for latest version?) on home page
 - Recipe drafts
   - it's scary spending 10 minutes typing it all out and worrying that an error might happen
   - de-prioritized because editing helps fill this gap
@@ -34,6 +30,8 @@ A kitchen helper with recipe versioning
   - ~~Step deletion/re-ordering~~
   - ~~Ingredient re-ordering~~
 - ~~Basic Admin Panel~~
+- ~~Adding Comments with ratings~~
+- ~~Viewing Comments on Recipes~~
 
 # Tech Debt
 - Better logging
