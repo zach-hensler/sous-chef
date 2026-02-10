@@ -20,6 +20,7 @@ jobs:
         run: |
           mkdir ./tmp
           docker build -o . -t sous-chef-image -f Dockerfile .
+          ls
           sudo chown -R runner:runner ./App
       - name: deploy
         uses: actions/upload-artifact@v4
