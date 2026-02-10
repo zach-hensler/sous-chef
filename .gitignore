@@ -1,6 +1,7 @@
 .idea/*
 */obj/*
 */bin/*
+*/App/*
 
 *.json
 *.drawio.bkp
