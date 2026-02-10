@@ -2,6 +2,7 @@ name: deploy
 run-name: deploy
 on:
   push:
+#  push:
 #    branches:
 #      - main
 jobs:
@@ -17,7 +18,7 @@ jobs:
           git config --global user.name ${{ github.actor }}
       - name: build
         run: |
-          makedir out
+          mkdir out
           docker build -o ./out -t sous-chef-image -f Dockerfile .
       - name: deploy
         uses: actions/upload-artifact@v4
