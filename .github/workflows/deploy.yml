@@ -18,10 +18,11 @@ jobs:
           git config --global user.name ${{ github.actor }}
       - name: build
         run: |
-          mkdir out
-          docker build -o ./out -t sous-chef-image -f Dockerfile .
+          mkdir ./tmp
+          docker build -o ./tmp -t sous-chef-image -f Dockerfile .
+          sudo chown -R runner:runner ./tmp
       - name: deploy
         uses: actions/upload-artifact@v4
         with:
           name: assets-for-download
-          path: out
+          path: ./temp
