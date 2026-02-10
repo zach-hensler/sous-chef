@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		ReadMe.md = ReadMe.md
 		views.drawio = views.drawio
 		compose.yaml = compose.yaml
+		Dockerfile = Dockerfile
+		.github\workflows\deploy.yml = .github\workflows\deploy.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "migrations", "migrations\migrations.csproj", "{D3463D57-6D3A-4C66-9664-3EF48A6B2CE1}"

@@ -57,3 +57,14 @@ A kitchen helper with recipe versioning
 - can view the steps/ingredients for each version
 - can view the notes/rating for each version
 - can compare the differences between versions
+
+---
+# Build pipeline
+- push changes to a branch
+  - aggregate changes on that branch
+  - when ready for a new release to be created, merge branch to main
+- on merge to main:
+  - get new version number?
+  - gh action builds docker image
+  - gh action stores image as a build artifact
+- raspberry pi pulls down new image, and runs new version
