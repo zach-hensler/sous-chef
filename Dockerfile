@@ -3,7 +3,7 @@
 COPY . /source
 WORKDIR /source/src
 RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
-    dotnet publish --use-current-runtime --self-contained false -o /app \
+    dotnet publish --use-current-runtime --self-contained false -o /app
 #-a ${TARGETARCH/amd64/x64}
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
