@@ -20,10 +20,10 @@ jobs:
         run: |
           mkdir tmp
           docker build --output=tmp -t sous-chef-image -f Dockerfile .
-          ls tmp
+          ls tmp/app
           sudo chown -R runner:runner ./tmp
-      - name: deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: assets-for-download
-          path: ./tmp
+#      - name: deploy
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: assets-for-download
+#          path: ./tmp
