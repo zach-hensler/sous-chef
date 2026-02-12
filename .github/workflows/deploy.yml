@@ -1,10 +1,16 @@
-name: deploy
-run-name: deploy
+name: create-release
+run-name: create-release
 on:
-  push:
-#  push:
-#    branches:
-#      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version Number for the new release'
+        required: true
+      branch:
+        description: 'Branch to generate release from'
+        required: true
+        default: 'main'
+        # TODO branch selector
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +18,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
       - name: setup
         run: |
           git config --global user.email zhensler12@gmail.com
@@ -19,9 +27,10 @@ jobs:
       - name: build
         run: |
           docker build -t sous-chef-image -f Dockerfile .
-          docker save sous-chef-image:latest | gzip > sous-chef-image_latest.tar.gz
-      - name: deploy
-        uses: actions/upload-artifact@v4
-        with:
-          name: v1.0
-          path: sous-chef-image_latest.tar.gz
+          docker save sous-chef-image:latest | gzip > sous-chef-image_${{ inputs.version }}.tar.gz
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create ${{ inputs.version }} sous-chef-image_${{ inputs.version }}.tar.gz
