@@ -1,17 +1,12 @@
-﻿# TODO find and add the sha for this image
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-WORKDIR /App
-
-# Copy everything
-COPY . ./
-# Restore as distinct layers
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+#ARG TARGETARCH
+COPY . /source
+WORKDIR /source
 RUN dotnet restore
 # Build and publish a release
-RUN dotnet publish -o out
+RUN dotnet publish -o=out sousChef.sln
 
-# Build runtime image
-# TODO find and add the sha for this image
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
-WORKDIR /App
-COPY --from=build /App/out .
-ENTRYPOINT ["dotnet", "DotNet.Docker.dll"]
+WORKDIR /app
+COPY --from=build /source/out .
+ENTRYPOINT ["dotnet", "entrypoint.dll"]
