@@ -21,9 +21,9 @@ jobs:
           mkdir tmp
           docker build --output=tmp -t sous-chef-image -f Dockerfile .
           ls tmp
-          sudo chown -R runner:runner ./temp
-#      - name: deploy
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: assets-for-download
-#          path: ./App/out
+#          sudo chown -R runner:runner ./tmp
+      - name: deploy
+        uses: actions/upload-artifact@v4
+        with:
+          name: assets-for-download
+          path: ./tmp
