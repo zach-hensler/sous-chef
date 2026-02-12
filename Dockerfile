@@ -1,17 +1,11 @@
-﻿# TODO find and add the sha for this image
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-WORKDIR /App
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+ARG TARGETARCH
+COPY . /source
+WORKDIR /source/src
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+    dotnet publish -a ${TARGETARCH/amd64/x64} --use-current-runtime --self-contained false -o /app
 
-# Copy everything
-COPY . ./
-# Restore as distinct layers
-RUN dotnet restore
-# Build and publish a release
-RUN dotnet publish -o out
-
-# Build runtime image
-# TODO find and add the sha for this image
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
-WORKDIR /App
-COPY --from=build /App/out .
-ENTRYPOINT ["dotnet", "DotNet.Docker.dll"]
+WORKDIR /app
+COPY --from=build /app .
+ENTRYPOINT ["dotnet", "entrypoint.dll"]
