@@ -3,10 +3,10 @@ A kitchen helper with recipe versioning
 ---
 # Missing Features
 ## Current Priorities
-- pipeline to create executable for local deployment
-  - gh action to generate a build?
-  - expose to local network from raspberry pi via tailscale
-  - need to actually start using this to identify pain points
+- docker compose for running db and application on pi
+- parameterized db connection string
+- volume storage for db
+- pi deployment w/ tailscale
 - database backups
 
 ## Secondary Priorities
@@ -32,6 +32,7 @@ A kitchen helper with recipe versioning
 - ~~Basic Admin Panel~~
 - ~~Adding Comments with ratings~~
 - ~~Viewing Comments on Recipes~~
+- ~~Creating Docker Image on GH Action~~
 
 # Tech Debt
 - Better logging
