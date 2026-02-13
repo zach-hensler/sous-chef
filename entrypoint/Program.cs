@@ -7,9 +7,11 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// TODO set connection string elsewhere
-Environment.SetEnvironmentVariable(
-    EnvironmentVariables.ConnectionString, "User ID=user;Password=pass;Host=localhost;Port=5432;Database=sous-chef;");
+if (app.Environment.IsDevelopment()) {
+    Console.WriteLine("Using Local DB");
+    Environment.SetEnvironmentVariable(
+        EnvironmentVariables.ConnectionString, "User ID=user;Password=pass;Host=localhost;Port=5432;Database=sous-chef;");
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
