@@ -28,7 +28,7 @@ public class AdminModel : PageModel {
 
     public async Task<IActionResult> HandleMigrate() {
         var res = await _migrationService.Migrate();
-        if ((int)res.StatusCode < 300) {
+        if ((int)res.StatusCode >= 300) {
             Console.WriteLine(res.ErrorMessage);
         }
         return Page();

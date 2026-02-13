@@ -19,7 +19,7 @@ public class IndexModel : PageModel {
 
     public async Task OnGet() {
         var res = await _recipeService.ListRecipes(RecipesRequest);
-        if ((int)res.StatusCode <= 300) {
+        if ((int)res.StatusCode < 300) {
             RecipeData = res.Data;
         }
         else {

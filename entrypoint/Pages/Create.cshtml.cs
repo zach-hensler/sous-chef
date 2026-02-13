@@ -63,7 +63,7 @@ public class CreateModel : PageModel {
         }
 
         var res = await _recipeService.GetRecipe(id.Value);
-        if ((int)res.StatusCode > 200 || res.Data == null) {
+        if ((int)res.StatusCode >= 300 || res.Data == null) {
             Console.WriteLine(res.ErrorMessage);
         }
         else {
