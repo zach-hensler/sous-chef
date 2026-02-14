@@ -27,7 +27,8 @@ jobs:
           git config --global user.name ${{ github.actor }}
       - name: build
         run: |
-          docker buildx --platform linux/amd64,linux/arm64/v8 -t sous-chef-image -f Dockerfile .
+          docker buildx create --use
+          docker buildx build --platform linux/amd64,linux/arm64/v8 -t sous-chef-image -f Dockerfile .
           docker save sous-chef-image:latest | gzip > sous-chef-image_${{ inputs.version }}.tar.gz
 #      - name: Create release
 #        env:
