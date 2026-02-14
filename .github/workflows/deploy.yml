@@ -1,16 +1,17 @@
 name: create-release
 run-name: create-release
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version Number for the new release'
-        required: true
-      branch:
-        description: 'Branch to generate release from'
-        required: true
-        default: 'main'
-        # TODO branch selector
+  # for testing changes before merging
+  push:
+#  workflow_dispatch:
+#    inputs:
+#      version:
+#        description: 'Version Number for the new release'
+#        required: true
+#      branch:
+#        description: 'Branch to generate release from'
+#        required: true
+#        default: 'main'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,11 +27,11 @@ jobs:
           git config --global user.name ${{ github.actor }}
       - name: build
         run: |
-          docker build -t sous-chef-image -f Dockerfile .
+          docker buildx --platform linux/amd64,linux/arm64/v8 -t sous-chef-image -f Dockerfile .
           docker save sous-chef-image:latest | gzip > sous-chef-image_${{ inputs.version }}.tar.gz
-      - name: Create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
-        run: |
-          gh release create ${{ inputs.version }} sous-chef-image_${{ inputs.version }}.tar.gz
+#      - name: Create release
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          tag: ${{ github.ref_name }}
+#        run: |
+#          gh release create ${{ inputs.version }} sous-chef-image_${{ inputs.version }}.tar.gz
