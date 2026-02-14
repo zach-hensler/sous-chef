@@ -14,7 +14,7 @@ on:
 #        default: 'main'
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: write
     steps:
@@ -27,8 +27,7 @@ jobs:
           git config --global user.name ${{ github.actor }}
       - name: build
         run: |
-          docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64/v8 -t sous-chef-image -f Dockerfile .
+          docker build -t sous-chef-image -f Dockerfile .
           docker save sous-chef-image:latest | gzip > sous-chef-image_${{ inputs.version }}.tar.gz
 #      - name: Create release
 #        env:
