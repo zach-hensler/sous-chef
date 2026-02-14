@@ -2,9 +2,16 @@
 A kitchen helper with recipe versioning
 ---
 # Missing Features
+## ISSUES
+- can't update tailscale on laptop
+- can't reach pi on tailnet
+  - tailscale serve might work ok, and container just isn't running
+- image built for amd64 instead of arm
+  - sous-chef-app The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+- app doesn't seem to be starting (probably related to above)
+
 ## Current Priorities
 - docker compose for running db and application on pi
-- parameterized db connection string
 - volume storage for db
 - pi deployment w/ tailscale
 - database backups

@@ -1,6 +1,8 @@
 name: create-release
 run-name: create-release
 on:
+#  for testing changes before merging
+#  push:
   workflow_dispatch:
     inputs:
       version:
@@ -10,10 +12,9 @@ on:
         description: 'Branch to generate release from'
         required: true
         default: 'main'
-        # TODO branch selector
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: write
     steps:
