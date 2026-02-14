@@ -3,18 +3,7 @@ A kitchen helper with recipe versioning
 ---
 # Missing Features
 ## ISSUES
-- can't update tailscale on laptop
-- can't reach pi on tailnet
-  - tailscale serve might work ok, and container just isn't running
-- image built for amd64 instead of arm
-  - sous-chef-app The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
-- app doesn't seem to be starting (probably related to above)
-
-## Current Priorities
-- docker compose for running db and application on pi
-- volume storage for db
-- pi deployment w/ tailscale
-- database backups
+- tailscale upgrade failing
 
 ## Secondary Priorities
 - Show avg rating (for latest version?) on home page
@@ -40,6 +29,7 @@ A kitchen helper with recipe versioning
 - ~~Adding Comments with ratings~~
 - ~~Viewing Comments on Recipes~~
 - ~~Creating Docker Image on GH Action~~
+- ~~Able to run image on PI and reach from external device~~
 
 # Tech Debt
 - Better logging
