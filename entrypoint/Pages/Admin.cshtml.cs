@@ -1,7 +1,10 @@
 using System.Text.Json.Serialization;
+using core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using services;
+
+namespace sous_chef.Pages;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum AdminActions {
@@ -9,25 +12,44 @@ public enum AdminActions {
 }
 
 public class AdminModel : PageModel {
-    private readonly MigrationService _migrationService = new MigrationService();
+    public ListErrorsResponse? ErrorRes { get; set; }
 
+    private async Task LoadPageData() {
+        var res = await ErrorService.ListErrors();
+        if ((int)res.StatusCode < 300 && res.Data != null) {
+            ErrorRes = res.Data;
+        }
+        else {
+            Console.WriteLine(res.ErrorMessage);
+        }
+        
+    }
+    public async Task<IActionResult> OnGetAsync() {
+        await LoadPageData();
+        return Page();
+    }
+    
     public async Task<IActionResult> OnPostAsync() {
         foreach (var kvp in Request.Query) {
             if (!Enum.TryParse<AdminActions>(kvp.Key, out var action)) {
                 Console.WriteLine($"Unexpected action: {kvp.Key} = {kvp.Value}");
+                await LoadPageData();
                 return Page();
             }
-            return action switch {
+            var actionResult = action switch {
                 AdminActions.Migrate => await HandleMigrate(),
                 _ => throw new ArgumentOutOfRangeException()
             };
+            await LoadPageData();
+            return actionResult;
         }
 
-        return Page();
+        await LoadPageData();
+        return Redirect("Admin");
     }
 
     public async Task<IActionResult> HandleMigrate() {
-        var res = await _migrationService.Migrate();
+        var res = await MigrationService.Migrate();
         if ((int)res.StatusCode >= 300) {
             Console.WriteLine(res.ErrorMessage);
         }

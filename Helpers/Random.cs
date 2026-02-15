@@ -27,6 +27,15 @@ public static class Rand {
 
             return s;
         }
+
+        public static DateTime Date() {
+            return DateTime.UtcNow
+                .AddMonths(-1*Int(0, 12))
+                .AddDays(-1*Int(0, 12))
+                .AddMinutes(-1*Int(0, 12))
+                .AddSeconds(-1*Int(0, 12))
+                .AddMilliseconds(-1*Int(0, 12));
+        }
     }
 
     public static class Domain {
@@ -54,11 +63,21 @@ public static class Rand {
                     Name = Primitive.String(),
                     Description = Primitive.String(),
                     TimeMinutes = Primitive.Int(),
-                    EffortLevel = EffortLevels.Low
+                    EffortLevel = EffortLevels.Easy
                 },
                 Steps = steps,
                 Ingredients = ingredients
             };
+        }
+
+        public static class Db {
+            public static ErrorHistoryDb ErrorHistoryDb() {
+                return new ErrorHistoryDb {
+                    source = Primitive.String(),
+                    message = Primitive.String(),
+                    occurred_at = Primitive.Date()
+                };
+            }
         }
     }
 }

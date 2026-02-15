@@ -5,11 +5,9 @@ using core.Models;
 
 namespace services;
 
-public class RecipeService(IConnectionFactory connectionFactory) {
-    public async Task<Response<int>> CreateRecipe(CreateRecipeRequest request) {
-        try {
-            await using var conn = connectionFactory.GetConnection();
-            await conn.OpenAsync();
+public static class RecipeService {
+    public static async Task<Response<int>> CreateRecipe(CreateRecipeRequest request) {
+        return await Utils.SafeRun(nameof(CreateRecipe), async (conn) => {
             var transaction = await conn.BeginTransactionAsync();
             var recipeId = await Common.Recipe.Create(request.Recipe, conn);
 
@@ -28,20 +26,12 @@ public class RecipeService(IConnectionFactory connectionFactory) {
             }
 
             await transaction.CommitAsync();
-            await conn.CloseAsync();
-            ;
-
             return new Response<int>(recipeId);
-        }
-        catch (Exception ex) {
-            return new Response<int>(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        });
     }
 
-    public async Task<Response> UpdateRecipe(int versionId, CreateRecipeRequest request) {
-        try {
-            await using var conn = connectionFactory.GetConnection();
-            await conn.OpenAsync();
+    public static async Task<Response> UpdateRecipe(int versionId, CreateRecipeRequest request) {
+        return await Utils.SafeRun(nameof(UpdateRecipe), async (conn) => {
             var transaction = await conn.BeginTransactionAsync();
 
             var version = await Common.RecipeVersion.Get(versionId, conn);
@@ -58,49 +48,28 @@ public class RecipeService(IConnectionFactory connectionFactory) {
             }
 
             await transaction.CommitAsync();
-            await conn.CloseAsync();
-            ;
-
             return new Response();
-        }
-        catch (Exception ex) {
-            return new Response(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        });
     }
 
-    public async Task<Response<RecipeDetails>> GetRecipe(int recipeId) {
-        try {
-            await using var conn = connectionFactory.GetConnection();
-            await conn.OpenAsync();
-
+    public static async Task<Response<RecipeDetails>> GetRecipe(int recipeId) {
+        return await Utils.SafeRun(nameof(GetRecipe), async (conn) => {
             var data = await GetRecipeDetails.Get(recipeId, conn);
 
             return new Response<RecipeDetails>(data);
-        }
-        catch (Exception ex) {
-            return new Response<RecipeDetails>(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        });
     }
 
-    public async Task<Response> DeleteRecipe(int recipeId) {
-        try {
-            await using var conn = connectionFactory.GetConnection();
-            await conn.OpenAsync();
-
+    public static async Task<Response> DeleteRecipe(int recipeId) {
+        return await Utils.SafeRun(nameof(DeleteRecipe), async (conn) => {
             await Common.Recipe.DeleteCascade(recipeId, conn);
 
             return new Response();
-        }
-        catch (Exception ex) {
-            return new Response(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        });
     }
 
-    public async Task<Response<ListRecipesResponse>> ListRecipes(ListRecipesRequest request) {
-        try {
-            await using var conn = connectionFactory.GetConnection();
-            await conn.OpenAsync();
-
+    public static async Task<Response<ListRecipesResponse>> ListRecipes(ListRecipesRequest request) {
+        return await Utils.SafeRun(nameof(ListRecipes), async (conn) => {
             var total = await RecipeData.CountRecipes(conn);
             var recipes = await RecipeData.ListRecipes(request.Count, request.Offset, conn);
 
@@ -115,17 +84,11 @@ public class RecipeService(IConnectionFactory connectionFactory) {
                         })
                         .ToList()
             });
-        }
-        catch (Exception ex) {
-            return new Response<ListRecipesResponse>(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        });
     }
 
-    public async Task<Response> AddComment(CreateRecipeCommentDb request) {
-        try {
-            await using var conn = connectionFactory.GetConnection();
-            await conn.OpenAsync();
-
+    public static async Task<Response> AddComment(CreateRecipeCommentDb request) {
+        return await Utils.SafeRun(nameof(AddComment), async (conn) => {
             if (!await Common.RecipeVersion.Exists(request.VersionId, conn)) {
                 return new Response(HttpStatusCode.NotFound, $"Version '{request.VersionId}' not found");
             }
@@ -133,17 +96,11 @@ public class RecipeService(IConnectionFactory connectionFactory) {
             await Common.RecipeComments.Create(request, conn);
 
             return new Response();
-        }
-        catch (Exception ex) {
-            return new Response(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        });
     }
 
-    public async Task<Response<List<GetCommentsResponse>>> GetComments(int versionId) {
-        try {
-            await using var conn = connectionFactory.GetConnection();
-            await conn.OpenAsync();
-
+    public static async Task<Response<List<GetCommentsResponse>>> GetComments(int versionId) {
+        return await Utils.SafeRun(nameof(GetComments), async (conn) => {
             if (!await Common.RecipeVersion.Exists(versionId, conn)) {
                 return new Response<List<GetCommentsResponse>>(
                     HttpStatusCode.NotFound, $"Version '{versionId}' not found");
@@ -158,9 +115,6 @@ public class RecipeService(IConnectionFactory connectionFactory) {
                         CreatedAt = c.created_at
                     })
                     .ToList());
-        }
-        catch (Exception ex) {
-            return new Response<List<GetCommentsResponse>>(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        });
     }
 }

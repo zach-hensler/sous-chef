@@ -18,7 +18,6 @@ public record NewComment {
 }
 
 public class Recipe : PageModel {
-    private readonly RecipeService _recipeService = new(new ConnectionFactory());
     public RecipeDetails? Details { get; set; }
     public List<GetCommentsResponse> Comments { get; set; } = [];
 
@@ -31,7 +30,7 @@ public class Recipe : PageModel {
     public int Id { get; set; }
 
     private async Task LoadPageData(int id) {
-        var res = await _recipeService.GetRecipe(id);
+        var res = await RecipeService.GetRecipe(id);
         if ((int)res.StatusCode < 300 && res.Data != null) {
             Details = res.Data;
         }
@@ -40,7 +39,7 @@ public class Recipe : PageModel {
             return;
         }
 
-        var commentRes = await _recipeService.GetComments(id);
+        var commentRes = await RecipeService.GetComments(id);
         if ((int)res.StatusCode < 300 && commentRes.Data != null) {
             Comments = commentRes.Data;
         }
@@ -74,7 +73,7 @@ public class Recipe : PageModel {
             return Page();
         }
 
-        var res = await _recipeService.AddComment(new CreateRecipeCommentDb {
+        var res = await RecipeService.AddComment(new CreateRecipeCommentDb {
             VersionId = id,
             Rating = NewComment.Rating,
             Comment = NewComment.Comment,
@@ -87,7 +86,7 @@ public class Recipe : PageModel {
     }
 
     public async Task<IActionResult> HandleDelete(int id) {
-        var res = await _recipeService.DeleteRecipe(id);
+        var res = await RecipeService.DeleteRecipe(id);
         if ((int)res.StatusCode >= 300) {
             Console.WriteLine(res.ErrorMessage);
         }

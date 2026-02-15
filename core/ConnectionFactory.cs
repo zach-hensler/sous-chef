@@ -3,11 +3,7 @@ using Npgsql;
 
 namespace core;
 
-public interface IConnectionFactory {
-    public DbConnection GetConnection();
-}
-
-public class ConnectionFactory(bool testEnv = false) : IConnectionFactory {
+public class ConnectionFactory(bool testEnv = false) {
     private readonly string? _connectionString = Environment.GetEnvironmentVariable(EnvironmentVariables.ConnectionString);
 
     public DbConnection GetConnection() {
