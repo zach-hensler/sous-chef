@@ -6,16 +6,27 @@ A kitchen helper with recipe versioning
 - tailscale upgrade failing
 
 # Current Priorities
-- UI review/updates
-- Better Error Handling
+- Recipe Versions
+  - Create New Version
+  - Version Selector on Details Page
+  - Version Comparison View
 
-## Secondary Priorities
+## Backlog
+- UI review/updates
+  - Home Feed
+  - Modals
+  - Edit Page
+- Additional Sorts on Home Feed
 - Show avg rating (for latest version?) on home page
 - Recipe drafts
-  - it's scary spending 10 minutes typing it all out and worrying that an error might happen
-  - de-prioritized because editing helps fill this gap
-- Create new recipe versions
-- Admin Panel
+- Recipe Searching
+  - By name, description, and ingredients
+- Uploading image for a recipe
+  - Should be automatically scaled down before saving image
+- Build pipeline fixes
+  - Include commit messages of commits within the release
+  - Select major/minor and generate next version number instead of making user enter number manually
+    - Or use commit prefixes (would make it easier to remember what all was changed)
 
 ## Completed Features
 - ~~Create New Recipes~~
@@ -33,6 +44,8 @@ A kitchen helper with recipe versioning
 - ~~Creating Docker Image on GH Action~~
 - ~~Able to run image on PI and reach from external device~~
 - ~~Rename EffortLevels from (Low, Medium, High) -> (Easy, Medium, Hard)~~
+- ~~Error History log on Admin Page~~
+- ~~Tmux on Server for session management~~
 
 # Tech Debt
 - Better logging
