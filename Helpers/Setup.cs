@@ -5,7 +5,7 @@ using services;
 namespace Helpers;
 
 public static class Setup {
-    public static async Task<IConnectionFactory> GetConnectionFactory() {
+    public static async Task<ConnectionFactory> ResetAndGetDatabase() {
         Environment.SetEnvironmentVariable(
             EnvironmentVariables.ConnectionString,
             "User ID=test-user;Password=test-pass;Host=localhost;Port=5433;Database=tests;");
@@ -17,7 +17,11 @@ public static class Setup {
             DROP SCHEMA public CASCADE;
             CREATE SCHEMA public;
             """);
-        await new MigrationService().Migrate(true);
-        return connFactory;
+        await conn.CloseAsync();
+        var migrationRes = await MigrationService.Migrate(true);
+        return
+            !string.IsNullOrWhiteSpace(migrationRes.ErrorMessage)
+                ? throw new Exception(migrationRes.ErrorMessage)
+                : connFactory;
     }
 }

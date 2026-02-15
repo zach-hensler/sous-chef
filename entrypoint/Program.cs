@@ -1,4 +1,4 @@
-using core;using program;
+using core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +30,5 @@ app.MapRazorPages()
 app.UseRouting();
 
 app.UseAuthorization();
-
-new Controllers(app).Register();
 
 app.Run();

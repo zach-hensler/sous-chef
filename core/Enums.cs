@@ -4,7 +4,7 @@ namespace core;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum EffortLevels {
-    Low,
+    Easy,
     Medium,
-    High
+    Hard
 }

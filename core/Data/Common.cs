@@ -186,10 +186,24 @@ public static class Common {
                 .ToList();
         }
     }
+
+    public static class ErrorHistory {
+        public static async Task Add(ErrorHistoryDb errorHistory, DbConnection conn) {
+            await conn.ExecuteAsync(
+                "INSERT INTO error_history (source, message, occurred_at) VALUES (@source, @message, @occurred_at)",
+                new { errorHistory.source, errorHistory.message, errorHistory.occurred_at });
+        }
+
+        public static async Task<int> Count(DbConnection conn) {
+            return await conn.QuerySingleAsync<int>("SELECT count(*) FROM error_history");
+        }
+
+        public static async Task<List<ErrorHistoryDb>> List(int offset, int count, DbConnection conn) {
+            return
+                (await conn.QueryAsync<ErrorHistoryDb>(
+                "SELECT * FROM error_history ORDER BY occurred_at DESC LIMIT @count OFFSET @offset",
+                new { count, offset }))
+                .ToList();
+        }
+    }
 }
-
-
-
-
-
-

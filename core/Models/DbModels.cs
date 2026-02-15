@@ -39,3 +39,19 @@ public record RecipeIngredientDb {
     public required float quantity { get; init; }
     public required string unit { get; init; }
 }
+
+public record ErrorHistoryDb {
+    public required string source { get; init; }
+    public required string message { get; init; }
+    public required DateTime occurred_at { get; init; }
+    public virtual bool Equals(ErrorHistoryDb? other) {
+        return
+            source == other?.source &&
+            message == other.message &&
+            occurred_at.ToString() == other.occurred_at.ToString();
+    }
+
+    public override int GetHashCode() {
+        return HashCode.Combine(source, message, occurred_at);
+    }
+}

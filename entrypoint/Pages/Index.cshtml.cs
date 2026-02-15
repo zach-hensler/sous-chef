@@ -7,8 +7,6 @@ using services;
 namespace sous_chef.Pages;
 
 public class IndexModel : PageModel {
-    private RecipeService _recipeService = new(new ConnectionFactory());
-
     public (HttpStatusCode, string)? Error { get; set; }
     
     public ListRecipesResponse? RecipeData { get; set; }
@@ -18,7 +16,7 @@ public class IndexModel : PageModel {
     };
 
     public async Task OnGet() {
-        var res = await _recipeService.ListRecipes(RecipesRequest);
+        var res = await RecipeService.ListRecipes(RecipesRequest);
         if ((int)res.StatusCode < 300) {
             RecipeData = res.Data;
         }

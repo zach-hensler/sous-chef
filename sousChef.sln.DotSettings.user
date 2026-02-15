@@ -9,5 +9,6 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=27e5073e_002De28b_002D4133_002D8d78_002D069cdeb90b53/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ShouldCreateNewRecipe" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::B827F09B-A3F6-4061-94CC-792F9A209B0C::net10.0::ServiceTests.RecipeServiceTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79E163E8-620D-410A-A407-1A57A9800670::net10.0::DataTests.ErrorHistory.ShouldAddErrorsToHistory&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

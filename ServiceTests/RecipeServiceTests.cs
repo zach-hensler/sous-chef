@@ -7,14 +7,12 @@ namespace ServiceTests;
 public class RecipeServiceTests {
     [Fact]
     public async Task ShouldCreateNewRecipe() {
-        var conn = await Setup.GetConnectionFactory();
-        var recipeService = new RecipeService(conn);
-
+        _ = await Setup.ResetAndGetDatabase();
         var requested = Rand.Domain.CreateRecipeRequest();
-        var createRes = await recipeService.CreateRecipe(requested);
+        var createRes = await RecipeService.CreateRecipe(requested);
         Assert.Empty(createRes.ErrorMessage);
 
-        var storedRes = await recipeService.GetRecipe(createRes.Data);
+        var storedRes = await RecipeService.GetRecipe(createRes.Data);
         Assert.Empty(storedRes.ErrorMessage);
         Assert.NotNull(storedRes.Data);
         
@@ -38,15 +36,13 @@ public class RecipeServiceTests {
     
     [Fact]
     public async Task ShouldUpdateRecipe() {
-        var conn = await Setup.GetConnectionFactory();
-        var recipeService = new RecipeService(conn);
-
-        var createRes = await recipeService.CreateRecipe(Rand.Domain.CreateRecipeRequest());
+        _ = await Setup.ResetAndGetDatabase();
+        var createRes = await RecipeService.CreateRecipe(Rand.Domain.CreateRecipeRequest());
         Assert.Empty(createRes.ErrorMessage);
         
         var updated = Rand.Domain.CreateRecipeRequest();
-        await recipeService.UpdateRecipe(createRes.Data, updated);
-        var storedRes = await recipeService.GetRecipe(createRes.Data);
+        await RecipeService.UpdateRecipe(createRes.Data, updated);
+        var storedRes = await RecipeService.GetRecipe(createRes.Data);
         Assert.Empty(storedRes.ErrorMessage);
         Assert.NotNull(storedRes.Data);
         

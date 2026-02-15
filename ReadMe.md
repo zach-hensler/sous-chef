@@ -5,14 +5,16 @@ A kitchen helper with recipe versioning
 ## ISSUES
 - tailscale upgrade failing
 
+# Current Priorities
+- UI review/updates
+- Better Error Handling
+
 ## Secondary Priorities
 - Show avg rating (for latest version?) on home page
 - Recipe drafts
   - it's scary spending 10 minutes typing it all out and worrying that an error might happen
   - de-prioritized because editing helps fill this gap
 - Create new recipe versions
-- Rename EffortLevels from (Low, Medium, High) -> (Easy, Medium, Hard)
-- Better Error Handling
 - Admin Panel
 
 ## Completed Features
@@ -30,6 +32,7 @@ A kitchen helper with recipe versioning
 - ~~Viewing Comments on Recipes~~
 - ~~Creating Docker Image on GH Action~~
 - ~~Able to run image on PI and reach from external device~~
+- ~~Rename EffortLevels from (Low, Medium, High) -> (Easy, Medium, Hard)~~
 
 # Tech Debt
 - Better logging

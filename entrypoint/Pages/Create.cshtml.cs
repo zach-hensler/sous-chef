@@ -29,8 +29,6 @@ public enum CreateActions {
 }
 
 public class CreateModel : PageModel {
-    private RecipeService _recipeService = new(new ConnectionFactory());
-
     public record Recipe {
         public required string Name { get; init; }
         public required string Description { get; init; }
@@ -62,7 +60,7 @@ public class CreateModel : PageModel {
             return Page();
         }
 
-        var res = await _recipeService.GetRecipe(id.Value);
+        var res = await RecipeService.GetRecipe(id.Value);
         if ((int)res.StatusCode >= 300 || res.Data == null) {
             Console.WriteLine(res.ErrorMessage);
         }
@@ -191,12 +189,12 @@ public class CreateModel : PageModel {
         Response? response;
         int redirectId;
         if (versionId == null) {
-            var createRes = await _recipeService.CreateRecipe(createRequest);
+            var createRes = await RecipeService.CreateRecipe(createRequest);
             redirectId = createRes.Data;
             response = createRes;
         }
         else {
-            response = await _recipeService.UpdateRecipe(versionId.Value, createRequest);
+            response = await RecipeService.UpdateRecipe(versionId.Value, createRequest);
             redirectId = (int)versionId;
         }
 
