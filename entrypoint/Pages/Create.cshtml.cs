@@ -31,8 +31,9 @@ public enum CreateActions {
 public class CreateModel : PageModel {
     public record Recipe {
         public required string Name { get; init; }
-        public required string Description { get; init; }
+        public string? Description { get; init; }
         public required EffortLevels EffortLevel { get; init; }
+        public required Categories Category { get; init; } = Categories.Uncategorized;
         public required int Time { get; init; }
 }
     
@@ -69,6 +70,7 @@ public class CreateModel : PageModel {
                 Name = res.Data!.Name,
                 Description = res.Data.Description,
                 EffortLevel = res.Data.EffortLevel,
+                Category = res.Data.Category,
                 Time = res.Data.Time
             };
             RecipeIngredients =
@@ -166,7 +168,8 @@ public class CreateModel : PageModel {
                 Name = RecipeMetadata.Name,
                 Description = RecipeMetadata.Description,
                 TimeMinutes = RecipeMetadata.Time,
-                EffortLevel = RecipeMetadata.EffortLevel
+                EffortLevel = RecipeMetadata.EffortLevel,
+                Category = RecipeMetadata.Category
             },
             Steps =
                 RecipeSteps

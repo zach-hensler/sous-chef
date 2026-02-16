@@ -1,13 +1,12 @@
 using System.Data.Common;
-using core.Models;
-using Dapper;
 
 namespace core.Data;
 
 public record RecipeDetails {
     public required string Name { get; init; }
-    public required string Description { get; init; }
+    public string? Description { get; init; }
     public required EffortLevels EffortLevel { get; init; }
+    public required Categories Category { get; init; }
     public required int Time { get; init; }
     public required string VersionNumber { get; init; }
     public required List<Step> Steps { get; init; }
@@ -37,6 +36,7 @@ public static class GetRecipeDetails {
             Name = recipe.name,
             Description = recipe.description,
             EffortLevel = recipe.effort_level,
+            Category = recipe.category,
             Time = recipe.time_minutes,
             VersionNumber = latestVersion.version_number,
             Steps =

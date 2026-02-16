@@ -2,9 +2,10 @@ namespace core.Models;
 
 public record CreateRecipeDb {
     public required string Name { get; init; }
-    public required string Description { get; init; }
+    public string? Description { get; init; }
     public required int TimeMinutes { get; init; }
     public required EffortLevels EffortLevel { get; init; }
+    public required Categories Category { get; init; }
 }
 
 public record CreateRecipeVersionDb {

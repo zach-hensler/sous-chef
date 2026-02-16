@@ -16,22 +16,32 @@ public static class Common {
             return await conn.ExecuteScalarAsync<int>(
                 """
                 INSERT INTO recipes
-                    (name, description, time_minutes, effort_level)
+                    (name, description, time_minutes, effort_level, category)
                 VALUES
-                    (@Name, @Description, @TimeMinutes, @EffortLevel)
+                    (@Name, @Description, @TimeMinutes, @EffortLevel, @category)
                 RETURNING recipe_id;
                 """,
-                new { recipe.Name, recipe.Description, recipe.TimeMinutes, EffortLevel = recipe.EffortLevel.ToString() });
+                new {
+                    recipe.Name,
+                    recipe.Description,
+                    recipe.TimeMinutes,
+                    EffortLevel = recipe.EffortLevel.ToString(),
+                    Categories = recipe.Category.ToString()
+                });
         }
 
         public static async Task Update(int id, CreateRecipeDb recipe, DbConnection conn) {
             await conn.ExecuteAsync(
                 """
                 UPDATE recipes
-                SET name = @Name, description = @Description, time_minutes = @TimeMinutes, effort_level = @EffortLevel
+                SET name = @Name,
+                    description = @Description,
+                    time_minutes = @TimeMinutes,
+                    effort_level = @EffortLevel,
+                    category = @Category
                 WHERE recipe_id = @id;
                 """,
-                new { id, recipe.Name, recipe.Description, recipe.EffortLevel, recipe.TimeMinutes });
+                new { id, recipe.Name, recipe.Description, recipe.EffortLevel, recipe.TimeMinutes, recipe.Category });
         }
 
         public static async Task DeleteCascade(int recipeId, DbConnection conn) {

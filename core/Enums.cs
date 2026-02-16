@@ -8,3 +8,12 @@ public enum EffortLevels {
     Medium,
     Hard
 }
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum Categories {
+    Uncategorized,
+    Entree,
+    Side,
+    Drink,
+    Desert
+}

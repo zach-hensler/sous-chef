@@ -13,14 +13,23 @@
         <h1>Edit Version Id: @Model.VersionId</h1>
     }
     <form method="post">
-        <h2>Metadata</h2>
         <div>
             <label for="name">Recipe Name: </label>
             <input asp-for="RecipeMetadata.Name" id="name" required/>
         </div>
         <div>
             <label for="description">Description: </label>
-            <input asp-for="RecipeMetadata.Description" id="description" required/>
+            <input asp-for="RecipeMetadata.Description" id="description"/>
+        </div>
+        <div>
+            <label for="category">Category: </label>
+            <select asp-for="RecipeMetadata.Category" id="category">
+                <option value="@Categories.Uncategorized">@Categories.Uncategorized</option>
+                <option value="@Categories.Entree">@Categories.Entree</option>
+                <option value="@Categories.Side">@Categories.Side</option>
+                <option value="@Categories.Drink">@Categories.Drink</option>
+                <option value="@Categories.Desert">@Categories.Desert</option>
+            </select>
         </div>
         <div>
             <label for="effortLevel">Effort Level: </label>

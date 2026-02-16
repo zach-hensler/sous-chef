@@ -63,7 +63,8 @@ public static class Rand {
                     Name = Primitive.String(),
                     Description = Primitive.String(),
                     TimeMinutes = Primitive.Int(),
-                    EffortLevel = EffortLevels.Easy
+                    EffortLevel = EffortLevels.Easy,
+                    Category = Categories.Uncategorized
                 },
                 Steps = steps,
                 Ingredients = ingredients

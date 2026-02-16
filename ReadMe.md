@@ -16,7 +16,8 @@ A kitchen helper with recipe versioning
   - Home Feed
   - Modals
   - Edit Page
-- Additional Sorts on Home Feed
+- Filters on Home Feed
+  - By: Star Rating, Category, Effort Level
 - Show avg rating (for latest version?) on home page
 - Recipe drafts
 - Recipe Searching
@@ -27,6 +28,8 @@ A kitchen helper with recipe versioning
   - Include commit messages of commits within the release
   - Select major/minor and generate next version number instead of making user enter number manually
     - Or use commit prefixes (would make it easier to remember what all was changed)
+- Grocery List
+  - adding recipe to grocery list
 
 ## Completed Features
 - ~~Create New Recipes~~

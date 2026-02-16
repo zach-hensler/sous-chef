@@ -1,5 +1,4 @@
 using System.Net;
-using core;
 using core.Data;
 using core.Models;
 
@@ -80,7 +79,8 @@ public static class RecipeService {
                             Id = r.recipe_id,
                             Name = r.name,
                             Description = r.description,
-                            EffortLevel = r.effort_level
+                            EffortLevel = r.effort_level,
+                            Category = r.category
                         })
                         .ToList()
             });

@@ -3,9 +3,10 @@ namespace core.Models;
 public record RecipeDb {
     public required int recipe_id { get; init; }
     public required string name { get; init; }
-    public required string description { get; init; }
+    public string? description { get; init; }
     public required int time_minutes { get; init; }
     public required EffortLevels effort_level { get; init; }
+    public required Categories category { get; init; }
 }
 
 public record RecipeVersionDb {
