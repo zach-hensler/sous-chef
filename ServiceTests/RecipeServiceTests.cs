@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using core.Models;
+using Xunit;
 using Helpers;
 using services;
 
@@ -62,5 +63,25 @@ public class RecipeServiceTests {
             Assert.Equal(step.Instruction, storedRes.Data.Steps[stepCounter].Instruction);
             stepCounter++;
         }
+    }
+
+    [Fact]
+    public async Task ShouldLeaveComments() {
+        _ = await Setup.ResetAndGetDatabase();
+        var createRes = await RecipeService.CreateRecipe(Rand.Domain.CreateRecipeRequest());
+
+        const int commentCount = 4;
+        for (var i = 0; i < 4; i++) {
+            await RecipeService.AddComment(new CreateRecipeCommentDb {
+                VersionId = createRes.Data,
+                Rating = Rand.Primitive.Int(0, 5),
+                Comment = Rand.Primitive.String(),
+                CreatedAt = Rand.Primitive.Date()
+            });
+        }
+
+        var comments = await RecipeService.GetComments(createRes.Data);
+        Assert.Empty(comments.ErrorMessage);
+        Assert.Equal(commentCount, comments.Data?.Count);
     }
 }

@@ -18,7 +18,7 @@ public static class Common {
                 INSERT INTO recipes
                     (name, description, time_minutes, effort_level, category)
                 VALUES
-                    (@Name, @Description, @TimeMinutes, @EffortLevel, @category)
+                    (@Name, @Description, @TimeMinutes, @EffortLevel, @Category)
                 RETURNING recipe_id;
                 """,
                 new {
@@ -26,7 +26,7 @@ public static class Common {
                     recipe.Description,
                     recipe.TimeMinutes,
                     EffortLevel = recipe.EffortLevel.ToString(),
-                    Categories = recipe.Category.ToString()
+                    Category = recipe.Category.ToString()
                 });
         }
 
