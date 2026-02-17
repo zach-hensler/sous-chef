@@ -2,13 +2,14 @@
     width: 100%;
 }
 
-.recipe-list-header {
+.recipe-list-item {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    flex-wrap: wrap-reverse;
 }
 
-.recipe-list-header-name {
+.recipe-list-text {
     min-width: 60%;
 }
 
@@ -20,9 +21,11 @@
 }
 
 .recipe-list-chip {
+    font-size: small;
     margin: var(--extra-small);
     padding: var(--extra-small);
     height: fit-content;
     border-radius: var(--border-radius);
     border: 1px solid black;
+    background-color: var(--bg-color-darker);
 }

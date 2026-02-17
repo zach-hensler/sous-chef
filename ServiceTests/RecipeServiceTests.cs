@@ -42,7 +42,7 @@ public class RecipeServiceTests {
         Assert.Empty(createRes.ErrorMessage);
         
         var updated = Rand.Domain.CreateRecipeRequest();
-        await RecipeService.UpdateRecipe(createRes.Data, updated);
+        await RecipeService.UpdateRecipeVersion(createRes.Data, updated);
         var storedRes = await RecipeService.GetRecipe(createRes.Data);
         Assert.Empty(storedRes.ErrorMessage);
         Assert.NotNull(storedRes.Data);
@@ -63,6 +63,27 @@ public class RecipeServiceTests {
             Assert.Equal(step.Instruction, storedRes.Data.Steps[stepCounter].Instruction);
             stepCounter++;
         }
+    }
+
+    [Fact]
+    public async Task ShouldCreateMajorRecipeVersion() {
+        _ = await Setup.ResetAndGetDatabase();
+        var recipe = Rand.Domain.CreateRecipeRequest();
+        var createRecipeRes = await RecipeService.CreateRecipe(recipe);
+        Assert.Empty(createRecipeRes.ErrorMessage);
+
+        var newVersionRes = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
+            PreviousVersionId = createRecipeRes.Data,
+            VersionType = VersionType.Major,
+            Recipe = recipe.Recipe,
+            Steps = recipe.Steps,
+            Ingredients = recipe.Ingredients
+        });
+        Assert.Empty(newVersionRes.ErrorMessage);
+
+        var latest = await RecipeService.GetRecipe(createRecipeRes.Data);
+        Assert.Empty(latest.ErrorMessage);
+        Assert.Equal("2.0", latest.Data?.VersionNumber);
     }
 
     [Fact]

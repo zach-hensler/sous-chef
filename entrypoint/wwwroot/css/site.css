@@ -1,18 +1,21 @@
 :root {
   /* colors */
   --font-color: #000;
-  --main-bg-color: #FEF9FF;
-  --darker-bg-color: #9F9FED;
-  --darkest-bg-color: #736CED;
-  --accent-color: #D4C1EC;
-  --warning-color: #F2DFD7;
-  --warning-darker: #C9AAA3;
+  --bg-color: hsl(263.3, 32.1%, 93%);
+  --bg-color-darker: hsl(263.3, 32.1%, 88%);
+  --bg-color-darkest: hsl(263.3, 32.1%, 86%);
+
+  --accent-color: hsl(220, 40%, 80.2%);
+  --accent-color-darker: hsl(220, 40%, 70.2%);
+  --warning-color: hsl(339.3, 60.9%, 76.3%);
+  --warning-darker: hsl(339.3, 60.9%, 70%);
 
   /* spacing - each level should double */
   --extra-small: 5px;
   --small: 10px;
   --medium: 20px;
   --large: 40px;
+  --extra-large: 80px;
   
   --border-radius: 5px;
 }
@@ -20,7 +23,7 @@
 body {
   margin: 0 0 var(--large) 0;
   color: var(--font-color);
-  background-color: var(--main-bg-color);
+  background-color: var(--bg-color);
   font-family: Roboto, sans-serif;
 }
 
@@ -37,27 +40,8 @@ h3 {
 }
 
 hr {
-  margin: var(--small) 0;
-  color: var(--accent-color);
-}
-
-.nav-container {
-  background-color: var(--darker-bg-color);
-  color: var(--font-color);
-
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  border-bottom: 1px solid var(--darkest-bg-color);
-}
-
-.nav-item {
-  color: var(--font-color);
-  padding: var(--medium);
-  text-decoration: underline;
-}
-.nav-item:hover {
-  background-color: var(--darkest-bg-color);
+  margin: var(--medium) 0;
+  color: var(--bg-color-darker);
 }
 
 main {
@@ -65,13 +49,40 @@ main {
   margin: auto;
 }
 
-button {
+dialog {
+  padding: var(--medium) var(--extra-large);
   border-radius: var(--border-radius);
-  padding: var(--extra-small) var(--small);
-  height: var(--large);
+  border: solid 2px var(--bg-color-darkest);
+  box-shadow: 0 var(--medium) var(--large) var(--bg-color-darkest);
 }
 
-select, input {
+a {
+  text-decoration: none;
+  color: var(--font-color);
+}
+
+a:hover {
+  text-decoration: underline;  
+}
+
+button, select, input, textarea {
+  background-color: var(--bg-color-darker);
+  border: 3px solid var(--bg-color-darkest);
+  text-decoration: none;
+}
+
+button:hover, select:hover, input:hover, textarea:hover {
+  background-color: var(--bg-color-darkest);
+  text-decoration: underline;
+}
+
+button {
+  border-radius: var(--border-radius);
+  padding: var(--small) var(--medium);
+  font-size: large;
+}
+
+select, input, textarea {
   border-radius: var(--border-radius);
   margin: var(--small) 0;
   padding: var(--extra-small) var(--small);
@@ -85,11 +96,11 @@ textarea {
 }
 
 .primary {
-  background-color: var(--darker-bg-color);
+  background-color: var(--accent-color);
 }
 
 .primary:hover {
-  background-color: var(--darkest-bg-color);
+  background-color: var(--accent-color-darker);
 }
 
 .warning {
@@ -98,4 +109,22 @@ textarea {
 
 .warning:hover {
   background-color: var(--warning-darker);
+}
+
+.nav-container {
+  background-color: var(--bg-color-darker);
+  color: var(--font-color);
+
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-bottom: solid 2px var(--bg-color-darkest);
+  box-shadow: 0 var(--extra-small) var(--small) var(--bg-color-darker);
+}
+
+.nav-item {
+  padding: var(--medium);
+}
+.nav-item:hover {
+  background-color: var(--bg-color-darkest);
 }

@@ -29,8 +29,36 @@ public static class RecipeService {
         });
     }
 
-    public static async Task<Response> UpdateRecipe(int versionId, CreateRecipeRequest request) {
-        return await Utils.SafeRun(nameof(UpdateRecipe), async (conn) => {
+    public static async Task<Response<int>> CreateRecipeVersion(CreateRecipeVersionRequest request) {
+        return await Utils.SafeRun(nameof(CreateRecipe), async (conn) => {
+            var transaction = await conn.BeginTransactionAsync();
+            
+            var recipeId = (await Common.RecipeVersion.Get(request.PreviousVersionId, conn)).recipe_id;
+            await Common.Recipe.Update(recipeId, request.Recipe, conn);
+            var latestVersion = await Common.RecipeVersion.GetLatest(request.PreviousVersionId, conn);
+
+            var version = await Common.RecipeVersion.Create(new CreateRecipeVersionDb {
+                RecipeId = recipeId,
+                VersionNumber = Utils.Domain.IncrementRecipeVersion(latestVersion.version_number, request.VersionType),
+                CreatedAt = DateTime.UtcNow
+            }, conn);
+
+            for (var i = 0; i < request.Steps.Count; i++) {
+                await Common.RecipeSteps.Create(request.Steps[i], i + 1, version, conn);
+            }
+
+            foreach (var ingredient in request.Ingredients) {
+                await Common.RecipeIngredients.Create(ingredient, version, conn);
+            }
+
+            await transaction.CommitAsync();
+            return new Response<int>(version);
+        });
+        
+    }
+
+    public static async Task<Response> UpdateRecipeVersion(int versionId, CreateRecipeRequest request) {
+        return await Utils.SafeRun(nameof(UpdateRecipeVersion), async (conn) => {
             var transaction = await conn.BeginTransactionAsync();
 
             var version = await Common.RecipeVersion.Get(versionId, conn);

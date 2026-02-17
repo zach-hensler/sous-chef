@@ -3,14 +3,26 @@
 @model CreateModel
 @{
     ViewData["Title"] = "Create New Recipe";
+    const string saveDialog = "saveDialog";
 }
+
+<script>
+    function OpenSaveDialog() {
+        const dialog = document.getElementById("@saveDialog")
+        dialog.showModal();
+    }
+    function CloseSaveDialog() {
+        const dialog = document.getElementById("@saveDialog")
+        dialog.close();
+    }
+</script>
 
 <div>
     @if (Model.VersionId == null) {
         <h1>Create New Recipe</h1>
     }
     else {
-        <h1>Edit Version Id: @Model.VersionId</h1>
+        <h1>Edit @Model.RecipeMetadata?.Name @Model.VersionNumber</h1>
     }
     <form method="post">
         <div>
@@ -131,8 +143,31 @@
                 type="submit"
                 value="Add Step"/>
         </div>
-        <div>
-            <input formaction="@Model.GetBaseRoute()?@CreateActions.Submit" type="submit" value="Submit"/>
+        <hr />
+        <div class="submitContainer">
+            <a href="/Index">
+                <button class="submitButton" type="button">Cancel</button>
+            </a>
+            <button class="submitButton primary" onclick="OpenSaveDialog()" type="button">Save</button>
         </div>
+        <dialog id="@saveDialog">
+            <h1>Save changes as:</h1>
+            <hr />
+            <div class="dialog-button-wrapper">
+                <button
+                    formaction="?@CreateActions.SaveAsNewMajorVersion"
+                    class="dialog-button">New Major Version</button>
+                <button
+                    formaction="?@CreateActions.SaveAsNewMinorVersion"
+                    class="dialog-button primary">New Minor Version</button>
+                <button
+                    formaction="?@CreateActions.SaveExisting"
+                    class="dialog-button">Update Current Version</button>
+                <button
+                    class="dialog-button"
+                    type="button"
+                    onclick="CloseSaveDialog()">Close</button>
+            </div>
+        </dialog>
     </form>
 </div>

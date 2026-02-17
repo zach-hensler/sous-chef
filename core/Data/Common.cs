@@ -81,7 +81,7 @@ public static class Common {
                 SELECT *
                 FROM recipe_versions
                 WHERE recipe_id = @recipeId
-                ORDER BY created_at
+                ORDER BY created_at DESC
                 LIMIT 1;
                 """,
                 new { recipeId });

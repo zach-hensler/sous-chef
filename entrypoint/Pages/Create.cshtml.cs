@@ -10,16 +10,52 @@ public record ViewIngedient {
     public required string Name { get; init; }
     public required float Quantity { get; init; }
     public string? Unit { get; init; }
+
+    public CreateRecipeIngredientDb ToIngredientDb() {
+        return new CreateRecipeIngredientDb {
+            Name = Name,
+            Note = "",
+            Quantity = Quantity,
+            Unit = Unit
+        };
+    }
 }
 
 public record ViewStep {
     public required string Name { get; init; }
     public required string Instruction { get; init; }
+
+    public CreateRecipeStepDb ToStepDb() {
+        return new CreateRecipeStepDb {
+            Name = Name,
+            Instruction = Instruction
+        };
+    }
+}
+
+public record ViewRecipe {
+    public required string Name { get; init; }
+    public string? Description { get; init; }
+    public required EffortLevels EffortLevel { get; init; }
+    public required Categories Category { get; init; } = Categories.Uncategorized;
+    public required int Time { get; init; }
+
+    public CreateRecipeDb ToRecipeDb() {
+        return new CreateRecipeDb {
+            Name = Name,
+            Description = Description,
+            TimeMinutes = Time,
+            EffortLevel = EffortLevel,
+            Category = Category
+        };
+    }
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum CreateActions {
-    Submit,
+    SaveExisting,
+    SaveAsNewMajorVersion,
+    SaveAsNewMinorVersion,
     NewIngredient,
     RemoveIngredient,
     NewStep,
@@ -29,22 +65,13 @@ public enum CreateActions {
 }
 
 public class CreateModel : PageModel {
-    public record Recipe {
-        public required string Name { get; init; }
-        public string? Description { get; init; }
-        public required EffortLevels EffortLevel { get; init; }
-        public required Categories Category { get; init; } = Categories.Uncategorized;
-        public required int Time { get; init; }
-}
-    
-    [BindProperty]
-    public Recipe RecipeMetadata { get; set; }
+    [BindProperty] public ViewRecipe RecipeMetadata { get; set; }
 
-    [BindProperty]
-    public List<ViewIngedient> RecipeIngredients { get; set; } = [];
+    [BindProperty] public List<ViewIngedient> RecipeIngredients { get; set; } = [];
 
     [BindProperty] public List<ViewStep> RecipeSteps { get; set; } = [];
     public int? VersionId { get; set; }
+    [BindProperty] public string? VersionNumber { get; set; }
 
     public string GetBaseRoute() {
         var baseRoute = "/Create";
@@ -55,18 +82,14 @@ public class CreateModel : PageModel {
         return baseRoute;
     }
 
-    public async Task<IActionResult> OnGet(int? id) {
-        VersionId = id;
-        if (id == null) {
-            return Page();
-        }
-
-        var res = await RecipeService.GetRecipe(id.Value);
+    private async Task LoadPageData(int id) {
+        var res = await RecipeService.GetRecipe(id);
         if ((int)res.StatusCode >= 300 || res.Data == null) {
             Console.WriteLine(res.ErrorMessage);
         }
         else {
-            RecipeMetadata = new Recipe {
+            VersionNumber = res.Data.VersionNumber;
+            RecipeMetadata = new ViewRecipe {
                 Name = res.Data!.Name,
                 Description = res.Data.Description,
                 EffortLevel = res.Data.EffortLevel,
@@ -89,11 +112,23 @@ public class CreateModel : PageModel {
                     })
                     .ToList();
         }
+    }
+
+    public async Task<IActionResult> OnGet(int? id) {
+        if (id != null) {
+            VersionId = id;
+            await LoadPageData(id.Value);
+        }
+        
         return Page();
     }
 
     public async Task<IActionResult> OnPostAsync(int? id) {
-        VersionId = id;
+        if (id != null) {
+            VersionId = id;
+            var versionDetails = await RecipeVersionService.GetVersion(id.Value);
+            VersionNumber = versionDetails.Data?.version_number;
+        }
         foreach (var kvp in Request.Query) {
             if (!Enum.TryParse<CreateActions>(kvp.Key, out var action)) {
                 Console.WriteLine($"Unexpected action: {kvp.Key} = {kvp.Value}");
@@ -101,14 +136,16 @@ public class CreateModel : PageModel {
             }
 
             return action switch {
-                CreateActions.Submit => await HandleSubmit(id),
+                CreateActions.SaveExisting => await HandleSaveExisting(id),
+                CreateActions.SaveAsNewMajorVersion => await HandleSaveNewMajorVersion(id),
+                CreateActions.SaveAsNewMinorVersion => await HandleSaveNewMinorVersion(id),
                 CreateActions.NewIngredient => HandleNewIngredient(),
                 CreateActions.NewStep => HandleNewStep(),
                 CreateActions.RemoveIngredient => RemoveIngredient(kvp.Value.ToString()),
                 CreateActions.RemoveStep => RemoveStep(kvp.Value.ToString()),
                 CreateActions.MoveStepDown => MoveStepDown(kvp.Value.ToString()),
                 CreateActions.MoveStepUp => MoveStepUp(kvp.Value.ToString()),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(kvp.Key)
             };
         }
 
@@ -162,31 +199,51 @@ public class CreateModel : PageModel {
         return Page();
     }
 
-    private async Task<IActionResult> HandleSubmit(int? versionId) {
+    private async Task<IActionResult> HandleSaveNewMajorVersion(int? versionId) {
+        if (versionId == null) {
+            return Page();
+        }
+
+        var res = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
+            PreviousVersionId = versionId.Value,
+            VersionType = VersionType.Major,
+            Recipe = RecipeMetadata.ToRecipeDb(),
+            Steps = RecipeSteps.Select(s => s.ToStepDb()).ToList(),
+            Ingredients = RecipeIngredients.Select(i => i.ToIngredientDb()).ToList()
+        });
+        if ((int)res.StatusCode < 300) {
+            return Redirect("/Index");
+        }
+
+        Console.WriteLine($"Unable to create new version, received error '{res.ErrorMessage}'");
+        return Page();
+    }
+    
+    private async Task<IActionResult> HandleSaveNewMinorVersion(int? versionId) {
+        if (versionId == null) {
+            return Page();
+        }
+
+        var res = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
+            PreviousVersionId = versionId.Value,
+            VersionType = VersionType.Minor,
+            Recipe = RecipeMetadata.ToRecipeDb(),
+            Steps = RecipeSteps.Select(s => s.ToStepDb()).ToList(),
+            Ingredients = RecipeIngredients.Select(i => i.ToIngredientDb()).ToList()
+        });
+        if ((int)res.StatusCode < 300) {
+            return Redirect("/Index");
+        }
+
+        Console.WriteLine($"Unable to create new version, received error '{res.ErrorMessage}'");
+        return Page();
+    }
+
+    private async Task<IActionResult> HandleSaveExisting(int? versionId) {
         var createRequest = new CreateRecipeRequest {
-            Recipe = new CreateRecipeDb {
-                Name = RecipeMetadata.Name,
-                Description = RecipeMetadata.Description,
-                TimeMinutes = RecipeMetadata.Time,
-                EffortLevel = RecipeMetadata.EffortLevel,
-                Category = RecipeMetadata.Category
-            },
-            Steps =
-                RecipeSteps
-                    .Select(s => new CreateRecipeStepDb {
-                        Name = s.Name,
-                        Instruction = s.Instruction
-                    })
-                    .ToList(),
-            Ingredients =
-                RecipeIngredients
-                    .Select(i => new CreateRecipeIngredientDb {
-                        Name = i.Name,
-                        Note = "",
-                        Quantity = i.Quantity,
-                        Unit = i.Unit
-                    })
-                    .ToList()
+            Recipe = RecipeMetadata.ToRecipeDb(),
+            Steps = RecipeSteps.Select(s => s.ToStepDb()).ToList(),
+            Ingredients = RecipeIngredients.Select(i => i.ToIngredientDb()).ToList()
         };
 
         Response? response;
@@ -197,12 +254,12 @@ public class CreateModel : PageModel {
             response = createRes;
         }
         else {
-            response = await RecipeService.UpdateRecipe(versionId.Value, createRequest);
-            redirectId = (int)versionId;
+            response = await RecipeService.UpdateRecipeVersion(versionId.Value, createRequest);
+            // redirectId = (int)versionId;
         }
 
         if (response.StatusCode == HttpStatusCode.OK) {
-            return Redirect("/Recipe/" + redirectId);
+            return Redirect("/Index");
         }
 
         Console.WriteLine(response.ErrorMessage);
