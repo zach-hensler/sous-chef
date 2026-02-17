@@ -9,7 +9,7 @@ namespace services;
 public static class Utils {
     public static class Domain {
         public static string IncrementRecipeVersion(string currentVersion, VersionType versionType) {
-            var parts = currentVersion.Trim('v').Split('.');
+            var parts = currentVersion.Split('.');
             if (parts.Length != 2) {
                 throw new Exception($"Unexpected number of version parts, received '{parts.Length}' instead of 2.");
             }
@@ -68,9 +68,9 @@ public static class Utils {
             await conn.OpenAsync();
             await Common.ErrorHistory.Add(
                 new ErrorHistoryDb {
-                    source = sourceWorkflow,
-                    message = message,
-                    occurred_at = DateTime.UtcNow
+                    Source = sourceWorkflow,
+                    Message = message,
+                    OccurredAt = DateTime.UtcNow
                 },
                 conn);
         }

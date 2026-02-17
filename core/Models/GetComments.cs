@@ -8,10 +8,10 @@ public record GetCommentsResponse {
 
     public GetCommentsResponse FromDb(RecipeCommentDb db) {
         return new GetCommentsResponse {
-            CommentId = db.comment_id,
-            Comment = db.comment,
-            Rating = db.rating,
-            CreatedAt = db.created_at
+            CommentId = db.CommentId,
+            Comment = db.Comment,
+            Rating = db.Rating,
+            CreatedAt = db.CreatedAt
         };
     }
 }

@@ -74,9 +74,9 @@ public static class Rand {
         public static class Db {
             public static ErrorHistoryDb ErrorHistoryDb() {
                 return new ErrorHistoryDb {
-                    source = Primitive.String(),
-                    message = Primitive.String(),
-                    occurred_at = Primitive.Date()
+                    Source = Primitive.String(),
+                    Message = Primitive.String(),
+                    OccurredAt = Primitive.Date()
                 };
             }
         }

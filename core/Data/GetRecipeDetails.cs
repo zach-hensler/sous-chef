@@ -29,30 +29,30 @@ public static class GetRecipeDetails {
         var recipe = await Common.Recipe.Get(recipeId, conn);
         var latestVersion = await Common.RecipeVersion.GetLatest(recipeId, conn);
         
-        var steps = await Common.RecipeSteps.Get(latestVersion.version_id, conn);
-        var ingredients = await Common.RecipeIngredients.Get(latestVersion.version_id, conn);
+        var steps = await Common.RecipeSteps.Get(latestVersion.VersionId, conn);
+        var ingredients = await Common.RecipeIngredients.Get(latestVersion.VersionId, conn);
 
         return new RecipeDetails {
-            Name = recipe.name,
-            Description = recipe.description,
-            EffortLevel = recipe.effort_level,
-            Category = recipe.category,
-            Time = recipe.time_minutes,
-            VersionNumber = latestVersion.version_number,
+            Name = recipe.Name,
+            Description = recipe.Description,
+            EffortLevel = recipe.EffortLevel,
+            Category = recipe.Category,
+            Time = recipe.TimeMinutes,
+            VersionNumber = latestVersion.VersionNumber,
             Steps =
                 steps
-                    .OrderBy(s => s.step_number)
+                    .OrderBy(s => s.StepNumber)
                     .Select(s => new RecipeDetails.Step {
-                        Name = s.name,
-                        Instruction = s.instruction
+                        Name = s.Name,
+                        Instruction = s.Instruction
                     })
                     .ToList(),
             Ingredients =
                 ingredients
                     .Select(i => new RecipeDetails.Ingredient {
-                        Name = i.name,
-                        Quantity = i.quantity,
-                        Unit = i.unit
+                        Name = i.Name,
+                        Quantity = i.Quantity,
+                        Unit = i.Unit
                     })
                     .ToList()
         };

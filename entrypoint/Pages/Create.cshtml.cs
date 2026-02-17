@@ -127,7 +127,7 @@ public class CreateModel : PageModel {
         if (id != null) {
             VersionId = id;
             var versionDetails = await RecipeVersionService.GetVersion(id.Value);
-            VersionNumber = versionDetails.Data?.version_number;
+            VersionNumber = versionDetails.Data?.VersionNumber;
         }
         foreach (var kvp in Request.Query) {
             if (!Enum.TryParse<CreateActions>(kvp.Key, out var action)) {

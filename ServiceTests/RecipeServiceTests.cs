@@ -1,4 +1,5 @@
-﻿using core.Models;
+﻿using core.Data;
+using core.Models;
 using Xunit;
 using Helpers;
 using services;
@@ -104,5 +105,42 @@ public class RecipeServiceTests {
         var comments = await RecipeService.GetComments(createRes.Data);
         Assert.Empty(comments.ErrorMessage);
         Assert.Equal(commentCount, comments.Data?.Count);
+    }
+
+    [Fact]
+    public async Task ShouldListRecipes() {
+        var conn = (await Setup.ResetAndGetDatabase()).GetConnection();
+        _ = await RecipeService.CreateRecipe(Rand.Domain.CreateRecipeRequest());
+        _ = await RecipeService.CreateRecipe(Rand.Domain.CreateRecipeRequest());
+        var recipe3Data = Rand.Domain.CreateRecipeRequest();
+        var recipe3 = await RecipeService.CreateRecipe(recipe3Data);
+        
+        await conn.OpenAsync(TestContext.Current.CancellationToken);
+        var latest = await Common.RecipeVersion.GetLatest(recipe3.Data, conn);
+
+        await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
+            PreviousVersionId = latest.VersionId,
+            VersionType = VersionType.Major,
+            Recipe = recipe3Data.Recipe,
+            Steps = recipe3Data.Steps,
+            Ingredients = recipe3Data.Ingredients
+        });
+
+        var listed = await RecipeService.ListRecipes(new ListRecipesRequest {
+            Count = 10,
+            Offset = 0
+        });
+        Assert.Empty(listed.ErrorMessage);
+        Assert.NotNull(listed.Data?.Items);
+        Assert.Equal(3, listed.Data?.Total);
+        foreach (var recipe in listed.Data!.Items) {
+            Assert.NotEmpty(recipe.VersionNumber);
+            Assert.NotEmpty(recipe.Name);
+            Assert.NotEmpty(recipe.Description ?? "");
+            Assert.NotEqual(0, recipe.RecipeId);
+            if (recipe.RecipeId == recipe3.Data) {
+                Assert.Equal("2.0", recipe.VersionNumber);
+            }
+        }
     }
 }

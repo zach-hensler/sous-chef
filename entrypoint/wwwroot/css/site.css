@@ -1,14 +1,15 @@
 :root {
   /* colors */
   --font-color: #000;
-  --bg-color: hsl(263.3, 32.1%, 93%);
-  --bg-color-darker: hsl(263.3, 32.1%, 88%);
-  --bg-color-darkest: hsl(263.3, 32.1%, 86%);
+  --bg-color: hsl(300, 32.1%, 94%);
+  --bg-color-darker: hsl(300, 32.1%, 90%);
+  --bg-color-darkest: hsl(300, 32.1%, 86%);
 
-  --accent-color: hsl(220, 40%, 80.2%);
-  --accent-color-darker: hsl(220, 40%, 70.2%);
-  --warning-color: hsl(339.3, 60.9%, 76.3%);
-  --warning-darker: hsl(339.3, 60.9%, 70%);
+  --accent-font-color: #000;
+  --accent-color: hsl(265, 70%, 75%);
+  --accent-color-darker: hsl(265, 70%, 71%);
+  --warning-color: hsl(355, 61%, 76%);
+  --warning-darker: hsl(355, 61%, 72%);
 
   /* spacing - each level should double */
   --extra-small: 5px;
@@ -66,13 +67,14 @@ a:hover {
 }
 
 button, select, input, textarea {
-  background-color: var(--bg-color-darker);
-  border: 3px solid var(--bg-color-darkest);
+  background-color: var(--bg-color);
+  border: 3px solid var(--bg-color-darker);
   text-decoration: none;
 }
 
 button:hover, select:hover, input:hover, textarea:hover {
-  background-color: var(--bg-color-darkest);
+  background-color: var(--bg-color-darker);
+  border-color: var(--bg-color-darkest);
   text-decoration: underline;
 }
 
@@ -96,6 +98,7 @@ textarea {
 }
 
 .primary {
+  color: var(--accent-font-color);
   background-color: var(--accent-color);
 }
 
@@ -112,19 +115,19 @@ textarea {
 }
 
 .nav-container {
-  background-color: var(--bg-color-darker);
-  color: var(--font-color);
+  background-color: var(--accent-color);
 
   display: flex;
   flex-direction: row;
   width: 100%;
-  border-bottom: solid 2px var(--bg-color-darkest);
+  /*border-bottom: solid 2px var(--bg-color-darkest);*/
   box-shadow: 0 var(--extra-small) var(--small) var(--bg-color-darker);
 }
 
 .nav-item {
+  color: var(--accent-font-color);
   padding: var(--medium);
 }
 .nav-item:hover {
-  background-color: var(--bg-color-darkest);
+  background-color: var(--accent-color-darker );
 }

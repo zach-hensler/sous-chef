@@ -20,6 +20,8 @@ if (!app.Environment.IsDevelopment()) {
     app.UseHsts();
 }
 
+DapperConfigurations.Register();
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();

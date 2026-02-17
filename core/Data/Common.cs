@@ -201,7 +201,7 @@ public static class Common {
         public static async Task Add(ErrorHistoryDb errorHistory, DbConnection conn) {
             await conn.ExecuteAsync(
                 "INSERT INTO error_history (source, message, occurred_at) VALUES (@source, @message, @occurred_at)",
-                new { errorHistory.source, errorHistory.message, errorHistory.occurred_at });
+                new { source = errorHistory.Source, message = errorHistory.Message, occurred_at = errorHistory.OccurredAt });
         }
 
         public static async Task<int> Count(DbConnection conn) {

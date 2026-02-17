@@ -26,6 +26,6 @@
     padding: var(--extra-small);
     height: fit-content;
     border-radius: var(--border-radius);
-    border: 1px solid black;
+    border: 2px solid var(--bg-color-darkest);
     background-color: var(--bg-color-darker);
 }

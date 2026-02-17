@@ -9,9 +9,8 @@ public static class RecipeData {
         return await conn.QuerySingleAsync<int>("SELECT count(*) FROM recipes");
     }
 
-    public static async Task<List<RecipeDb>> ListRecipes(int limit, int offset, DbConnection conn) {
-        // TODO do something w/ limit and offset
-        return (await conn.QueryAsync<RecipeDb>(
+    public static async Task<List<ListRecipesResponse.RecipeItem>> ListRecipes(int limit, int offset, DbConnection conn) {
+        return (await conn.QueryAsync<ListRecipesResponse.RecipeItem>(
             """
             WITH latest_versions AS (
                 SELECT
@@ -21,7 +20,7 @@ public static class RecipeData {
                     ROW_NUMBER() OVER (PARTITION BY recipe_id ORDER BY created_at DESC) as row
                 FROM recipe_versions
             )
-            SELECT r.*
+            SELECT r.*, lv.version_number
             FROM recipes r
             INNER JOIN latest_versions lv ON lv.recipe_id = r.recipe_id
             WHERE lv.row = 1

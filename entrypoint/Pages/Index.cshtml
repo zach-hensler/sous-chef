@@ -18,9 +18,9 @@
                 <div class="recipe-list-container">
                     <hr />
                     <div class="recipe-list-item">
-                        <a asp-page="/Recipe" asp-route-id="@recipe.Id">
+                        <a asp-page="/Recipe" asp-route-id="@recipe.RecipeId">
                             <div class="recipe-list-text">
-                                <h2>@recipe.Name</h2>
+                                <h2>@recipe.Name - @recipe.VersionNumber</h2>
                                 <p>@recipe.Description</p>
                             </div>
                         </a>

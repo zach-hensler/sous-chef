@@ -33,13 +33,13 @@ public static class RecipeService {
         return await Utils.SafeRun(nameof(CreateRecipe), async (conn) => {
             var transaction = await conn.BeginTransactionAsync();
             
-            var recipeId = (await Common.RecipeVersion.Get(request.PreviousVersionId, conn)).recipe_id;
+            var recipeId = (await Common.RecipeVersion.Get(request.PreviousVersionId, conn)).RecipeId;
             await Common.Recipe.Update(recipeId, request.Recipe, conn);
             var latestVersion = await Common.RecipeVersion.GetLatest(request.PreviousVersionId, conn);
 
             var version = await Common.RecipeVersion.Create(new CreateRecipeVersionDb {
                 RecipeId = recipeId,
-                VersionNumber = Utils.Domain.IncrementRecipeVersion(latestVersion.version_number, request.VersionType),
+                VersionNumber = Utils.Domain.IncrementRecipeVersion(latestVersion.VersionNumber, request.VersionType),
                 CreatedAt = DateTime.UtcNow
             }, conn);
 
@@ -62,7 +62,7 @@ public static class RecipeService {
             var transaction = await conn.BeginTransactionAsync();
 
             var version = await Common.RecipeVersion.Get(versionId, conn);
-            await Common.Recipe.Update(version.recipe_id, request.Recipe, conn);
+            await Common.Recipe.Update(version.RecipeId, request.Recipe, conn);
 
             await Common.RecipeSteps.Delete(versionId, conn);
             for (var i = 0; i < request.Steps.Count; i++) {
@@ -102,15 +102,7 @@ public static class RecipeService {
 
             return new Response<ListRecipesResponse>(new ListRecipesResponse {
                 Total = total,
-                Items =
-                    recipes.Select(r => new ListRecipesResponse.RecipeItem {
-                            Id = r.recipe_id,
-                            Name = r.name,
-                            Description = r.description,
-                            EffortLevel = r.effort_level,
-                            Category = r.category
-                        })
-                        .ToList()
+                Items = recipes
             });
         });
     }
@@ -137,10 +129,10 @@ public static class RecipeService {
             var comments = await Common.RecipeComments.Get(versionId, conn);
             return new Response<List<GetCommentsResponse>>(
                 comments.Select(c => new GetCommentsResponse {
-                        CommentId = c.comment_id,
-                        Comment = c.comment,
-                        Rating = c.rating,
-                        CreatedAt = c.created_at
+                        CommentId = c.CommentId,
+                        Comment = c.Comment,
+                        Rating = c.Rating,
+                        CreatedAt = c.CreatedAt
                     })
                     .ToList());
         });
