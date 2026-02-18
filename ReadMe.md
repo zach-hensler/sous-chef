@@ -12,6 +12,7 @@ A kitchen helper with recipe versioning
   - Version Comparison View
 
 ## Backlog
+### UI/UX
 - UI review/updates
   - Home Feed
   - Modals
@@ -19,6 +20,15 @@ A kitchen helper with recipe versioning
 - Filters on Home Feed
   - By: Star Rating, Category, Effort Level
 - Show avg rating (for latest version?) on home page
+- grid view for main screen
+- navbar updates
+  - icons for admin/create
+  - rename "recipes" as "Sous Chef"
+  - media query, on mobile collapse to hamburger button + "Sous Chef"
+    - hamburger button reveals the rest of the options
+- On mobile, clicking "new ingredient/new step" should open up the on screen keyboard
+
+### Features
 - Recipe drafts
 - Recipe Searching
   - By name, description, and ingredients
@@ -30,6 +40,11 @@ A kitchen helper with recipe versioning
     - Or use commit prefixes (would make it easier to remember what all was changed)
 - Grocery List
   - adding recipe to grocery list
+- Original author citation for recipes
+
+### Tech Debt
+- Better logging
+- Better response model (current isn't wrong, just odd)
 
 ## Completed Features
 - ~~Create New Recipes~~
@@ -49,10 +64,6 @@ A kitchen helper with recipe versioning
 - ~~Rename EffortLevels from (Low, Medium, High) -> (Easy, Medium, Hard)~~
 - ~~Error History log on Admin Page~~
 - ~~Tmux on Server for session management~~
-
-# Tech Debt
-- Better logging
-- Better response model (current isn't wrong, just odd)
 
 ---
 # Initial Roadmap

@@ -12,12 +12,6 @@
 </head>
 <body>
 <header>
-    <!-- TODO fix this error dialog -->
-    @if (!string.IsNullOrWhiteSpace(ViewData["ErrorMessage"]?.ToString())) {
-        <dialog show>
-            <p>@ViewData["ErrorMessage"]</p>
-        </dialog>
-    }
     <nav class="nav-container">
         <a class="nav-item" asp-page="/Index">Recipes</a>
         <a class="nav-item" asp-page="/Create">Create</a>

@@ -1,5 +1,5 @@
 :root {
-  /* colors */
+  /* colors - each "darker" is 4% darker */
   --font-color: #000;
   --bg-color: hsl(300, 32.1%, 94%);
   --bg-color-darker: hsl(300, 32.1%, 90%);
