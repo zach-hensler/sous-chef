@@ -1,4 +1,6 @@
 :root {
+  --font-family: 'Roboto, sans-serif';
+  
   /* colors - each "darker" is 4% darker */
   --font-color: #000;
   --bg-color: hsl(300, 32.1%, 94%);
@@ -25,7 +27,7 @@ body {
   margin: 0 0 var(--large) 0;
   color: var(--font-color);
   background-color: var(--bg-color);
-  font-family: Roboto, sans-serif;
+  font-family: var(--font-family);
 }
 
 h1 {
@@ -75,7 +77,10 @@ button, select, input, textarea {
 button:hover, select:hover, input:hover, textarea:hover {
   background-color: var(--bg-color-darker);
   border-color: var(--bg-color-darkest);
-  text-decoration: underline;
+}
+
+button:hover, select:hover {
+  text-decoration: underline;  
 }
 
 button {
@@ -91,6 +96,7 @@ select, input, textarea {
 }
 
 textarea {
+  font-family: var(--font-family);
   padding: var(--extra-small) var(--small);
   margin: var(--small) 0;
   resize: vertical;

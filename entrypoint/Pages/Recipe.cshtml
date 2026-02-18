@@ -78,9 +78,10 @@
             </div>
             <div>
                 <label for="comment">Comment (optional)</label>
-                <input
+                <textarea
+                    rows="4"
                     asp-for="@Model.NewComment.Comment"
-                    id="comment" />
+                    id="comment" ></textarea>
             </div>
             <div class="dialog-footer">
                 <hr />

@@ -31,7 +31,7 @@
         </div>
         <div>
             <label for="description">Description: </label>
-            <input asp-for="RecipeMetadata.Description" id="description"/>
+            <textarea rows="2" asp-for="RecipeMetadata.Description" id="description"></textarea>
         </div>
         <div>
             <label for="category">Category: </label>
@@ -79,6 +79,7 @@
                         asp-for="@Model.RecipeIngredients[i].Quantity"
                         id="quantity-@i"
                         value="@Model.RecipeIngredients[i].Quantity"
+                        type="number"
                         required/>
                 </div>
                 <div>
