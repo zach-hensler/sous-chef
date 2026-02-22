@@ -19,7 +19,7 @@ public record NewComment {
 
 public class RecipeModel : PageModel {
     public RecipeDetails? Details { get; set; }
-    public List<GetCommentsResponse> Comments { get; set; } = [];
+    public List<RecipeCommentDb> Comments { get; set; } = [];
     public List<RecipeVersionDb> Versions { get; set; } = [];
 
     [BindProperty]
@@ -40,7 +40,7 @@ public class RecipeModel : PageModel {
             return;
         }
 
-        var commentRes = await RecipeService.GetComments(versionId);
+        var commentRes = await RecipeService.GetComments(res.Data.Version.RecipeId);
         if ((int)res.StatusCode < 300 && commentRes.Data != null) {
             Comments = commentRes.Data;
         }

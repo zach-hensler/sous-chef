@@ -31,14 +31,14 @@
             <h1>@Model.Details.RecipeMetadata.Name @Model.Details.Version.VersionNumber</h1>
             <div class="header-action-wrapper">
                 <button class="header-action primary" onclick="OpenMadeIt()">Review</button>
-                @if (Model.Versions.Count > 1) {
-                    <a
-                        asp-page="/Compare"
-                        asp-route-id1="@Model.Versions[0].VersionId"
-                        asp-route-id2="@Model.Versions[1].VersionId">
-                        <button class="header-action">Compare</button>
-                    </a>
-                }
+                @* @if (Model.Versions.Count > 1) { *@
+                @*     <a *@
+                @*         asp-page="/Compare" *@
+                @*         asp-route-id1="@Model.Versions[0].VersionId" *@
+                @*         asp-route-id2="@Model.Versions[1].VersionId"> *@
+                @*         <button class="header-action">Compare</button> *@
+                @*     </a> *@
+                @* } *@
                 <a asp-page="/Create" asp-route-versionId="@Model.Id">
                     <button class="header-action">Edit</button>
                 </a>
@@ -67,9 +67,17 @@
         <p>No comments yet!</p>
     }
     else {
-        foreach (var comment in Model.Comments) {
+        foreach (var comment in Model.Comments.Where(c => c.VersionId == Model.Details?.Version.VersionId).OrderByDescending(c => c.CreatedAt)) {
             <hr />
-            <p>Rating: @($"{comment.Rating}/5")</p>
+            <p>Rating: @($"{comment.Rating}/5") at @comment.CreatedAt</p>
+            @if (!string.IsNullOrWhiteSpace(comment.Comment)) {
+                <p>Comment: @comment.Comment</p>
+            }
+        }
+        <h2>Previous Version Comments</h2>
+        foreach (var comment in Model.Comments.Where(c => c.VersionId != Model.Details?.Version.VersionId).OrderByDescending(c => c.CreatedAt)) {
+            <hr />
+            <p>Rating: @($"{comment.Rating}/5") at @comment.CreatedAt</p>
             @if (!string.IsNullOrWhiteSpace(comment.Comment)) {
                 <p>Comment: @comment.Comment</p>
             }

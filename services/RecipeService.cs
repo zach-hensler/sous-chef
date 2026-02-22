@@ -114,22 +114,15 @@ public static class RecipeService {
         });
     }
 
-    public static async Task<Response<List<GetCommentsResponse>>> GetComments(int versionId) {
+    public static async Task<Response<List<RecipeCommentDb>>> GetComments(int recipeId) {
         return await Utils.SafeRun(nameof(GetComments), async (conn) => {
-            if (!await Common.RecipeVersion.Exists(versionId, conn)) {
-                return new Response<List<GetCommentsResponse>>(
-                    HttpStatusCode.NotFound, $"Version '{versionId}' not found");
+            if (!await Common.RecipeVersion.Exists(recipeId, conn)) {
+                return new Response<List<RecipeCommentDb>>(
+                    HttpStatusCode.NotFound, $"Version '{recipeId}' not found");
             }
 
-            var comments = await Common.RecipeComments.Get(versionId, conn);
-            return new Response<List<GetCommentsResponse>>(
-                comments.Select(c => new GetCommentsResponse {
-                        CommentId = c.CommentId,
-                        Comment = c.Comment,
-                        Rating = c.Rating,
-                        CreatedAt = c.CreatedAt
-                    })
-                    .ToList());
+            return new Response<List<RecipeCommentDb>>(
+                await Common.RecipeComments.GetByRecipe(recipeId, conn));
         });
     }
 }

@@ -31,15 +31,15 @@ body {
 }
 
 h1 {
-  margin: var(--large) 0 0 0;
+  margin: var(--extra-large) 0 0 0;
 }
 
 h2 {
-  margin: var(--medium) 0 0 0;
+  margin: var(--large) 0 0 0;
 }
 
 h3 {
-  margin: var(--small) 0 0 0;
+  margin: var(--medium) 0 0 0;
 }
 
 hr {

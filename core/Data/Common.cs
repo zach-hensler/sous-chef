@@ -196,8 +196,20 @@ public static class Common {
                 """,
                 new { comment.VersionId, comment.Rating, comment.Comment, comment.CreatedAt });
         }
+        
+        public static async Task<List<RecipeCommentDb>> GetByRecipe(int recipeId, DbConnection conn) {
+            return (await conn.QueryAsync<RecipeCommentDb>(
+                    """
+                    SELECT c.*
+                    FROM recipe_comments c
+                    INNER JOIN recipe_versions rv ON rv.version_id = c.version_id
+                    WHERE rv.recipe_id = @recipeId;
+                    """,
+                    new { recipeId }))
+                .ToList();
+        }
 
-        public static async Task<List<RecipeCommentDb>> Get(int versionId, DbConnection conn) {
+        public static async Task<List<RecipeCommentDb>> GetByVersion(int versionId, DbConnection conn) {
             return (await conn.QueryAsync<RecipeCommentDb>(
                 "SELECT * FROM recipe_comments WHERE version_id = @versionId",
                 new { versionId }))

@@ -6,10 +6,7 @@ A kitchen helper with recipe versioning
 - tailscale upgrade failing
 
 # Current Priorities
-- Recipe Versions
-  - Version Selector on Details Page
-  - Version Comparison View
-- Display comments from previous versions on details page
+- Compare Versions Page
 - Bug w/ "Move Up" and "Move Down" buttons
 - Make Ids into types so we don't accidentally assign in the wrong spots anymore
 
@@ -78,6 +75,8 @@ A kitchen helper with recipe versioning
 - ~~Rename EffortLevels from (Low, Medium, High) -> (Easy, Medium, Hard)~~
 - ~~Error History log on Admin Page~~
 - ~~Tmux on Server for session management~~
+- ~~Recipe Versions support~~
+- ~~Display comments from previous versions on details page~~
 
 ---
 # Initial Roadmap
@@ -99,14 +98,3 @@ A kitchen helper with recipe versioning
 - can view the steps/ingredients for each version
 - can view the notes/rating for each version
 - can compare the differences between versions
-
----
-# Build pipeline
-- push changes to a branch
-  - aggregate changes on that branch
-  - when ready for a new release to be created, merge branch to main
-- on merge to main:
-  - get new version number?
-  - gh action builds docker image
-  - gh action stores image as a build artifact
-- raspberry pi pulls down new image, and runs new version
