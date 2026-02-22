@@ -1,55 +1,12 @@
 using System.Net;
 using System.Text.Json.Serialization;
-using core;
 using core.Models;
+using core.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using services;
 
-public record ViewIngedient {
-    public required string Name { get; init; }
-    public required float Quantity { get; init; }
-    public string? Unit { get; init; }
-
-    public CreateRecipeIngredientDb ToIngredientDb() {
-        return new CreateRecipeIngredientDb {
-            Name = Name,
-            Note = "",
-            Quantity = Quantity,
-            Unit = Unit
-        };
-    }
-}
-
-public record ViewStep {
-    public required string Name { get; init; }
-    public required string Instruction { get; init; }
-
-    public CreateRecipeStepDb ToStepDb() {
-        return new CreateRecipeStepDb {
-            Name = Name,
-            Instruction = Instruction
-        };
-    }
-}
-
-public record ViewRecipe {
-    public required string Name { get; init; }
-    public string? Description { get; init; }
-    public required EffortLevels EffortLevel { get; init; }
-    public required Categories Category { get; init; } = Categories.Uncategorized;
-    public required int Time { get; init; }
-
-    public CreateRecipeDb ToRecipeDb() {
-        return new CreateRecipeDb {
-            Name = Name,
-            Description = Description,
-            TimeMinutes = Time,
-            EffortLevel = EffortLevel,
-            Category = Category
-        };
-    }
-}
+namespace sous_chef.Pages;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum CreateActions {
@@ -71,7 +28,7 @@ public class CreateModel : PageModel {
 
     [BindProperty] public List<ViewStep> RecipeSteps { get; set; } = [];
     public int? VersionId { get; set; }
-    [BindProperty] public string? VersionNumber { get; set; }
+    public string? VersionNumber { get; set; }
 
     public string GetBaseRoute() {
         var baseRoute = "/Create";
@@ -82,52 +39,31 @@ public class CreateModel : PageModel {
         return baseRoute;
     }
 
-    private async Task LoadPageData(int id) {
-        var res = await RecipeService.GetRecipe(id);
+    private async Task LoadPageData(int versionId) {
+        var res = await VersionService.GetRecipeByVersion(versionId);
         if ((int)res.StatusCode >= 300 || res.Data == null) {
             Console.WriteLine(res.ErrorMessage);
         }
         else {
-            VersionNumber = res.Data.VersionNumber;
-            RecipeMetadata = new ViewRecipe {
-                Name = res.Data!.Name,
-                Description = res.Data.Description,
-                EffortLevel = res.Data.EffortLevel,
-                Category = res.Data.Category,
-                Time = res.Data.Time
-            };
-            RecipeIngredients =
-                res.Data.Ingredients
-                    .Select(i => new ViewIngedient {
-                        Name = i.Name,
-                        Quantity = i.Quantity,
-                        Unit = i.Unit
-                    })
-                    .ToList();
-            RecipeSteps =
-                res.Data.Steps
-                    .Select(s => new ViewStep {
-                        Name = s.Name,
-                        Instruction = s.Instruction
-                    })
-                    .ToList();
+            RecipeMetadata = res.Data.RecipeMetadata.ToViewRecipe();
+            VersionNumber = res.Data.Version.VersionNumber;
+            RecipeIngredients = res.Data.Ingredients.Select(i => i.ToViewIngredient()).ToList();
+            RecipeSteps = res.Data.Steps.Select(s => s.ToViewStep()).ToList();
         }
     }
 
-    public async Task<IActionResult> OnGet(int? id) {
-        if (id != null) {
-            VersionId = id;
-            await LoadPageData(id.Value);
+    public async Task<IActionResult> OnGet(int? versionId) {
+        if (versionId != null) {
+            VersionId = versionId;
+            await LoadPageData(versionId.Value);
         }
         
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(int? id) {
-        if (id != null) {
-            VersionId = id;
-            var versionDetails = await RecipeVersionService.GetVersion(id.Value);
-            VersionNumber = versionDetails.Data?.VersionNumber;
+    public async Task<IActionResult> OnPostAsync(int? versionId) {
+        if (versionId != null) {
+            VersionId = versionId;
         }
         foreach (var kvp in Request.Query) {
             if (!Enum.TryParse<CreateActions>(kvp.Key, out var action)) {
@@ -136,9 +72,9 @@ public class CreateModel : PageModel {
             }
 
             return action switch {
-                CreateActions.SaveExisting => await HandleSaveExisting(id),
-                CreateActions.SaveAsNewMajorVersion => await HandleSaveNewMajorVersion(id),
-                CreateActions.SaveAsNewMinorVersion => await HandleSaveNewMinorVersion(id),
+                CreateActions.SaveExisting => await HandleSaveExisting(versionId),
+                CreateActions.SaveAsNewMajorVersion => await HandleSaveNewMajorVersion(versionId),
+                CreateActions.SaveAsNewMinorVersion => await HandleSaveNewMinorVersion(versionId),
                 CreateActions.NewIngredient => HandleNewIngredient(),
                 CreateActions.NewStep => HandleNewStep(),
                 CreateActions.RemoveIngredient => RemoveIngredient(kvp.Value.ToString()),
@@ -250,16 +186,16 @@ public class CreateModel : PageModel {
         int redirectId;
         if (versionId == null) {
             var createRes = await RecipeService.CreateRecipe(createRequest);
-            redirectId = createRes.Data;
+            redirectId = createRes.Data.VersionId;
             response = createRes;
         }
         else {
             response = await RecipeService.UpdateRecipeVersion(versionId.Value, createRequest);
-            // redirectId = (int)versionId;
+            redirectId = versionId.Value;
         }
 
         if (response.StatusCode == HttpStatusCode.OK) {
-            return Redirect("/Index");
+            return Redirect($"/Recipe/{redirectId}");
         }
 
         Console.WriteLine(response.ErrorMessage);

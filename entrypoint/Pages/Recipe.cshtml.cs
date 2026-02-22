@@ -1,6 +1,6 @@
-using core;
 using core.Data;
 using core.Models;
+using core.Models.DbModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using services;
@@ -17,9 +17,10 @@ public record NewComment {
     public required string? Comment { get; init; }
 }
 
-public class Recipe : PageModel {
+public class RecipeModel : PageModel {
     public RecipeDetails? Details { get; set; }
     public List<GetCommentsResponse> Comments { get; set; } = [];
+    public List<RecipeVersionDb> Versions { get; set; } = [];
 
     [BindProperty]
     public NewComment NewComment { get; set; } = new() {
@@ -29,8 +30,8 @@ public class Recipe : PageModel {
 
     public int Id { get; set; }
 
-    private async Task LoadPageData(int id) {
-        var res = await RecipeService.GetRecipe(id);
+    private async Task LoadPageData(int versionId) {
+        var res = await VersionService.GetRecipeByVersion(versionId);
         if ((int)res.StatusCode < 300 && res.Data != null) {
             Details = res.Data;
         }
@@ -39,42 +40,50 @@ public class Recipe : PageModel {
             return;
         }
 
-        var commentRes = await RecipeService.GetComments(id);
+        var commentRes = await RecipeService.GetComments(versionId);
         if ((int)res.StatusCode < 300 && commentRes.Data != null) {
             Comments = commentRes.Data;
         }
         else {
             Console.WriteLine(res.ErrorMessage);
         }
+
+        var versionRes = await VersionService.List(versionId);
+        if ((int)res.StatusCode < 300 && versionRes.Data != null) {
+            Versions = versionRes.Data;
+        }
+        else {
+            Console.WriteLine(res.ErrorMessage);
+        }
     }
     
-    public async Task OnGet(int id) {
-        Id = id;
-        await LoadPageData(id);
+    public async Task OnGet(int versionId) {
+        Id = versionId;
+        await LoadPageData(versionId);
     }
 
-    public async Task<IActionResult> OnPost(int id) {
-        Id = id;
-        await LoadPageData(id);
+    public async Task<IActionResult> OnPost(int versionId) {
+        Id = versionId;
+        await LoadPageData(versionId);
         Request.Query.TryGetValue("action", out var action);
         if (!Enum.TryParse<RecipeDetailsAction>(action.ToString(), out var postAction)) {
             return Page();
         }
 
         return postAction switch {
-            RecipeDetailsAction.DeleteConfirmation => await HandleDelete(id),
-            RecipeDetailsAction.AddComment => await HandleAddComment(id),
+            RecipeDetailsAction.DeleteConfirmation => await HandleDelete(versionId),
+            RecipeDetailsAction.AddComment => await HandleAddComment(versionId),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public async Task<IActionResult> HandleAddComment(int id) {
+    public async Task<IActionResult> HandleAddComment(int versionId) {
         if (NewComment.Rating is > 5 or < 0) {
             return Page();
         }
 
-        var res = await RecipeService.AddComment(new CreateRecipeCommentDb {
-            VersionId = id,
+        var res = await VersionService.AddComment(new CreateRecipeCommentDb {
+            VersionId = versionId,
             Rating = NewComment.Rating,
             Comment = NewComment.Comment,
             CreatedAt = DateTime.UtcNow
@@ -86,7 +95,7 @@ public class Recipe : PageModel {
     }
 
     public async Task<IActionResult> HandleDelete(int id) {
-        var res = await RecipeService.DeleteRecipe(id);
+        var res = await VersionService.DeleteRecipeVersion(id);
         if ((int)res.StatusCode >= 300) {
             Console.WriteLine(res.ErrorMessage);
         }

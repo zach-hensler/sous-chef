@@ -1,7 +1,7 @@
-@page "{id:int}"
-@model Recipe
+@page "{versionId:int}"
+@model RecipeModel
 @{
-    ViewData["Title"] = Model.Details?.Name;
+    ViewData["Title"] = Model.Details?.RecipeMetadata.Name;
     const string deleteDialog = "deleteDialog";
     const string madeItDialog = "madeItDialog";
 }
@@ -28,16 +28,24 @@
     }
     else {
         <div class="header-wrapper">
-            <h1>@Model.Details.Name @Model.Details.VersionNumber</h1>
+            <h1>@Model.Details.RecipeMetadata.Name @Model.Details.Version.VersionNumber</h1>
             <div class="header-action-wrapper">
-                <button class="header-action primary" onclick="OpenMadeIt()">Leave a Review</button>
-                <a asp-page="/Create" asp-route-id="@Model.Id">
+                <button class="header-action primary" onclick="OpenMadeIt()">Review</button>
+                @if (Model.Versions.Count > 1) {
+                    <a
+                        asp-page="/Compare"
+                        asp-route-id1="@Model.Versions[0].VersionId"
+                        asp-route-id2="@Model.Versions[1].VersionId">
+                        <button class="header-action">Compare</button>
+                    </a>
+                }
+                <a asp-page="/Create" asp-route-versionId="@Model.Id">
                     <button class="header-action">Edit</button>
                 </a>
                 <button class="header-action warning" onclick="ConfirmDelete()">Delete</button>
             </div>
         </div>
-        <p>Effort: @Model.Details.EffortLevel, Time: @Model.Details.Time Minutes</p>
+        <p>Effort: @Model.Details.RecipeMetadata.EffortLevel, Time: @Model.Details.RecipeMetadata.TimeMinutes Minutes</p>
         <h2>Ingredients</h2>
         <ul>
             @foreach(var ingredient in Model.Details.Ingredients) {

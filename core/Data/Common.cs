@@ -1,5 +1,6 @@
 using System.Data.Common;
 using core.Models;
+using core.Models.DbModels;
 using Dapper;
 
 namespace core.Data;
@@ -85,6 +86,13 @@ public static class Common {
                 LIMIT 1;
                 """,
                 new { recipeId });
+        }
+
+        public static async Task<List<RecipeVersionDb>> List(int recipeId, DbConnection conn) {
+            return (await conn.QueryAsync<RecipeVersionDb>(
+                "SELECT * FROM recipe_versions WHERE recipe_id = @recipeId;",
+                new { recipeId }))
+                .ToList();
         }
         public static async Task<int> Create(CreateRecipeVersionDb version, DbConnection conn) {
             return await conn.ExecuteScalarAsync<int>(

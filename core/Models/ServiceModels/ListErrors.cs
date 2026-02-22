@@ -1,3 +1,5 @@
+using core.Models.DbModels;
+
 namespace core.Models;
 
 public record ListErrorsResponse {

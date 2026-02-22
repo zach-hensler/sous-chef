@@ -7,9 +7,11 @@ A kitchen helper with recipe versioning
 
 # Current Priorities
 - Recipe Versions
-  - Create New Version
   - Version Selector on Details Page
   - Version Comparison View
+- Display comments from previous versions on details page
+- Bug w/ "Move Up" and "Move Down" buttons
+- Make Ids into types so we don't accidentally assign in the wrong spots anymore
 
 ## Backlog
 ### UI/UX
@@ -41,10 +43,22 @@ A kitchen helper with recipe versioning
 - Grocery List
   - adding recipe to grocery list
 - Original author citation for recipes
+- Export Recipe to PDF
+- Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"
+- Support marking a version as the "active version"
+  - A recipe can have only one version be active
+    - boolean on the recipe_versions row
+  - On create screen add a "make active" checkbox
+  - List recipes should return the "active" version instead of the latest
+  - On compare screen, you can change which one is active
 
 ### Tech Debt
 - Better logging
 - Better response model (current isn't wrong, just odd)
+- Reconsider how versions are stored
+  - instead of storing entire steps/ingredients, only store modified
+  - each version would reference it's child ingredients/steps
+  - would save on db space with a complexity tradeoff
 
 ## Completed Features
 - ~~Create New Recipes~~

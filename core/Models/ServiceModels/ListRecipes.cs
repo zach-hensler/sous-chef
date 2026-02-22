@@ -7,8 +7,8 @@ public record ListRecipesResponse {
         public string? Description { get; init; }
         public required EffortLevels EffortLevel { get; init; }
         public required Categories Category { get; init; }
-        public required string VersionNumber { get; init; }
-        
+        public required string LatestVersionNumber { get; init; }
+        public required int LatestVersionId { get; init; }
     }
     public required int Total { get; init; }
     public required List<RecipeItem> Items { get; init; }

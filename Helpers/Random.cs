@@ -1,5 +1,6 @@
 using core;
 using core.Models;
+using core.Models.DbModels;
 
 namespace Helpers;
 
@@ -39,44 +40,76 @@ public static class Rand {
     }
 
     public static class Domain {
-        public static CreateRecipeRequest CreateRecipeRequest() {
-            List<CreateRecipeStepDb> steps = [];
-            for (var i = 0; i < Primitive.Int(1, 4); i++) {
-                steps.Add(new CreateRecipeStepDb {
-                    Name = Primitive.String(),
-                    Instruction = Primitive.String()
-                });
-            }
-
-            List<CreateRecipeIngredientDb> ingredients = [];
-            for (var i = 0; i < Primitive.Int(1, 4); i++) {
-                ingredients.Add(new CreateRecipeIngredientDb {
-                    Name = Primitive.String(),
-                    Note = Primitive.String(),
-                    Quantity = Primitive.Int(),
-                    Unit = Primitive.String()
-                });
-            }
-            
-            return new CreateRecipeRequest {
-                Recipe = new CreateRecipeDb {
+        public static class Db {
+            public static RecipeDb RecipeDb() {
+                return new RecipeDb {
+                    RecipeId = 0,
                     Name = Primitive.String(),
                     Description = Primitive.String(),
-                    TimeMinutes = Primitive.Int(),
-                    EffortLevel = EffortLevels.Easy,
-                    Category = Categories.Uncategorized
-                },
-                Steps = steps,
-                Ingredients = ingredients
-            };
-        }
+                    TimeMinutes = Primitive.Int(0,120),
+                    EffortLevel = (EffortLevels)Primitive.Int(0,2),
+                    Category = (Categories)Primitive.Int(0,4)
+                };
+            }
 
-        public static class Db {
+            public static RecipeStepDb RecipeStepDb(int idx) {
+                return new RecipeStepDb {
+                    RecipeId = 0,
+                    VersionId = 0,
+                    Name = Primitive.String(),
+                    StepNumber = idx.ToString(),
+                    Instruction = Primitive.String()
+                };
+            }
+
+            public static RecipeIngredientDb RecipeIngredientDb() {
+                return new RecipeIngredientDb {
+                    RecipeId = 0,
+                    VersionId = 0,
+                    Name = Primitive.String(),
+                    Note = null,
+                    Quantity = Primitive.Int(),
+                    Unit = Primitive.String()
+                };
+            }
             public static ErrorHistoryDb ErrorHistoryDb() {
                 return new ErrorHistoryDb {
                     Source = Primitive.String(),
                     Message = Primitive.String(),
                     OccurredAt = Primitive.Date()
+                };
+            }
+        }
+        public static class Requests {
+            public static CreateRecipeRequest CreateRecipeRequest() {
+                List<CreateRecipeStepDb> steps = [];
+                for (var i = 0; i < Primitive.Int(1, 4); i++) {
+                    steps.Add(new CreateRecipeStepDb {
+                        Name = Primitive.String(),
+                        Instruction = Primitive.String()
+                    });
+                }
+
+                List<CreateRecipeIngredientDb> ingredients = [];
+                for (var i = 0; i < Primitive.Int(1, 4); i++) {
+                    ingredients.Add(new CreateRecipeIngredientDb {
+                        Name = Primitive.String(),
+                        Note = Primitive.String(),
+                        Quantity = Primitive.Int(),
+                        Unit = Primitive.String()
+                    });
+                }
+            
+                return new CreateRecipeRequest {
+                    Recipe = new CreateRecipeDb {
+                        Name = Primitive.String(),
+                        Description = Primitive.String(),
+                        TimeMinutes = Primitive.Int(),
+                        EffortLevel = EffortLevels.Easy,
+                        Category = Categories.Uncategorized
+                    },
+                    Steps = steps,
+                    Ingredients = ingredients
                 };
             }
         }

@@ -1,6 +1,13 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+using services;
 using core;
 using Dapper;
-using services;
 
 namespace Helpers;
 
@@ -24,5 +31,19 @@ public static class Setup {
             !string.IsNullOrWhiteSpace(migrationRes.ErrorMessage)
                 ? throw new Exception(migrationRes.ErrorMessage)
                 : connFactory;
+    }
+
+    public static PageContext GetPageContext(Dictionary<string, StringValues> queryParams) {
+        
+        return new PageContext(new ActionContext {
+            ActionDescriptor = new ActionDescriptor(),
+            RouteData = new RouteData(),
+            ModelState = { },
+            HttpContext = new DefaultHttpContext {
+                Request = {
+                    Query = new QueryCollection(queryParams)
+                }
+            }
+        });
     }
 }

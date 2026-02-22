@@ -1,31 +1,38 @@
 using System.Net;
 using core.Data;
 using core.Models;
+using core.Models.DbModels;
 
 namespace services;
 
 public static class RecipeService {
-    public static async Task<Response<int>> CreateRecipe(CreateRecipeRequest request) {
+    public static async Task<Response<RecipeVersionDb>> CreateRecipe(CreateRecipeRequest request) {
         return await Utils.SafeRun(nameof(CreateRecipe), async (conn) => {
             var transaction = await conn.BeginTransactionAsync();
             var recipeId = await Common.Recipe.Create(request.Recipe, conn);
 
-            var version = await Common.RecipeVersion.Create(new CreateRecipeVersionDb {
+            var now = DateTime.UtcNow;
+            var versionId = await Common.RecipeVersion.Create(new CreateRecipeVersionDb {
                 RecipeId = recipeId,
                 VersionNumber = "1.0",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = now
             }, conn);
 
             for (var i = 0; i < request.Steps.Count; i++) {
-                await Common.RecipeSteps.Create(request.Steps[i], i + 1, version, conn);
+                await Common.RecipeSteps.Create(request.Steps[i], i + 1, versionId, conn);
             }
 
             foreach (var ingredient in request.Ingredients) {
-                await Common.RecipeIngredients.Create(ingredient, version, conn);
+                await Common.RecipeIngredients.Create(ingredient, versionId, conn);
             }
 
             await transaction.CommitAsync();
-            return new Response<int>(recipeId);
+            return new Response<RecipeVersionDb>(new RecipeVersionDb {
+                VersionId = versionId,
+                VersionNumber = "1.0",
+                RecipeId = recipeId,
+                CreatedAt = default
+            });
         });
     }
 
@@ -35,7 +42,7 @@ public static class RecipeService {
             
             var recipeId = (await Common.RecipeVersion.Get(request.PreviousVersionId, conn)).RecipeId;
             await Common.Recipe.Update(recipeId, request.Recipe, conn);
-            var latestVersion = await Common.RecipeVersion.GetLatest(request.PreviousVersionId, conn);
+            var latestVersion = await Common.RecipeVersion.GetLatest(recipeId, conn);
 
             var version = await Common.RecipeVersion.Create(new CreateRecipeVersionDb {
                 RecipeId = recipeId,
@@ -81,20 +88,20 @@ public static class RecipeService {
 
     public static async Task<Response<RecipeDetails>> GetRecipe(int recipeId) {
         return await Utils.SafeRun(nameof(GetRecipe), async (conn) => {
-            var data = await GetRecipeDetails.Get(recipeId, conn);
+            var data = await GetRecipeDetails.GetByRecipe(recipeId, conn);
 
             return new Response<RecipeDetails>(data);
         });
     }
 
-    public static async Task<Response> DeleteRecipe(int recipeId) {
-        return await Utils.SafeRun(nameof(DeleteRecipe), async (conn) => {
-            await Common.Recipe.DeleteCascade(recipeId, conn);
+    public static async Task<Response<RecipeDetails>> GetRecipeByVersion(int versionId) {
+        return await Utils.SafeRun(nameof(GetRecipeByVersion), async (conn) => {
+            var version = await Common.RecipeVersion.Get(versionId, conn);
+            var data = await GetRecipeDetails.GetByRecipe(version.RecipeId, conn);
 
-            return new Response();
+            return new Response<RecipeDetails>(data);
         });
     }
-
     public static async Task<Response<ListRecipesResponse>> ListRecipes(ListRecipesRequest request) {
         return await Utils.SafeRun(nameof(ListRecipes), async (conn) => {
             var total = await RecipeData.CountRecipes(conn);
@@ -104,18 +111,6 @@ public static class RecipeService {
                 Total = total,
                 Items = recipes
             });
-        });
-    }
-
-    public static async Task<Response> AddComment(CreateRecipeCommentDb request) {
-        return await Utils.SafeRun(nameof(AddComment), async (conn) => {
-            if (!await Common.RecipeVersion.Exists(request.VersionId, conn)) {
-                return new Response(HttpStatusCode.NotFound, $"Version '{request.VersionId}' not found");
-            }
-
-            await Common.RecipeComments.Create(request, conn);
-
-            return new Response();
         });
     }
 

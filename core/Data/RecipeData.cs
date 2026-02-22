@@ -16,11 +16,15 @@ public static class RecipeData {
                 SELECT
                     recipe_id,
                     version_number,
+                    version_id,
                     created_at,
                     ROW_NUMBER() OVER (PARTITION BY recipe_id ORDER BY created_at DESC) as row
                 FROM recipe_versions
             )
-            SELECT r.*, lv.version_number
+            SELECT
+                r.*,
+                lv.version_number as LatestVersionNumber,
+                lv.version_id as LatestVersionId
             FROM recipes r
             INNER JOIN latest_versions lv ON lv.recipe_id = r.recipe_id
             WHERE lv.row = 1

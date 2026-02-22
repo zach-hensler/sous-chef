@@ -1,0 +1,15 @@
+@page "/Compare/{id1:int}/{id2:int}"
+@model Compare
+@{
+    ViewData["Title"] = "Compare";
+}
+
+<div>
+    @if (Model.Version1Details == null || Model.Version2Details == null) {
+        <p>Unable to load recipe comparison</p>
+    }
+    else {
+        <h1>@Model.Version1Details.RecipeMetadata.Name</h1>
+        <h2>@Model.Version1Details.</h2>
+    }
+</div>

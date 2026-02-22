@@ -8,8 +8,8 @@
   --bg-color-darkest: hsl(300, 32.1%, 86%);
 
   --accent-font-color: #000;
-  --accent-color: hsl(265, 70%, 75%);
-  --accent-color-darker: hsl(265, 70%, 71%);
+  --accent-color: hsl(255, 70%, 75%, .9);
+  --accent-color-darker: hsl(255, 70%, 71%, .9);
   --warning-color: hsl(355, 61%, 76%);
   --warning-darker: hsl(355, 61%, 72%);
 

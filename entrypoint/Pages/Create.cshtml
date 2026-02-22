@@ -1,4 +1,4 @@
-@page "{id:int?}"
+@page "{versionId:int?}"
 @using core
 @model CreateModel
 @{
@@ -149,7 +149,16 @@
             <a href="/Index">
                 <button class="submitButton" type="button">Cancel</button>
             </a>
-            <button class="submitButton primary" onclick="OpenSaveDialog()" type="button">Save</button>
+            @if (Model.VersionId == null) {
+                <button formaction="?@CreateActions.SaveExisting" class="submitButton primary">
+                    Save
+                </button>
+            }
+            else {
+                <button class="submitButton primary" onclick="OpenSaveDialog()" type="button">
+                    Save
+                </button>
+            }
         </div>
         <dialog id="@saveDialog">
             <h1>Save changes as:</h1>
