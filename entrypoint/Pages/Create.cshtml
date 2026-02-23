@@ -132,10 +132,9 @@
                 </div>
                 <textarea
                     rows="5"
+                    id="step-instruction-@Model.RecipeSteps[i].Name"
                     asp-for="@Model.RecipeSteps[i].Instruction"
-                    value="@Model.RecipeSteps[i].Instruction"
                     required>
-
                 </textarea>
             }
             <input

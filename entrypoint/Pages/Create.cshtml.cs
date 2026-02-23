@@ -88,12 +88,22 @@ public class CreateModel : PageModel {
         return Page();
     }
 
+    private void SyncStepAttemptedValues() {
+        // TextAreas don't automatically sync and must be manually synced
+        for (var i = 0; i < RecipeSteps.Count; i++) {
+            ModelState[$"{nameof(RecipeSteps)}[{i}].{nameof(ViewStep.Name)}"]?.AttemptedValue = RecipeSteps[i].Name;
+            ModelState[$"{nameof(RecipeSteps)}[{i}].{nameof(ViewStep.Instruction)}"]?.AttemptedValue = RecipeSteps[i].Instruction;
+        }
+    }
+
     private IActionResult MoveStepDown(string idx) {
         if (int.TryParse(idx, out var parsedIdx)) {
             var step = RecipeSteps[parsedIdx];
             RecipeSteps.RemoveAt(parsedIdx);
             RecipeSteps.Insert(parsedIdx + 1, step);
         }
+
+        SyncStepAttemptedValues();
         return Page();
     }
 
@@ -103,6 +113,8 @@ public class CreateModel : PageModel {
             RecipeSteps.RemoveAt(parsedIdx);
             RecipeSteps.Insert(parsedIdx - 1, step);
         }
+
+        SyncStepAttemptedValues();
         return Page();
     }
 
@@ -110,6 +122,8 @@ public class CreateModel : PageModel {
         if (int.TryParse(idx, out var parsedIdx)) {
             RecipeSteps.RemoveAt(parsedIdx);
         }
+
+        SyncStepAttemptedValues();
         return Page();
     }
     private IActionResult RemoveIngredient(string idx) {

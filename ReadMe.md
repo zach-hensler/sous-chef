@@ -7,7 +7,6 @@ A kitchen helper with recipe versioning
 
 # Current Priorities
 - Compare Versions Page
-- Bug w/ "Move Up" and "Move Down" buttons
 - Make Ids into types so we don't accidentally assign in the wrong spots anymore
 
 ## Backlog
@@ -77,6 +76,7 @@ A kitchen helper with recipe versioning
 - ~~Tmux on Server for session management~~
 - ~~Recipe Versions support~~
 - ~~Display comments from previous versions on details page~~
+- ~~Bug w/ "Move Up" and "Move Down" buttons~~
 
 ---
 # Initial Roadmap

@@ -33,15 +33,15 @@ public static class Setup {
                 : connFactory;
     }
 
-    public static PageContext GetPageContext(Dictionary<string, StringValues> queryParams) {
-        
+    public static PageContext GetPageContext(string key, string? value = null) {
         return new PageContext(new ActionContext {
             ActionDescriptor = new ActionDescriptor(),
             RouteData = new RouteData(),
             ModelState = { },
             HttpContext = new DefaultHttpContext {
                 Request = {
-                    Query = new QueryCollection(queryParams)
+                    Query = new QueryCollection(
+                        new Dictionary<string, StringValues> { [key] = new(value) })
                 }
             }
         });

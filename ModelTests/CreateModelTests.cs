@@ -1,7 +1,6 @@
 using core.Models;
 using core.Models.ViewModels;
 using Helpers;
-using Microsoft.Extensions.Primitives;
 using services;
 using sous_chef.Pages;
 using Xunit;
@@ -25,9 +24,7 @@ public class CreateModelTests: Sequential {
             ]
         };
         await model.OnGet(null);
-        model.PageContext = Setup.GetPageContext(new Dictionary<string, StringValues> {
-            [nameof(CreateActions.SaveExisting)] = StringValues.Empty
-        });
+        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveExisting));
         await model.OnPostAsync(null);
 
         var listRecipes = await RecipeService.ListRecipes(new ListRecipesRequest {
@@ -58,14 +55,12 @@ public class CreateModelTests: Sequential {
         var newName = "new_" + Rand.Primitive.String();
         model.RecipeMetadata = new ViewRecipe {
             Name = newName,
-            Description = model.RecipeMetadata!.Description,
-            EffortLevel = model.RecipeMetadata!.EffortLevel,
-            Category = model.RecipeMetadata!.Category,
-            Time = model.RecipeMetadata!.Time
+            Description = model.RecipeMetadata.Description,
+            EffortLevel = model.RecipeMetadata.EffortLevel,
+            Category = model.RecipeMetadata.Category,
+            Time = model.RecipeMetadata.Time
         };
-        model.PageContext = Setup.GetPageContext(new Dictionary<string, StringValues> {
-            [nameof(CreateActions.SaveExisting)] = StringValues.Empty
-        });
+        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveExisting));
         await model.OnPostAsync(recipe.Data?.VersionId);
 
         var details = await RecipeService.GetRecipe(recipe.Data!.RecipeId);
@@ -90,14 +85,12 @@ public class CreateModelTests: Sequential {
         var newName = "new_" + Rand.Primitive.String();
         model.RecipeMetadata = new ViewRecipe {
             Name = newName,
-            Description = model.RecipeMetadata!.Description,
-            EffortLevel = model.RecipeMetadata!.EffortLevel,
-            Category = model.RecipeMetadata!.Category,
-            Time = model.RecipeMetadata!.Time
+            Description = model.RecipeMetadata.Description,
+            EffortLevel = model.RecipeMetadata.EffortLevel,
+            Category = model.RecipeMetadata.Category,
+            Time = model.RecipeMetadata.Time
         };
-        model.PageContext = Setup.GetPageContext(new Dictionary<string, StringValues> {
-            [nameof(CreateActions.SaveAsNewMinorVersion)] = StringValues.Empty
-        });
+        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveAsNewMinorVersion));
         await model.OnPostAsync(recipe.Data.VersionId);
         var details = await RecipeService.GetRecipe(recipe.Data.VersionId);
         Assert.Empty(details.ErrorMessage);
@@ -119,14 +112,12 @@ public class CreateModelTests: Sequential {
         var newName = "new_" + Rand.Primitive.String();
         model.RecipeMetadata = new ViewRecipe {
             Name = newName,
-            Description = model.RecipeMetadata!.Description,
-            EffortLevel = model.RecipeMetadata!.EffortLevel,
-            Category = model.RecipeMetadata!.Category,
-            Time = model.RecipeMetadata!.Time
+            Description = model.RecipeMetadata.Description,
+            EffortLevel = model.RecipeMetadata.EffortLevel,
+            Category = model.RecipeMetadata.Category,
+            Time = model.RecipeMetadata.Time
         };
-        model.PageContext = Setup.GetPageContext(new Dictionary<string, StringValues> {
-            [nameof(CreateActions.SaveAsNewMajorVersion)] = StringValues.Empty
-        });
+        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveAsNewMajorVersion));
         await model.OnPostAsync(recipe.Data.VersionId);
         var details = await RecipeService.GetRecipe(recipe.Data.VersionId);
         Assert.Empty(details.ErrorMessage);
@@ -143,9 +134,34 @@ public class CreateModelTests: Sequential {
 
         var model = new CreateModel();
         await model.OnGet(recipe.Data!.VersionId);
-        model.PageContext = Setup.GetPageContext(new Dictionary<string, StringValues> {
-            [nameof(CreateActions.SaveAsNewMajorVersion)] = StringValues.Empty
-        });
+        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveAsNewMajorVersion));
         await model.OnPostAsync(recipe.Data.VersionId);
+    }
+
+    [Fact]
+    public async Task ShouldMoveSteps() {
+        var model = new CreateModel();
+        model.PageContext = Setup.GetPageContext(nameof(CreateActions.NewStep));
+        await model.OnPostAsync(null);
+        Assert.Single(model.RecipeSteps);
+        model.RecipeSteps[0] = new ViewStep {
+            Name = "name0",
+            Instruction = "instruct0"
+        };
+        
+        model.PageContext = Setup.GetPageContext(nameof(CreateActions.NewStep));
+        await model.OnPostAsync(null);
+        model.RecipeSteps[1] = new ViewStep {
+            Name = "name1",
+            Instruction = "instruct1"
+        };
+        
+        model.PageContext = Setup.GetPageContext(nameof(CreateActions.MoveStepUp), "1");
+        await model.OnPostAsync(null);
+        
+        Assert.Equal("name1",model.RecipeSteps[0].Name);
+        Assert.Equal("instruct1",model.RecipeSteps[0].Instruction);
+        Assert.Equal("name0",model.RecipeSteps[1].Name);
+        Assert.Equal("instruct0",model.RecipeSteps[1].Instruction);
     }
 }
