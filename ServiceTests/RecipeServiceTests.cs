@@ -117,7 +117,7 @@ public class RecipeServiceTests: Sequential {
             Assert.NotEmpty(recipe.LatestVersionNumber);
             Assert.NotEmpty(recipe.Name);
             Assert.NotEmpty(recipe.Description ?? "");
-            Assert.NotEqual(0, recipe.RecipeId);
+            Assert.NotEqual(0, recipe.RecipeId.Value);
             if (recipe.RecipeId == recipe3.Data!.RecipeId) {
                 Assert.Equal("2.0", recipe.LatestVersionNumber);
             }

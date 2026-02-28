@@ -1,3 +1,5 @@
+using core.Models.DbModels;
+
 namespace core.Models;
 
 public record CreateRecipeDb {
@@ -9,7 +11,7 @@ public record CreateRecipeDb {
 }
 
 public record CreateRecipeVersionDb {
-    public required int RecipeId { get; init; }
+    public required RecipeId RecipeId { get; init; }
     public required string VersionNumber { get; init; }
     public required DateTime CreatedAt { get; init; }
 }
@@ -27,7 +29,7 @@ public record CreateRecipeIngredientDb {
 }
 
 public record CreateRecipeCommentDb {
-    public required int VersionId { get; init; }
+    public required VersionId VersionId { get; init; }
     public required int Rating { get; init; }
     public string? Comment { get; init; }
     public required DateTime CreatedAt { get; init; }

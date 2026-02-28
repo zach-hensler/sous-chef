@@ -21,7 +21,7 @@ public class VersionServiceTests: Sequential {
             });
         }
 
-        var comments = await RecipeService.GetComments(createRes.Data!.VersionId);
+        var comments = await RecipeService.GetComments(createRes.Data!.RecipeId);
         Assert.Empty(comments.ErrorMessage);
         Assert.Equal(commentCount, comments.Data?.Count);
     }

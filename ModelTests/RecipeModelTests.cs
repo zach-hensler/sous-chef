@@ -1,5 +1,6 @@
 ﻿using core.Data;
 using core.Models;
+using core.Models.DbModels;
 using Helpers;
 using services;
 using sous_chef.Pages;
@@ -19,7 +20,7 @@ public class RecipeModelTests: Sequential {
         var latest = await Common.RecipeVersion.GetLatest(recipe.Data!.RecipeId, conn);
         var model = new RecipeModel();
 
-        await model.OnGet(latest.VersionId);
+        await model.OnGet(latest.VersionId.Value);
         Assert.NotNull(model.Details);
         Assert.Single(model.Versions);
     }
@@ -33,7 +34,7 @@ public class RecipeModelTests: Sequential {
         var recipe = await RecipeService.CreateRecipe(originalRecipe);
         Assert.Empty(recipe.ErrorMessage);
         
-        const int versionId1 = 1; //we know this because fresh db
+        var versionId1 = new VersionId(1); //we know this because fresh db
         var versionId2 = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = versionId1,
             VersionType = VersionType.Minor,
@@ -64,7 +65,7 @@ public class RecipeModelTests: Sequential {
         var latest = await Common.RecipeVersion.GetLatest(recipe.Data!.RecipeId, conn);
 
         var model = new RecipeModel();
-        await model.OnGet(versionId3.Data);
+        await model.OnGet(versionId3.Data!.Value);
         Assert.NotNull(model.Details);
         Assert.Equal("1.2", model.Details.Version.VersionNumber);
         Assert.NotEqual(model.Details.Version.VersionNumber, latest.VersionNumber);

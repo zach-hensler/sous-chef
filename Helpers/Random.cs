@@ -43,7 +43,7 @@ public static class Rand {
         public static class Db {
             public static RecipeDb RecipeDb() {
                 return new RecipeDb {
-                    RecipeId = 0,
+                    RecipeId = new RecipeId(0),
                     Name = Primitive.String(),
                     Description = Primitive.String(),
                     TimeMinutes = Primitive.Int(0,120),
@@ -54,8 +54,8 @@ public static class Rand {
 
             public static RecipeStepDb RecipeStepDb(int idx) {
                 return new RecipeStepDb {
-                    RecipeId = 0,
-                    VersionId = 0,
+                    RecipeId = new RecipeId(0),
+                    VersionId = new VersionId(0),
                     Name = Primitive.String(),
                     StepNumber = idx.ToString(),
                     Instruction = Primitive.String()
@@ -64,8 +64,8 @@ public static class Rand {
 
             public static RecipeIngredientDb RecipeIngredientDb() {
                 return new RecipeIngredientDb {
-                    RecipeId = 0,
-                    VersionId = 0,
+                    RecipeId = new RecipeId(0),
+                    VersionId = new VersionId(0),
                     Name = Primitive.String(),
                     Note = null,
                     Quantity = Primitive.Int(),

@@ -1,13 +1,18 @@
 # Sous Chef
 A kitchen helper with recipe versioning
 ---
-# Missing Features
-## ISSUES
-- tailscale upgrade failing
+# Backlog
 
-# Current Priorities
+## Missing v1 Features
 - Compare Versions Page
-- Make Ids into types so we don't accidentally assign in the wrong spots anymore
+- Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"
+- Create Page fixes
+  - On mobile, clicking "new ingredient/new step" should open up the on screen keyboard
+  - Moving step up/down, and deleting steps/ingredients should autofocus to the same area
+    - the modified step for moving, a neighboring step for deletion
+- Input Field for "rating" should restrict to one character
+  - https://stackoverflow.com/questions/42067911/input-field-restrict-to-one-digit
+- Recipe List page should use grid instead of list
 
 ## Backlog
 ### UI/UX
@@ -18,13 +23,11 @@ A kitchen helper with recipe versioning
 - Filters on Home Feed
   - By: Star Rating, Category, Effort Level
 - Show avg rating (for latest version?) on home page
-- grid view for main screen
 - navbar updates
   - icons for admin/create
   - rename "recipes" as "Sous Chef"
   - media query, on mobile collapse to hamburger button + "Sous Chef"
     - hamburger button reveals the rest of the options
-- On mobile, clicking "new ingredient/new step" should open up the on screen keyboard
 
 ### Features
 - Recipe drafts
@@ -36,11 +39,11 @@ A kitchen helper with recipe versioning
   - Include commit messages of commits within the release
   - Select major/minor and generate next version number instead of making user enter number manually
     - Or use commit prefixes (would make it easier to remember what all was changed)
+  - Output version number to file during build, have UI display value in Footer
 - Grocery List
   - adding recipe to grocery list
 - Original author citation for recipes
 - Export Recipe to PDF
-- Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"
 - Support marking a version as the "active version"
   - A recipe can have only one version be active
     - boolean on the recipe_versions row
@@ -55,6 +58,10 @@ A kitchen helper with recipe versioning
   - instead of storing entire steps/ingredients, only store modified
   - each version would reference it's child ingredients/steps
   - would save on db space with a complexity tradeoff
+
+## Tools to research
+- nginx
+- upgraded server
 
 ## Completed Features
 - ~~Create New Recipes~~

@@ -28,9 +28,9 @@ public class RecipeModel : PageModel {
         Comment = null
     };
 
-    public int Id { get; set; }
+    public VersionId Id { get; set; }
 
-    private async Task LoadPageData(int versionId) {
+    private async Task LoadPageData(VersionId versionId) {
         var res = await VersionService.GetRecipeByVersion(versionId);
         if ((int)res.StatusCode < 300 && res.Data != null) {
             Details = res.Data;
@@ -58,13 +58,13 @@ public class RecipeModel : PageModel {
     }
     
     public async Task OnGet(int versionId) {
-        Id = versionId;
-        await LoadPageData(versionId);
+        Id = new VersionId(versionId);
+        await LoadPageData(Id);
     }
 
     public async Task<IActionResult> OnPost(int versionId) {
-        Id = versionId;
-        await LoadPageData(versionId);
+        Id = new VersionId(versionId);
+        await LoadPageData(Id);
         Request.Query.TryGetValue("action", out var action);
         if (!Enum.TryParse<RecipeDetailsAction>(action.ToString(), out var postAction)) {
             return Page();
@@ -78,12 +78,13 @@ public class RecipeModel : PageModel {
     }
 
     public async Task<IActionResult> HandleAddComment(int versionId) {
+        Id = new VersionId(versionId);
         if (NewComment.Rating is > 5 or < 0) {
             return Page();
         }
 
         var res = await VersionService.AddComment(new CreateRecipeCommentDb {
-            VersionId = versionId,
+            VersionId = Id,
             Rating = NewComment.Rating,
             Comment = NewComment.Comment,
             CreatedAt = DateTime.UtcNow
@@ -94,8 +95,9 @@ public class RecipeModel : PageModel {
         return Redirect($"/Recipe/{Id}");
     }
 
-    public async Task<IActionResult> HandleDelete(int id) {
-        var res = await VersionService.DeleteRecipeVersion(id);
+    public async Task<IActionResult> HandleDelete(int versionId) {
+        Id = new VersionId(versionId);
+        var res = await VersionService.DeleteRecipeVersion(Id);
         if ((int)res.StatusCode >= 300) {
             Console.WriteLine(res.ErrorMessage);
         }

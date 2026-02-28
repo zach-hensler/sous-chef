@@ -161,17 +161,17 @@
         </div>
         <dialog id="@saveDialog">
             <h1>Save changes as:</h1>
-            <hr />
+            <p>Note: Updates will be tracked in version history.<br/>Corrections override the previous version.</p>
             <div class="dialog-button-wrapper">
                 <button
                     formaction="?@CreateActions.SaveAsNewMajorVersion"
-                    class="dialog-button">New Major Version</button>
+                    class="dialog-button">Major Update</button>
                 <button
                     formaction="?@CreateActions.SaveAsNewMinorVersion"
-                    class="dialog-button primary">New Minor Version</button>
+                    class="dialog-button primary">Minor Update</button>
                 <button
                     formaction="?@CreateActions.SaveExisting"
-                    class="dialog-button">Update Current Version</button>
+                    class="dialog-button">Correction</button>
                 <button
                     class="dialog-button"
                     type="button"

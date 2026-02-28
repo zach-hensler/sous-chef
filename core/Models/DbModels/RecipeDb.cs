@@ -3,7 +3,7 @@ using core.Models.ViewModels;
 namespace core.Models.DbModels;
 
 public record RecipeDb {
-    public required int RecipeId { get; init; }
+    public required RecipeId RecipeId { get; init; }
     public required string Name { get; init; }
     public string? Description { get; init; }
     public required int TimeMinutes { get; init; }

@@ -5,9 +5,6 @@ using Dapper;
 namespace core.Data;
 
 public static class RecipeData {
-    public static async Task<int> CountRecipes(DbConnection conn) {
-        return await conn.QuerySingleAsync<int>("SELECT count(*) FROM recipes");
-    }
 
     public static async Task<List<ListRecipesResponse.RecipeItem>> ListRecipes(int limit, int offset, DbConnection conn) {
         return (await conn.QueryAsync<ListRecipesResponse.RecipeItem>(

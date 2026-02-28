@@ -7,14 +7,24 @@ namespace core.Data;
 
 public static class Common {
     public static class Recipe {
-        public static async Task<RecipeDb> Get(int recipeId, DbConnection conn) {
+        public static async Task<int> Count(DbConnection conn) {
+            return await conn.QuerySingleAsync<int>("SELECT count(*) FROM recipes");
+        }
+
+        public static async Task<bool> Exists(RecipeId recipeId, DbConnection conn) {
+            var count = await conn.QuerySingleAsync<int>(
+                "SELECT count(*) FROM recipes WHERE recipe_id = @recipeId",
+                new { recipeId });
+            return count > 0;
+        }
+        public static async Task<RecipeDb> Get(RecipeId recipeId, DbConnection conn) {
             return await conn.QuerySingleAsync<RecipeDb>(
                 "SELECT * FROM recipes WHERE recipe_id = @recipeId LIMIT 1;",
                 new { recipeId });
         }
 
-        public static async Task<int> Create(CreateRecipeDb recipe, DbConnection conn) {
-            return await conn.ExecuteScalarAsync<int>(
+        public static async Task<RecipeId> Create(CreateRecipeDb recipe, DbConnection conn) {
+            return await conn.ExecuteScalarAsync<RecipeId>(
                 """
                 INSERT INTO recipes
                     (name, description, time_minutes, effort_level, category)
@@ -31,7 +41,7 @@ public static class Common {
                 });
         }
 
-        public static async Task Update(int id, CreateRecipeDb recipe, DbConnection conn) {
+        public static async Task Update(RecipeId recipeId, CreateRecipeDb recipe, DbConnection conn) {
             await conn.ExecuteAsync(
                 """
                 UPDATE recipes
@@ -42,16 +52,16 @@ public static class Common {
                     category = @Category
                 WHERE recipe_id = @id;
                 """,
-                new { id, recipe.Name, recipe.Description, recipe.EffortLevel, recipe.TimeMinutes, recipe.Category });
+                new { id = recipeId, recipe.Name, recipe.Description, recipe.EffortLevel, recipe.TimeMinutes, recipe.Category });
         }
 
-        public static async Task DeleteCascade(int recipeId, DbConnection conn) {
+        public static async Task DeleteCascade(RecipeId recipeId, DbConnection conn) {
             await conn.ExecuteAsync(
                 "DELETE FROM recipes WHERE recipe_id = @recipeId",
                 new { recipeId });
         }
 
-        public static async Task<List<string>> ListVersions(int recipeId, DbConnection conn) {
+        public static async Task<List<string>> ListVersions(RecipeId recipeId, DbConnection conn) {
             return
                 (await conn.QueryAsync<string>(
                     """
@@ -65,18 +75,18 @@ public static class Common {
     }
 
     public static class RecipeVersion {
-        public static async Task<bool> Exists(int versionId, DbConnection conn) {
+        public static async Task<bool> Exists(VersionId versionId, DbConnection conn) {
             var count = await conn.QuerySingleAsync<int>(
                 "SELECT count(*) FROM recipe_versions WHERE version_id = @versionId",
                 new { versionId });
             return count > 0;
         }
-        public static async Task<RecipeVersionDb> Get(int versionId, DbConnection conn) {
+        public static async Task<RecipeVersionDb> Get(VersionId versionId, DbConnection conn) {
             return await conn.QuerySingleAsync<RecipeVersionDb>(
                 "SELECT * FROM recipe_versions WHERE version_id = @versionId",
                 new { versionId });
         }
-        public static async Task<RecipeVersionDb> GetLatest(int recipeId, DbConnection conn) {
+        public static async Task<RecipeVersionDb> GetLatest(RecipeId recipeId, DbConnection conn) {
             return await conn.QuerySingleAsync<RecipeVersionDb>(
                 """
                 SELECT *
@@ -88,14 +98,14 @@ public static class Common {
                 new { recipeId });
         }
 
-        public static async Task<List<RecipeVersionDb>> List(int recipeId, DbConnection conn) {
+        public static async Task<List<RecipeVersionDb>> List(RecipeId recipeId, DbConnection conn) {
             return (await conn.QueryAsync<RecipeVersionDb>(
                 "SELECT * FROM recipe_versions WHERE recipe_id = @recipeId;",
                 new { recipeId }))
                 .ToList();
         }
-        public static async Task<int> Create(CreateRecipeVersionDb version, DbConnection conn) {
-            return await conn.ExecuteScalarAsync<int>(
+        public static async Task<VersionId> Create(CreateRecipeVersionDb version, DbConnection conn) {
+            return await conn.ExecuteScalarAsync<VersionId>(
                 """
                 INSERT INTO recipe_versions
                 (version_number, recipe_id, created_at)
@@ -109,10 +119,16 @@ public static class Common {
                     version.CreatedAt
                 });
         }
+
+        public static async Task DeleteCascade(VersionId versionId, DbConnection conn) {
+            await conn.ExecuteAsync(
+                "DELETE FROM recipe_steps WHERE version_id = @versionId",
+                new { versionId });
+        }
     }
 
     public static class RecipeSteps {
-        public static async Task Create(CreateRecipeStepDb step, int stepIndex, int versionId, DbConnection conn) {
+        public static async Task Create(CreateRecipeStepDb step, int stepIndex, VersionId versionId, DbConnection conn) {
             await conn.ExecuteAsync(
                 """
                 INSERT INTO recipe_steps
@@ -128,13 +144,13 @@ public static class Common {
                 });
         }
 
-        public static async Task Delete(int versionId, DbConnection conn) {
+        public static async Task Delete(VersionId versionId, DbConnection conn) {
             await conn.ExecuteAsync(
                 "DELETE FROM recipe_steps WHERE version_id = @versionId;",
                 new { versionId });
         }
         
-        public static async Task<List<RecipeStepDb>> Get(int versionId, DbConnection conn) {
+        public static async Task<List<RecipeStepDb>> Get(VersionId versionId, DbConnection conn) {
             return
                 (await conn.QueryAsync<RecipeStepDb>(
                     """
@@ -148,7 +164,7 @@ public static class Common {
     }
 
     public static class RecipeIngredients {
-        public static async Task Create(CreateRecipeIngredientDb ingredient, int versionId, DbConnection conn) {
+        public static async Task Create(CreateRecipeIngredientDb ingredient, VersionId versionId, DbConnection conn) {
             await conn.ExecuteAsync(
                 """
                 INSERT INTO recipe_ingredients
@@ -165,13 +181,13 @@ public static class Common {
                 });
         }
         
-        public static async Task Delete(int versionId, DbConnection conn) {
+        public static async Task Delete(VersionId versionId, DbConnection conn) {
             await conn.ExecuteAsync(
                 "DELETE FROM recipe_ingredients WHERE version_id = @versionId;",
                 new { versionId });
         }
         
-        public static async Task<List<RecipeIngredientDb>> Get(int versionId, DbConnection conn) {
+        public static async Task<List<RecipeIngredientDb>> Get(VersionId versionId, DbConnection conn) {
             return
                 (await conn.QueryAsync<RecipeIngredientDb>(
                     """
@@ -197,7 +213,7 @@ public static class Common {
                 new { comment.VersionId, comment.Rating, comment.Comment, comment.CreatedAt });
         }
         
-        public static async Task<List<RecipeCommentDb>> GetByRecipe(int recipeId, DbConnection conn) {
+        public static async Task<List<RecipeCommentDb>> GetByRecipe(RecipeId recipeId, DbConnection conn) {
             return (await conn.QueryAsync<RecipeCommentDb>(
                     """
                     SELECT c.*
@@ -209,7 +225,7 @@ public static class Common {
                 .ToList();
         }
 
-        public static async Task<List<RecipeCommentDb>> GetByVersion(int versionId, DbConnection conn) {
+        public static async Task<List<RecipeCommentDb>> GetByVersion(VersionId versionId, DbConnection conn) {
             return (await conn.QueryAsync<RecipeCommentDb>(
                 "SELECT * FROM recipe_comments WHERE version_id = @versionId",
                 new { versionId }))

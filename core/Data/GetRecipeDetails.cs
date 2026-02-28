@@ -13,13 +13,13 @@ public record RecipeDetails {
 
 public static class GetRecipeDetails {
 
-    public static async Task<RecipeDetails> GetByRecipe(int recipeId, DbConnection conn) {
+    public static async Task<RecipeDetails> GetByRecipe(RecipeId recipeId, DbConnection conn) {
         var latestVersion = await Common.RecipeVersion.GetLatest(recipeId, conn);
 
         return await GetByVersion(latestVersion.VersionId, conn);
     }
 
-    public static async Task<RecipeDetails> GetByVersion(int versionId, DbConnection conn) {
+    public static async Task<RecipeDetails> GetByVersion(VersionId versionId, DbConnection conn) {
         var version = await Common.RecipeVersion.Get(versionId, conn);
         var recipe = await Common.Recipe.Get(version.RecipeId, conn);
         

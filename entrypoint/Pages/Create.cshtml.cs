@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json.Serialization;
 using core.Models;
+using core.Models.DbModels;
 using core.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -27,7 +28,7 @@ public class CreateModel : PageModel {
     [BindProperty] public List<ViewIngedient> RecipeIngredients { get; set; } = [];
 
     [BindProperty] public List<ViewStep> RecipeSteps { get; set; } = [];
-    public int? VersionId { get; set; }
+    public VersionId? VersionId { get; set; }
     public string? VersionNumber { get; set; }
 
     public string GetBaseRoute() {
@@ -39,7 +40,7 @@ public class CreateModel : PageModel {
         return baseRoute;
     }
 
-    private async Task LoadPageData(int versionId) {
+    private async Task LoadPageData(VersionId versionId) {
         var res = await VersionService.GetRecipeByVersion(versionId);
         if ((int)res.StatusCode >= 300 || res.Data == null) {
             Console.WriteLine(res.ErrorMessage);
@@ -54,8 +55,8 @@ public class CreateModel : PageModel {
 
     public async Task<IActionResult> OnGet(int? versionId) {
         if (versionId != null) {
-            VersionId = versionId;
-            await LoadPageData(versionId.Value);
+            VersionId = new VersionId(versionId.Value);
+            await LoadPageData(VersionId);
         }
         
         return Page();
@@ -63,7 +64,7 @@ public class CreateModel : PageModel {
 
     public async Task<IActionResult> OnPostAsync(int? versionId) {
         if (versionId != null) {
-            VersionId = versionId;
+            VersionId = new VersionId(versionId.Value);
         }
         foreach (var kvp in Request.Query) {
             if (!Enum.TryParse<CreateActions>(kvp.Key, out var action)) {
@@ -154,8 +155,9 @@ public class CreateModel : PageModel {
             return Page();
         }
 
+        VersionId = new VersionId(versionId.Value);
         var res = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
-            PreviousVersionId = versionId.Value,
+            PreviousVersionId = VersionId,
             VersionType = VersionType.Major,
             Recipe = RecipeMetadata.ToRecipeDb(),
             Steps = RecipeSteps.Select(s => s.ToStepDb()).ToList(),
@@ -174,8 +176,9 @@ public class CreateModel : PageModel {
             return Page();
         }
 
+        VersionId = new VersionId(versionId.Value);
         var res = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
-            PreviousVersionId = versionId.Value,
+            PreviousVersionId = VersionId,
             VersionType = VersionType.Minor,
             Recipe = RecipeMetadata.ToRecipeDb(),
             Steps = RecipeSteps.Select(s => s.ToStepDb()).ToList(),
@@ -200,11 +203,16 @@ public class CreateModel : PageModel {
         int redirectId;
         if (versionId == null) {
             var createRes = await RecipeService.CreateRecipe(createRequest);
-            redirectId = createRes.Data.VersionId;
+            if (!string.IsNullOrWhiteSpace(createRes.ErrorMessage)) {
+                Console.WriteLine(createRes.ErrorMessage);
+                return Page();
+            }
+            redirectId = createRes.Data!.VersionId.Value;
             response = createRes;
         }
         else {
-            response = await RecipeService.UpdateRecipeVersion(versionId.Value, createRequest);
+            VersionId = new VersionId(versionId.Value);
+            response = await RecipeService.UpdateRecipeVersion(VersionId, createRequest);
             redirectId = versionId.Value;
         }
 

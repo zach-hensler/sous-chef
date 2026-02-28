@@ -36,7 +36,7 @@ public static class RecipeService {
         });
     }
 
-    public static async Task<Response<int>> CreateRecipeVersion(CreateRecipeVersionRequest request) {
+    public static async Task<Response<VersionId>> CreateRecipeVersion(CreateRecipeVersionRequest request) {
         return await Utils.SafeRun(nameof(CreateRecipe), async (conn) => {
             var transaction = await conn.BeginTransactionAsync();
             
@@ -59,12 +59,12 @@ public static class RecipeService {
             }
 
             await transaction.CommitAsync();
-            return new Response<int>(version);
+            return new Response<VersionId>(version);
         });
         
     }
 
-    public static async Task<Response> UpdateRecipeVersion(int versionId, CreateRecipeRequest request) {
+    public static async Task<Response> UpdateRecipeVersion(VersionId versionId, CreateRecipeRequest request) {
         return await Utils.SafeRun(nameof(UpdateRecipeVersion), async (conn) => {
             var transaction = await conn.BeginTransactionAsync();
 
@@ -86,7 +86,7 @@ public static class RecipeService {
         });
     }
 
-    public static async Task<Response<RecipeDetails>> GetRecipe(int recipeId) {
+    public static async Task<Response<RecipeDetails>> GetRecipe(RecipeId recipeId) {
         return await Utils.SafeRun(nameof(GetRecipe), async (conn) => {
             var data = await GetRecipeDetails.GetByRecipe(recipeId, conn);
 
@@ -94,7 +94,7 @@ public static class RecipeService {
         });
     }
 
-    public static async Task<Response<RecipeDetails>> GetRecipeByVersion(int versionId) {
+    public static async Task<Response<RecipeDetails>> GetRecipeByVersion(VersionId versionId) {
         return await Utils.SafeRun(nameof(GetRecipeByVersion), async (conn) => {
             var version = await Common.RecipeVersion.Get(versionId, conn);
             var data = await GetRecipeDetails.GetByRecipe(version.RecipeId, conn);
@@ -104,7 +104,7 @@ public static class RecipeService {
     }
     public static async Task<Response<ListRecipesResponse>> ListRecipes(ListRecipesRequest request) {
         return await Utils.SafeRun(nameof(ListRecipes), async (conn) => {
-            var total = await RecipeData.CountRecipes(conn);
+            var total = await Common.Recipe.Count(conn);
             var recipes = await RecipeData.ListRecipes(request.Count, request.Offset, conn);
 
             return new Response<ListRecipesResponse>(new ListRecipesResponse {
@@ -114,9 +114,9 @@ public static class RecipeService {
         });
     }
 
-    public static async Task<Response<List<RecipeCommentDb>>> GetComments(int recipeId) {
+    public static async Task<Response<List<RecipeCommentDb>>> GetComments(RecipeId recipeId) {
         return await Utils.SafeRun(nameof(GetComments), async (conn) => {
-            if (!await Common.RecipeVersion.Exists(recipeId, conn)) {
+            if (!await Common.Recipe.Exists(recipeId, conn)) {
                 return new Response<List<RecipeCommentDb>>(
                     HttpStatusCode.NotFound, $"Version '{recipeId}' not found");
             }
