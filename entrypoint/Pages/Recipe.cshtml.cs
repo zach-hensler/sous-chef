@@ -9,7 +9,8 @@ namespace sous_chef.Pages;
 
 public enum RecipeDetailsAction {
     AddComment,
-    DeleteConfirmation
+    DeleteVersion,
+    DeleteEntireRecipe
 }
 
 public record NewComment {
@@ -21,6 +22,7 @@ public class RecipeModel : PageModel {
     public RecipeDetails? Details { get; set; }
     public List<RecipeCommentDb> Comments { get; set; } = [];
     public List<RecipeVersionDb> Versions { get; set; } = [];
+    [BindProperty] public string DeleteConfirmation { get; set; } = "";
 
     [BindProperty]
     public NewComment NewComment { get; set; } = new() {
@@ -71,8 +73,9 @@ public class RecipeModel : PageModel {
         }
 
         return postAction switch {
-            RecipeDetailsAction.DeleteConfirmation => await HandleDelete(versionId),
             RecipeDetailsAction.AddComment => await HandleAddComment(versionId),
+            RecipeDetailsAction.DeleteVersion => await HandleDeleteVersion(versionId),
+            RecipeDetailsAction.DeleteEntireRecipe => await HandleDeleteRecipe(versionId),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -95,9 +98,24 @@ public class RecipeModel : PageModel {
         return Redirect($"/Recipe/{Id}");
     }
 
-    public async Task<IActionResult> HandleDelete(int versionId) {
+    public async Task<IActionResult> HandleDeleteVersion(int versionId) {
+        if (DeleteConfirmation != "DELETE") {
+            return Page();
+        }
         Id = new VersionId(versionId);
         var res = await VersionService.DeleteRecipeVersion(Id);
+        if ((int)res.StatusCode >= 300) {
+            Console.WriteLine(res.ErrorMessage);
+        }
+        return RedirectToPage("Index");
+    }
+
+    public async Task<IActionResult> HandleDeleteRecipe(int versionId) {
+        if (DeleteConfirmation != "DELETE") {
+            return Page();
+        }
+        Id = new VersionId(versionId);
+        var res = await VersionService.DeleteEntireRecipe(Id);
         if ((int)res.StatusCode >= 300) {
             Console.WriteLine(res.ErrorMessage);
         }

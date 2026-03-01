@@ -105,7 +105,7 @@ public static class RecipeService {
     public static async Task<Response<ListRecipesResponse>> ListRecipes(ListRecipesRequest request) {
         return await Utils.SafeRun(nameof(ListRecipes), async (conn) => {
             var total = await Common.Recipe.Count(conn);
-            var recipes = await RecipeData.ListRecipes(request.Count, request.Offset, conn);
+            var recipes = await ListRecipeData.Get(request.Count, request.Offset, conn);
 
             return new Response<ListRecipesResponse>(new ListRecipesResponse {
                 Total = total,

@@ -39,12 +39,24 @@ public static class VersionService {
     }
 
     public static async Task<Response> DeleteRecipeVersion(VersionId versionId) {
-        // TODO conditionally delete the whole recipe if this is the only version
         return await Utils.SafeRun(nameof(DeleteRecipeVersion), async (conn) => {
-            await Common.RecipeVersion.DeleteCascade(versionId, conn);
+            var versions = await Common.RecipeVersion.ListOtherVersions(versionId, conn);
+            if (versions.Count > 1) {
+                await Common.RecipeVersion.DeleteCascade(versionId, conn);    
+            }
+            else {
+                await Common.Recipe.DeleteCascade(versions.First().RecipeId, conn);
+            }
 
             return new Response();
         });
     }
 
+    public static async Task<Response> DeleteEntireRecipe(VersionId versionId) {
+        return await Utils.SafeRun(nameof(DeleteRecipeVersion), async (conn) => {
+            await Common.Recipe.DeleteCascadeFromVersion(versionId, conn);
+
+            return new Response();
+        });
+    }
 }

@@ -3,7 +3,8 @@ A kitchen helper with recipe versioning
 ---
 # Backlog
 
-## Missing v1 Features
+## Missing v1 Features - Core Features
+- Better logging
 - Compare Versions Page
 - Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"
 - Create Page fixes
@@ -12,37 +13,30 @@ A kitchen helper with recipe versioning
     - the modified step for moving, a neighboring step for deletion
 - Input Field for "rating" should restrict to one character
   - https://stackoverflow.com/questions/42067911/input-field-restrict-to-one-digit
-- Recipe List page should use grid instead of list
+- Original author citation for recipes
 
-## Backlog
-### UI/UX
-- UI review/updates
-  - Home Feed
-  - Modals
-  - Edit Page
+
+## v2 Features - Ease of Use
+Index Updates
 - Filters on Home Feed
   - By: Star Rating, Category, Effort Level
-- Show avg rating (for latest version?) on home page
+  - Searching on Home Feed
+    - By name, description, and ingredients
+  - Show avg rating (for latest version?) on home page
 - navbar updates
   - icons for admin/create
   - rename "recipes" as "Sous Chef"
   - media query, on mobile collapse to hamburger button + "Sous Chef"
     - hamburger button reveals the rest of the options
+- Recipe List page should use grid instead of list
 
-### Features
+
+## Backlog
 - Recipe drafts
-- Recipe Searching
-  - By name, description, and ingredients
 - Uploading image for a recipe
   - Should be automatically scaled down before saving image
-- Build pipeline fixes
-  - Include commit messages of commits within the release
-  - Select major/minor and generate next version number instead of making user enter number manually
-    - Or use commit prefixes (would make it easier to remember what all was changed)
-  - Output version number to file during build, have UI display value in Footer
 - Grocery List
   - adding recipe to grocery list
-- Original author citation for recipes
 - Export Recipe to PDF
 - Support marking a version as the "active version"
   - A recipe can have only one version be active
@@ -51,13 +45,18 @@ A kitchen helper with recipe versioning
   - List recipes should return the "active" version instead of the latest
   - On compare screen, you can change which one is active
 
-### Tech Debt
-- Better logging
+## Tech Debt
 - Better response model (current isn't wrong, just odd)
 - Reconsider how versions are stored
   - instead of storing entire steps/ingredients, only store modified
   - each version would reference it's child ingredients/steps
   - would save on db space with a complexity tradeoff
+- Build pipeline fixes
+  - Include commit messages of commits within the release
+  - Select major/minor and generate next version number instead of making user enter number manually
+    - Or use commit prefixes (would make it easier to remember what all was changed)
+  - Output version number to file during build, have UI display value in Footer
+
 
 ## Tools to research
 - nginx

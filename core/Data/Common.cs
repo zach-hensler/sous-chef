@@ -60,6 +60,17 @@ public static class Common {
                 "DELETE FROM recipes WHERE recipe_id = @recipeId",
                 new { recipeId });
         }
+        
+        public static async Task DeleteCascadeFromVersion(VersionId versionId, DbConnection conn) {
+            await conn.ExecuteAsync(
+                """
+                DELETE FROM recipes
+                WHERE recipe_id IN (
+                    SELECT recipe_id FROM recipe_versions WHERE version_id = @versionId
+                );
+                """,
+                new { versionId });
+        }
 
         public static async Task<List<string>> ListVersions(RecipeId recipeId, DbConnection conn) {
             return
@@ -80,6 +91,18 @@ public static class Common {
                 "SELECT count(*) FROM recipe_versions WHERE version_id = @versionId",
                 new { versionId });
             return count > 0;
+        }
+        public static async Task<List<RecipeVersionDb>> ListOtherVersions(VersionId versionId, DbConnection conn) {
+            var res = await conn.QueryAsync<RecipeVersionDb>(
+                """
+                SELECT *
+                FROM recipe_versions
+                WHERE recipe_id IN (
+                    SELECT recipe_id FROM recipe_versions WHERE version_id = @versionId
+                )
+                """,
+                new { versionId });
+            return res.ToList();
         }
         public static async Task<RecipeVersionDb> Get(VersionId versionId, DbConnection conn) {
             return await conn.QuerySingleAsync<RecipeVersionDb>(
@@ -122,7 +145,7 @@ public static class Common {
 
         public static async Task DeleteCascade(VersionId versionId, DbConnection conn) {
             await conn.ExecuteAsync(
-                "DELETE FROM recipe_steps WHERE version_id = @versionId",
+                "DELETE FROM recipe_versions WHERE version_id = @versionId",
                 new { versionId });
         }
     }

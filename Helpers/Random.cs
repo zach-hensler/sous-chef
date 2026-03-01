@@ -79,37 +79,67 @@ public static class Rand {
                     OccurredAt = Primitive.Date()
                 };
             }
-        }
-        public static class Requests {
-            public static CreateRecipeRequest CreateRecipeRequest() {
-                List<CreateRecipeStepDb> steps = [];
-                for (var i = 0; i < Primitive.Int(1, 4); i++) {
-                    steps.Add(new CreateRecipeStepDb {
+
+            public static class Create {
+                public static CreateRecipeStepDb CreateRecipeStepDb() {
+                    return new CreateRecipeStepDb {
                         Name = Primitive.String(),
                         Instruction = Primitive.String()
-                    });
+                    };
                 }
 
-                List<CreateRecipeIngredientDb> ingredients = [];
-                for (var i = 0; i < Primitive.Int(1, 4); i++) {
-                    ingredients.Add(new CreateRecipeIngredientDb {
+                public static CreateRecipeIngredientDb CreateRecipeIngredientDb() {
+                    return new CreateRecipeIngredientDb {
                         Name = Primitive.String(),
                         Note = Primitive.String(),
                         Quantity = Primitive.Int(),
                         Unit = Primitive.String()
-                    });
+                    };
                 }
-            
-                return new CreateRecipeRequest {
-                    Recipe = new CreateRecipeDb {
+
+                public static CreateRecipeDb CreateRecipeDb() {
+                    return new CreateRecipeDb {
                         Name = Primitive.String(),
                         Description = Primitive.String(),
                         TimeMinutes = Primitive.Int(),
                         EffortLevel = EffortLevels.Easy,
                         Category = Categories.Uncategorized
-                    },
+                    };
+                }
+            }
+        }
+        public static class Requests {
+            public static CreateRecipeRequest CreateRecipeRequest() {
+                List<CreateRecipeStepDb> steps = [];
+                for (var i = 0; i < Primitive.Int(1, 4); i++) {
+                    steps.Add(Db.Create.CreateRecipeStepDb());
+                }
+
+                List<CreateRecipeIngredientDb> ingredients = [];
+                for (var i = 0; i < Primitive.Int(1, 4); i++) {
+                    ingredients.Add(Db.Create.CreateRecipeIngredientDb());
+                }
+            
+                return new CreateRecipeRequest {
+                    Recipe = Db.Create.CreateRecipeDb(),
                     Steps = steps,
                     Ingredients = ingredients
+                };
+            }
+
+            public static CreateRecipeVersionRequest CreateRecipeVersionRequest(VersionId previousVersion) {
+                return new CreateRecipeVersionRequest {
+                    PreviousVersionId = previousVersion,
+                    VersionType = (VersionType)Primitive.Int(0,1),
+                    Recipe = Db.Create.CreateRecipeDb(),
+                    Steps = [
+                        Db.Create.CreateRecipeStepDb(),
+                        Db.Create.CreateRecipeStepDb()
+                    ],
+                    Ingredients = [
+                        Db.Create.CreateRecipeIngredientDb(),
+                        Db.Create.CreateRecipeIngredientDb()
+                    ]
                 };
             }
         }

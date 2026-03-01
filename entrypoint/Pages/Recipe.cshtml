@@ -11,6 +11,10 @@
         const dialog = document.getElementById("@deleteDialog")
         dialog.showModal();
     }
+    function CloseDeleteDialog() {
+        const dialog = document.getElementById("@deleteDialog")
+        dialog.close();
+    }
     
     function OpenMadeIt() {
         const dialog = document.getElementById("@madeItDialog")
@@ -114,20 +118,26 @@
         </form>
     </dialog>
     <dialog id="@deleteDialog">
-        <p>Are you sure you'd like to delete this?</p>
-        <div class="dialog-footer">
-            <hr />
+        <form method="post">
             <div class="dialog-button-wrapper">
-                <form method="dialog">
-                    <button>Cancel</button>
-                </form>
-                <form method="post">
-                    <button
-                        class="warning"
-                        formaction="?action=@RecipeDetailsAction.DeleteConfirmation"
-                        type="submit">DELETE</button>
-                </form>
+                <p>Type 'DELETE' to confirm</p>
+                <input asp-for="@Model.DeleteConfirmation" required/>
+                <hr/>
+                <button
+                    class="warning dialog-button"
+                    formaction="?action=@RecipeDetailsAction.DeleteVersion"
+                    type="submit">Delete this Version</button>
+                <button
+                    class="warning dialog-button"
+                    formaction="?action=@RecipeDetailsAction.DeleteEntireRecipe"
+                    type="submit">Delete ALL Versions</button>
+                <button
+                    class="dialog-button"
+                    type="button"
+                    onclick="CloseDeleteDialog()">
+                    Cancel
+                </button>
             </div>
-        </div>
+        </form>
     </dialog>
 </div>
