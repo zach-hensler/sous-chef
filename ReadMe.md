@@ -9,8 +9,6 @@ A kitchen helper with recipe versioning
   - On mobile, clicking "new ingredient/new step" should open up the on screen keyboard
   - Moving step up/down, and deleting steps/ingredients should autofocus to the same area
     - the modified step for moving, a neighboring step for deletion
-- Input Field for "rating" should restrict to one character
-  - https://stackoverflow.com/questions/42067911/input-field-restrict-to-one-digit
 - Original author citation for recipes
 
 
@@ -82,6 +80,7 @@ Index Updates
 - ~~Display comments from previous versions on details page~~
 - ~~Bug w/ "Move Up" and "Move Down" buttons~~
 - ~~Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"~~
+- ~~Autofocus rating dialog and remove default~~
 
 ---
 # Initial Roadmap

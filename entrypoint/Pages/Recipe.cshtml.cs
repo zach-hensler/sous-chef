@@ -15,7 +15,7 @@ public enum RecipeDetailsAction {
 }
 
 public record NewComment {
-    public required int Rating { get; init; }
+    public required int? Rating { get; init; }
     public required string? Comment { get; init; }
 }
 
@@ -28,7 +28,7 @@ public class RecipeModel : PageModel {
 
     [BindProperty]
     public NewComment NewComment { get; set; } = new() {
-        Rating = 0,
+        Rating = null,
         Comment = null
     };
 
@@ -84,13 +84,13 @@ public class RecipeModel : PageModel {
 
     public async Task<IActionResult> HandleAddComment(int versionId) {
         Id = new VersionId(versionId);
-        if (NewComment.Rating is > 5 or < 0) {
+        if (NewComment.Rating is null or > 5 or < 0) {
             return Page();
         }
 
         var res = await VersionService.AddComment(new CreateRecipeCommentDb {
             VersionId = Id,
-            Rating = NewComment.Rating,
+            Rating = NewComment.Rating.Value,
             Comment = NewComment.Comment,
             CreatedAt = DateTime.UtcNow
         });

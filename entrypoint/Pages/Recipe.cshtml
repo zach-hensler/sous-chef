@@ -4,6 +4,7 @@
     ViewData["Title"] = Model.Details?.RecipeMetadata.Name;
     const string deleteDialog = "deleteDialog";
     const string madeItDialog = "madeItDialog";
+    const string rating = "rating";
 }
 
 <script>
@@ -17,8 +18,10 @@
     }
     
     function OpenMadeIt() {
-        const dialog = document.getElementById("@madeItDialog")
+        const dialog = document.getElementById("@madeItDialog");
         dialog.showModal();
+        const rating = document.getElementById("@rating");
+        rating.focus();
     }
     function CloseMadeIt() {
         const dialog = document.getElementById("@madeItDialog")
@@ -90,10 +93,10 @@
     <dialog id="@madeItDialog">
         <form method="post">
             <div>
-                <label for="rating">Rating (out of 5):</label>
+                <label for="@rating">Rating (out of 5):</label>
                 <input
                     asp-for="@Model.NewComment.Rating"
-                    id="rating"
+                    id="@rating"
                     required/>
             </div>
             <div>
