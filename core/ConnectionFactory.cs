@@ -4,7 +4,7 @@ using Npgsql;
 namespace core;
 
 public class ConnectionFactory(bool testEnv = false) {
-    private readonly string? _connectionString = Environment.GetEnvironmentVariable(EnvironmentVariables.ConnectionString);
+    private readonly string? _connectionString = Environment.GetEnvironmentVariable(EnvVars.ConnectionString);
 
     public DbConnection GetConnection() {
         if (string.IsNullOrWhiteSpace(_connectionString)) {

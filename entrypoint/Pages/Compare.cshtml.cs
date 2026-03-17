@@ -1,3 +1,4 @@
+using core;
 using core.Data;
 using core.Models.DbModels;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,6 @@ public class Compare : PageModel {
             if (!string.IsNullOrWhiteSpace(res.ErrorMessage)) {
                 Version1Details = res.Data;
             }
-            else {
-                Console.WriteLine(res.ErrorMessage);
-            }
         }
 
         if (id2 != null) {
@@ -30,9 +28,6 @@ public class Compare : PageModel {
             var res = await RecipeService.GetRecipeByVersion(VersionId2);
             if (!string.IsNullOrWhiteSpace(res.ErrorMessage)) {
                 Version2Details = res.Data;
-            }
-            else {
-                Console.WriteLine(res.ErrorMessage);
             }
         }
         return Page();

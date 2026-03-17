@@ -8,6 +8,7 @@ using core.Models.DbModels;
 namespace services;
 
 public static class Utils {
+    private static Logging log = new ();
     public static class Domain {
         public static string IncrementRecipeVersion(string currentVersion, VersionType versionType) {
             var parts = currentVersion.Split('.');
@@ -76,7 +77,7 @@ public static class Utils {
                 conn);
         }
         catch (Exception errorHistoryEx) {
-            Console.WriteLine("Unable to write error message" + errorHistoryEx.Message);
+            log.LogError("Unable to write error message" + errorHistoryEx.Message);
         }
     }
 }

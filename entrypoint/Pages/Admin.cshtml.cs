@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using core;
 using core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -19,9 +20,6 @@ public class AdminModel : PageModel {
         if ((int)res.StatusCode < 300 && res.Data != null) {
             ErrorRes = res.Data;
         }
-        else {
-            Console.WriteLine(res.ErrorMessage);
-        }
         
     }
     public async Task<IActionResult> OnGetAsync() {
@@ -32,7 +30,6 @@ public class AdminModel : PageModel {
     public async Task<IActionResult> OnPostAsync() {
         foreach (var kvp in Request.Query) {
             if (!Enum.TryParse<AdminActions>(kvp.Key, out var action)) {
-                Console.WriteLine($"Unexpected action: {kvp.Key} = {kvp.Value}");
                 await LoadPageData();
                 return Page();
             }
@@ -50,9 +47,6 @@ public class AdminModel : PageModel {
 
     public async Task<IActionResult> HandleMigrate() {
         var res = await MigrationService.Migrate();
-        if ((int)res.StatusCode >= 300) {
-            Console.WriteLine(res.ErrorMessage);
-        }
         return Page();
     }
 }

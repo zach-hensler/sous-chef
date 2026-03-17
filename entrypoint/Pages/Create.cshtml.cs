@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json.Serialization;
+using core;
 using core.Models;
 using core.Models.DbModels;
 using core.Models.ViewModels;
@@ -42,10 +43,7 @@ public class CreateModel : PageModel {
 
     private async Task LoadPageData(VersionId versionId) {
         var res = await VersionService.GetRecipeByVersion(versionId);
-        if ((int)res.StatusCode >= 300 || res.Data == null) {
-            Console.WriteLine(res.ErrorMessage);
-        }
-        else {
+        if (res.Data != null) {
             RecipeMetadata = res.Data.RecipeMetadata.ToViewRecipe();
             VersionNumber = res.Data.Version.VersionNumber;
             RecipeIngredients = res.Data.Ingredients.Select(i => i.ToViewIngredient()).ToList();
@@ -68,7 +66,6 @@ public class CreateModel : PageModel {
         }
         foreach (var kvp in Request.Query) {
             if (!Enum.TryParse<CreateActions>(kvp.Key, out var action)) {
-                Console.WriteLine($"Unexpected action: {kvp.Key} = {kvp.Value}");
                 return Page();
             }
 
@@ -167,7 +164,6 @@ public class CreateModel : PageModel {
             return Redirect("/Index");
         }
 
-        Console.WriteLine($"Unable to create new version, received error '{res.ErrorMessage}'");
         return Page();
     }
     
@@ -188,7 +184,6 @@ public class CreateModel : PageModel {
             return Redirect("/Index");
         }
 
-        Console.WriteLine($"Unable to create new version, received error '{res.ErrorMessage}'");
         return Page();
     }
 
@@ -204,7 +199,6 @@ public class CreateModel : PageModel {
         if (versionId == null) {
             var createRes = await RecipeService.CreateRecipe(createRequest);
             if (!string.IsNullOrWhiteSpace(createRes.ErrorMessage)) {
-                Console.WriteLine(createRes.ErrorMessage);
                 return Page();
             }
             redirectId = createRes.Data!.VersionId.Value;
@@ -220,7 +214,6 @@ public class CreateModel : PageModel {
             return Redirect($"/Recipe/{redirectId}");
         }
 
-        Console.WriteLine(response.ErrorMessage);
         return Page();
     }
 }

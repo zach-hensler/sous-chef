@@ -8,7 +8,7 @@ using migrations;
 namespace services;
 
 public static class MigrationService {
-    private static readonly string? ConnectionString = Environment.GetEnvironmentVariable(EnvironmentVariables.ConnectionString);
+    private static readonly string? ConnectionString = Environment.GetEnvironmentVariable(EnvVars.ConnectionString);
 
     public static async Task<Response> Migrate(bool testEnv = false) {
         return await Utils.SafeRun(nameof(Migrate), () => {

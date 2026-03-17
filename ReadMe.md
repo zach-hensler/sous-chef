@@ -4,9 +4,7 @@ A kitchen helper with recipe versioning
 # Backlog
 
 ## Missing v1 Features - Core Features
-- Better logging
 - Compare Versions Page
-- Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"
 - Create Page fixes
   - On mobile, clicking "new ingredient/new step" should open up the on screen keyboard
   - Moving step up/down, and deleting steps/ingredients should autofocus to the same area
@@ -83,6 +81,7 @@ Index Updates
 - ~~Recipe Versions support~~
 - ~~Display comments from previous versions on details page~~
 - ~~Bug w/ "Move Up" and "Move Down" buttons~~
+- ~~Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"~~
 
 ---
 # Initial Roadmap

@@ -13,7 +13,7 @@ namespace Helpers;
 
 public static class Setup {
     public static async Task<ConnectionFactory> ResetAndGetDatabase() {
-        Environment.SetEnvironmentVariable(EnvironmentVariables.ConnectionString, "User ID=test-user;Password=test-pass;Host=localhost;Port=5433;Database=tests;");
+        Environment.SetEnvironmentVariable(EnvVars.ConnectionString, "User ID=test-user;Password=test-pass;Host=localhost;Port=5433;Database=tests;");
 
         var connFactory = new ConnectionFactory(true);
         await using var conn = connFactory.GetConnection();

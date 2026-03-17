@@ -1,3 +1,4 @@
+using core;
 using core.Data;
 using core.Models;
 using core.Models.DbModels;
@@ -19,6 +20,7 @@ public record NewComment {
 }
 
 public class RecipeModel : PageModel {
+    private Logging _log = new();
     public RecipeDetails? Details { get; set; }
     public List<RecipeCommentDb> Comments { get; set; } = [];
     public List<RecipeVersionDb> Versions { get; set; } = [];
@@ -38,7 +40,7 @@ public class RecipeModel : PageModel {
             Details = res.Data;
         }
         else {
-            Console.WriteLine(res.ErrorMessage);
+            _log.LogError(res.ErrorMessage);
             return;
         }
 
@@ -47,7 +49,7 @@ public class RecipeModel : PageModel {
             Comments = commentRes.Data;
         }
         else {
-            Console.WriteLine(res.ErrorMessage);
+            _log.LogError(res.ErrorMessage);
         }
 
         var versionRes = await VersionService.List(versionId);
@@ -55,7 +57,7 @@ public class RecipeModel : PageModel {
             Versions = versionRes.Data;
         }
         else {
-            Console.WriteLine(res.ErrorMessage);
+            _log.LogError(res.ErrorMessage);
         }
     }
     
@@ -93,7 +95,7 @@ public class RecipeModel : PageModel {
             CreatedAt = DateTime.UtcNow
         });
         if (!string.IsNullOrWhiteSpace(res.ErrorMessage)) {
-            Console.WriteLine("Error adding comment: " + res.ErrorMessage);
+            _log.LogError("Error adding comment: " + res.ErrorMessage);
         }
         return Redirect($"/Recipe/{Id}");
     }
@@ -105,7 +107,7 @@ public class RecipeModel : PageModel {
         Id = new VersionId(versionId);
         var res = await VersionService.DeleteRecipeVersion(Id);
         if ((int)res.StatusCode >= 300) {
-            Console.WriteLine(res.ErrorMessage);
+            _log.LogError(res.ErrorMessage);
         }
         return RedirectToPage("Index");
     }
@@ -117,7 +119,7 @@ public class RecipeModel : PageModel {
         Id = new VersionId(versionId);
         var res = await VersionService.DeleteEntireRecipe(Id);
         if ((int)res.StatusCode >= 300) {
-            Console.WriteLine(res.ErrorMessage);
+            _log.LogError(res.ErrorMessage);
         }
         return RedirectToPage("Index");
     }
