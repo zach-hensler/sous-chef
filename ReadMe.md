@@ -7,8 +7,6 @@ A kitchen helper with recipe versioning
 - Compare Versions Page
 - Create Page fixes
   - On mobile, clicking "new ingredient/new step" should open up the on screen keyboard
-  - Moving step up/down, and deleting steps/ingredients should autofocus to the same area
-    - the modified step for moving, a neighboring step for deletion
 - Original author citation for recipes
 
 
@@ -81,6 +79,7 @@ Index Updates
 - ~~Bug w/ "Move Up" and "Move Down" buttons~~
 - ~~Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"~~
 - ~~Autofocus rating dialog and remove default~~
+- ~~Auto focus after adding/removing/ordering on Create page~~
 
 ---
 # Initial Roadmap

@@ -97,7 +97,7 @@ public class RecipeModel : PageModel {
         if (!string.IsNullOrWhiteSpace(res.ErrorMessage)) {
             _log.LogError("Error adding comment: " + res.ErrorMessage);
         }
-        return Redirect($"/Recipe/{Id}");
+        return Redirect($"/Recipe/{Id}#comments");
     }
 
     public async Task<IActionResult> HandleDeleteVersion(int versionId) {

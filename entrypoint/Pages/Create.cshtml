@@ -55,7 +55,7 @@
             <label for="time">Time (minutes): </label>
             <input asp-for="RecipeMetadata.Time" id="time" type="number" required/>
         </div>
-        <h2>Ingredients</h2>
+        <h2 id="ingredients">Ingredients</h2>
         <div>
             @for (var i = 0; i < Model.RecipeIngredients.Count; i++) {
                 <hr/>
@@ -69,7 +69,7 @@
                     <input
                         asp-for="@Model.RecipeIngredients[i].Name"
                         id="ingredient-name-@i"
-                        autofocus=@(Model.RecipeIngredients.Count == (i + 1) && string.IsNullOrWhiteSpace(Model.RecipeIngredients[i].Name))
+                        autofocus="@(Model.AutoFocusId == $"ingredient-name-{i}")"
                         value="@Model.RecipeIngredients[i].Name"
                         required/>
                 </div>
@@ -96,7 +96,7 @@
                 type="submit"
                 value="Add Ingredient"/>
         </div>
-        <h2>Steps</h2>
+        <h2 id="steps">Steps</h2>
         <div>
             @for (var i = 0; i < Model.RecipeSteps.Count; i++) {
                 <hr/>
@@ -126,7 +126,7 @@
                     <input
                         asp-for="@Model.RecipeSteps[i].Name"
                         id="step-name-@i"
-                        autofocus=@(Model.RecipeSteps.Count == (i + 1) && string.IsNullOrWhiteSpace(Model.RecipeSteps[i].Name))
+                        autofocus="@(Model.AutoFocusId == $"step-name-{i}")"
                         value="@Model.RecipeSteps[i].Name"
                         required/>
                 </div>

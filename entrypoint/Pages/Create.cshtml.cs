@@ -24,6 +24,7 @@ public enum CreateActions {
 }
 
 public class CreateModel : PageModel {
+    [BindProperty] public string AutoFocusId { get; set; } = "";
     [BindProperty] public ViewRecipe RecipeMetadata { get; set; }
 
     [BindProperty] public List<ViewIngedient> RecipeIngredients { get; set; } = [];
@@ -99,6 +100,7 @@ public class CreateModel : PageModel {
             var step = RecipeSteps[parsedIdx];
             RecipeSteps.RemoveAt(parsedIdx);
             RecipeSteps.Insert(parsedIdx + 1, step);
+            AutoFocusId = $"step-name-{parsedIdx + 1}";
         }
 
         SyncStepAttemptedValues();
@@ -110,6 +112,7 @@ public class CreateModel : PageModel {
             var step = RecipeSteps[parsedIdx];
             RecipeSteps.RemoveAt(parsedIdx);
             RecipeSteps.Insert(parsedIdx - 1, step);
+            AutoFocusId = $"step-name-{parsedIdx - 1}";
         }
 
         SyncStepAttemptedValues();
@@ -119,6 +122,7 @@ public class CreateModel : PageModel {
     private IActionResult RemoveStep(string idx) {
         if (int.TryParse(idx, out var parsedIdx)) {
             RecipeSteps.RemoveAt(parsedIdx);
+            AutoFocusId = $"step-name-{Math.Clamp(parsedIdx - 1, 0, RecipeSteps.Count)}";
         }
 
         SyncStepAttemptedValues();
@@ -127,6 +131,7 @@ public class CreateModel : PageModel {
     private IActionResult RemoveIngredient(string idx) {
         if (int.TryParse(idx, out var parsedIdx)) {
             RecipeIngredients.RemoveAt(parsedIdx);
+            AutoFocusId = $"ingredient-name-{Math.Clamp(parsedIdx - 1, 0, RecipeIngredients.Count)}";
         }
         return Page();
     }
@@ -135,6 +140,7 @@ public class CreateModel : PageModel {
             Name = "",
             Instruction = ""
         });
+        AutoFocusId = $"step-name-{RecipeSteps.Count - 1}";
         return Page();
     }
 
@@ -144,6 +150,7 @@ public class CreateModel : PageModel {
             Quantity = 0f,
             Unit = ""
         });
+        AutoFocusId = $"ingredient-name-{RecipeIngredients.Count - 1}";
         return Page();
     }
 
