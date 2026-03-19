@@ -3,15 +3,15 @@
   
   /* colors - each "darker" is 4% darker */
   --font-color: #000;
-  --bg-color: hsl(300, 32.1%, 94%);
-  --bg-color-darker: hsl(300, 32.1%, 90%);
-  --bg-color-darkest: hsl(300, 32.1%, 86%);
+  --bg-color: hsl(300, 32.1%, 93%);
+  --bg-color-darker: hsl(from var(--bg-color) h s calc(l - 4));
+  --bg-color-darkest: hsl(from var(--bg-color) h s calc(l - 8));
 
   --accent-font-color: #000;
-  --accent-color: hsl(255, 70%, 75%, .9);
-  --accent-color-darker: hsl(255, 70%, 71%, .9);
+  --accent-color: hsl(255, 70%, 76%);
+  --accent-color-darker: hsl(from var(--accent-color) h s calc(l - 4));
   --warning-color: hsl(355, 61%, 76%);
-  --warning-darker: hsl(355, 61%, 72%);
+  --warning-darker: hsl(from var(--warning-color) h s calc(l - 4));
 
   /* spacing - each level should double */
   --extra-small: 5px;
