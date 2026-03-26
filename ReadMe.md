@@ -4,7 +4,9 @@ A kitchen helper with recipe versioning
 # Backlog
 
 ## Missing v1 Features - Core Features
-- Compare Versions Page
+- Compare diff algo for steps
+  - moved step is add & remove
+  - changed name/description is "updated"
 - Original author citation for recipes
 - Versioning Updates
   - change semantic versioning to incremental version number

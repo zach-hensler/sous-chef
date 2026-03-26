@@ -8,11 +8,13 @@
 
 .header-action-wrapper {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: end;
 }
 .header-action {
+    flex: 1 1 0;
     margin: var(--small);
 }
 

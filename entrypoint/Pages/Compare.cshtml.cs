@@ -60,10 +60,15 @@ public class Compare : PageModel {
         var v2Ingredients = v2Res.Data.Ingredients.OrderBy(i => i.Name).ToList();
         foreach (var v1Ingredient in v1Ingredients) {
             var v2Ingredient = v2Ingredients.FirstOrDefault(i => i.Name == v1Ingredient.Name);
+            var item1 = $"{v1Ingredient.Name} {v1Ingredient.Quantity} {v1Ingredient.Unit}";
+            var item2 = v2Ingredient == null ? null : $"{v2Ingredient.Name} {v2Ingredient.Quantity} {v2Ingredient.Unit}";
+
             Comparison.ComparisonType type;
-            // TODO check for diff
             if (v2Ingredient == null) {
                 type = Comparison.ComparisonType.Deleted;
+            }
+            else if (item1 == item2) {
+                type = Comparison.ComparisonType.Updated;
             }
             else {
                 type = Comparison.ComparisonType.Same;
@@ -71,8 +76,8 @@ public class Compare : PageModel {
             IngredientComparisons.Add(
                 new Comparison {
                     Type = type,
-                    Item1 = v1Ingredient.Name,
-                    Item2 = v2Ingredient?.Name
+                    Item1 = item1,
+                    Item2 = item2
                 });
         }
         IngredientComparisons.AddRange(
