@@ -5,13 +5,28 @@ A kitchen helper with recipe versioning
 
 ## Missing v1 Features - Core Features
 - Compare Versions Page
-- Create Page fixes
-  - On mobile, clicking "new ingredient/new step" should open up the on screen keyboard
 - Original author citation for recipes
+- Versioning Updates
+  - change semantic versioning to incremental version number
+  - add "version message"
+- Track "active time" vs "total time"
+
+## v2 Going Public
+- Any user can read
+- Only I can write
+- Requires improved hosting requirements and bot-blocking
+- Auth Ideas:
+  - TS based authentication
+    - have public version w/ readonly db user and "read-only" env var for view purposes
+    - have tailnet exclusive version w/ full db user and no "read-only" env var
+  - Password based authentication
+    - hidden login form that requires specific password to enable "admin mode"
+    - login form hidden for UX not for security
+    - have to be more careful since both go through same API user
 
 
-## v2 Features - Ease of Use
-Index Updates
+## v3 Features - Ease of Use
+Main Feed Updates
 - Filters on Home Feed
   - By: Star Rating, Category, Effort Level
   - Searching on Home Feed
@@ -26,6 +41,7 @@ Index Updates
 
 
 ## Backlog
+- Convert steps to a jsonb list
 - Recipe drafts
 - Uploading image for a recipe
   - Should be automatically scaled down before saving image

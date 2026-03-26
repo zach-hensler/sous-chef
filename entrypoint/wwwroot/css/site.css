@@ -10,8 +10,12 @@
   --accent-font-color: #000;
   --accent-color: hsl(255, 70%, 76%);
   --accent-color-darker: hsl(from var(--accent-color) h s calc(l - 4));
+
   --warning-color: hsl(355, 61%, 76%);
   --warning-darker: hsl(from var(--warning-color) h s calc(l - 4));
+  
+  --success-color: lightgreen;
+  --success-darker: hsl(from var(--success-color) h s calc(l - 4));
 
   /* spacing - each level should double */
   --extra-small: 5px;
@@ -101,6 +105,17 @@ textarea {
   margin: var(--small) 0;
   resize: vertical;
   width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+td {
+  background-color: var(--bg-color-darker);
+  border: 2px solid var(--bg-color-darkest);
+  padding: var(--small);
+  border-radius: var(--border-radius);
 }
 
 .primary {

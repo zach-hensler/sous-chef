@@ -38,14 +38,14 @@
             <h1>@Model.Details.RecipeMetadata.Name @Model.Details.Version.VersionNumber</h1>
             <div class="header-action-wrapper">
                 <button class="header-action primary" onclick="OpenMadeIt()">Review</button>
-                @* @if (Model.Versions.Count > 1) { *@
-                @*     <a *@
-                @*         asp-page="/Compare" *@
-                @*         asp-route-id1="@Model.Versions[0].VersionId" *@
-                @*         asp-route-id2="@Model.Versions[1].VersionId"> *@
-                @*         <button class="header-action">Compare</button> *@
-                @*     </a> *@
-                @* } *@
+                @if (Model.Versions.Count > 1) {
+                    <a
+                        asp-page="/Compare"
+                        asp-route-id1="@Model.Versions[^2].VersionId"
+                        asp-route-id2="@Model.Versions[^1].VersionId">
+                        <button class="header-action">Compare</button>
+                    </a>
+                }
                 <a asp-page="/Create" asp-route-versionId="@Model.Id">
                     <button class="header-action">Edit</button>
                 </a>

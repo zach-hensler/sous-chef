@@ -96,8 +96,7 @@ public static class RecipeService {
 
     public static async Task<Response<RecipeDetails>> GetRecipeByVersion(VersionId versionId) {
         return await Utils.SafeRun(nameof(GetRecipeByVersion), async (conn) => {
-            var version = await Common.RecipeVersion.Get(versionId, conn);
-            var data = await GetRecipeDetails.GetByRecipe(version.RecipeId, conn);
+            var data = await GetRecipeDetails.GetByVersion(versionId, conn);
 
             return new Response<RecipeDetails>(data);
         });

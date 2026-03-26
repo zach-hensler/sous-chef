@@ -5,11 +5,34 @@
 }
 
 <div>
-    @if (Model.Version1Details == null || Model.Version2Details == null) {
+    @if (Model.VersionId1 == null || Model.VersionId2 == null) {
         <p>Unable to load recipe comparison</p>
     }
     else {
-        <h1>@Model.Version1Details.RecipeMetadata.Name</h1>
-        <h2>@Model.Version1Details.</h2>
+        <h1>@Model.RecipeName</h1>
+        <table>
+            <tr>
+                <td>@Model.Version1Number</td>
+                <td>@Model.Version2Number</td>
+            </tr>
+        </table>
+        <h2>Ingredients</h2>
+        <table>
+            @foreach (var ingredient in Model.IngredientComparisons) {
+                <tr>
+                    <td class="@ingredient.Type">@ingredient.Item1</td>
+                    <td class="@ingredient.Type">@ingredient.Item2</td>
+                </tr>
+            }
+        </table>
+        <h2>Steps</h2>
+        <table>
+            @foreach (var step in Model.StepComparisons) {
+                <tr>
+                    <td class="@step.Type">@step.Item1</td>
+                    <td class="@step.Type">@step.Item2</td>
+                </tr>
+            }
+        </table>
     }
 </div>
