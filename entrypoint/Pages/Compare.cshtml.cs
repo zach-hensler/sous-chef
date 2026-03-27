@@ -97,39 +97,96 @@ public class Compare : PageModel {
 
         var v1Steps = v1Res.Data.Steps.OrderBy(s => s.StepNumber).ToList();
         var v2Steps = v2Res.Data.Steps.OrderBy(s => s.StepNumber).ToList();
-        foreach (var step1 in v1Steps) {
-            var step2 = v2Steps.FirstOrDefault(s => s.Name == step1.Name);
-            Comparison.ComparisonType type;
-            if (step2 == null) {
-                type = Comparison.ComparisonType.Deleted;
+        var v1Counter = 0;
+        var v2Counter = 0;
+        for (var i = 0; i < Math.Max(v1Steps.Count, v2Steps.Count); i++) {
+            var v1Step = v1Steps.ElementAtOrDefault(v1Counter);
+            var v2Step = v2Steps.ElementAtOrDefault(v2Counter);
+            if (v1Step == null) {
+                StepComparisons.Add(
+                    new Comparison {
+                        Type = Comparison.ComparisonType.Added,
+                        Item1Line1 = null,
+                        Item1Line2 = null,
+                        Item2Line1 = $"{v2Step!.StepNumber}. {v2Step.Name}",
+                        Item2Line2 = v2Step.Instruction
+                    });
+                v2Counter++;
+                continue;
             }
-            else if (step1.StepNumber+step1.Name+step1.Instruction != step2.StepNumber+step2.Name+step2.Instruction) {
-                type = Comparison.ComparisonType.Updated;
+            if (v2Step == null) {
+                StepComparisons.Add(
+                    new Comparison {
+                        Type = Comparison.ComparisonType.Deleted,
+                        Item1Line1 = null,
+                        Item1Line2 = null,
+                        Item2Line1 = $"{v1Step!.StepNumber}. {v1Step.Name}",
+                        Item2Line2 = v1Step.Instruction
+                    });
+                v1Counter++;
+                continue;
             }
-            else {
-                type = Comparison.ComparisonType.Same;
+            if (v1Step.Name == v2Step.Name) {
+                StepComparisons.Add(
+                    new Comparison {
+                        Type = v1Step.Instruction == v2Step.Instruction
+                            ? Comparison.ComparisonType.Same
+                            : Comparison.ComparisonType.Updated,
+                        Item1Line1 = $"{v1Step.StepNumber}. {v1Step.Name}",
+                        Item1Line2 = v1Step.Instruction,
+                        Item2Line1 = $"{v2Step.StepNumber}. {v2Step.Name}",
+                        Item2Line2 = v2Step.Instruction
+                    });
+                v1Counter++;
+                v2Counter++;
+                continue;
+            }
+            
+            var v1Next = v1Steps.ElementAtOrDefault(v1Counter + 1);
+            var v2Next = v2Steps.ElementAtOrDefault(v2Counter + 1);
+            if (v1Step.Name == v2Next?.Name) {
+                StepComparisons.Add(
+                    new Comparison {
+                        Type = Comparison.ComparisonType.Added,
+                        Item1Line1 = null,
+                        Item1Line2 = null,
+                        Item2Line1 = $"{v2Step.StepNumber}. {v2Step.Name}",
+                        Item2Line2 = v2Step.Instruction
+                    });
+                v2Counter++;
+                continue;
+            }
+            if (v2Step.Name == v1Next?.Name) {
+                StepComparisons.Add(
+                    new Comparison {
+                        Type = Comparison.ComparisonType.Deleted,
+                        Item1Line1 = $"{v1Step.StepNumber}. {v1Step.Name}",
+                        Item1Line2 = v1Step.Instruction,
+                        Item2Line1 = null,
+                        Item2Line2 = null
+                    });
+                v1Counter++;
+                continue;
             }
             StepComparisons.Add(
                 new Comparison {
-                    Type = type,
-                    Item1Line1 = $"{step1.StepNumber}. {step1.Name}",
-                    Item2Line1 = step2 != null
-                        ? $"{step2.StepNumber}. {step2.Name}"
-                        : null,
-                    Item1Line2 = step1?.Instruction,
-                    Item2Line2 = step2?.Instruction
-                });
-        }
-        StepComparisons.AddRange(
-            v2Steps
-                .Where(s2 => v1Steps.Find(s1 => s1.Name == s2.Name) == null)
-                .Select(s => new Comparison {
                     Type = Comparison.ComparisonType.Added,
                     Item1Line1 = null,
-                    Item2Line1 = $"{s.StepNumber}. {s.Name}",
                     Item1Line2 = null,
-                    Item2Line2 = s.Instruction
-                }));
+                    Item2Line1 = $"{v2Step.StepNumber}. {v2Step.Name}",
+                    Item2Line2 = v2Step.Instruction
+                });
+            StepComparisons.Add(
+                new Comparison {
+                    Type = Comparison.ComparisonType.Deleted,
+                    Item1Line1 = $"{v1Step.StepNumber}. {v1Step.Name}",
+                    Item1Line2 = v1Step.Instruction,
+                    Item2Line1 = null,
+                    Item2Line2 = null
+                });
+            v1Counter++;
+            v2Counter++;
+        }
         
         return Page();
     }
