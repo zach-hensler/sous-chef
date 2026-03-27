@@ -130,7 +130,8 @@ public static class Rand {
             public static CreateRecipeVersionRequest CreateRecipeVersionRequest(VersionId previousVersion) {
                 return new CreateRecipeVersionRequest {
                     PreviousVersionId = previousVersion,
-                    VersionType = (VersionType)Primitive.Int(0,1),
+                    VersionType = (VersionType)Primitive.Int(0,
+                        1),
                     Recipe = Db.Create.CreateRecipeDb(),
                     Steps = [
                         Db.Create.CreateRecipeStepDb(),
@@ -139,7 +140,8 @@ public static class Rand {
                     Ingredients = [
                         Db.Create.CreateRecipeIngredientDb(),
                         Db.Create.CreateRecipeIngredientDb()
-                    ]
+                    ],
+                    Message = Primitive.String()
                 };
             }
         }

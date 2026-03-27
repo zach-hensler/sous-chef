@@ -13,8 +13,7 @@ namespace sous_chef.Pages;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum CreateActions {
     SaveExisting,
-    SaveAsNewMajorVersion,
-    SaveAsNewMinorVersion,
+    SaveAsNewVersion,
     NewIngredient,
     RemoveIngredient,
     NewStep,
@@ -25,13 +24,13 @@ public enum CreateActions {
 
 public class CreateModel : PageModel {
     [BindProperty] public string AutoFocusId { get; set; } = "";
+    [BindProperty] public string UpdateMessage { get; set; } = "";
     [BindProperty] public ViewRecipe RecipeMetadata { get; set; }
 
     [BindProperty] public List<ViewIngedient> RecipeIngredients { get; set; } = [];
 
     [BindProperty] public List<ViewStep> RecipeSteps { get; set; } = [];
     public VersionId? VersionId { get; set; }
-    public string? VersionNumber { get; set; }
 
     public string GetBaseRoute() {
         var baseRoute = "/Create";
@@ -46,7 +45,6 @@ public class CreateModel : PageModel {
         var res = await VersionService.GetRecipeByVersion(versionId);
         if (res.Data != null) {
             RecipeMetadata = res.Data.RecipeMetadata.ToViewRecipe();
-            VersionNumber = res.Data.Version.VersionNumber;
             RecipeIngredients = res.Data.Ingredients.Select(i => i.ToViewIngredient()).ToList();
             RecipeSteps = res.Data.Steps.Select(s => s.ToViewStep()).ToList();
         }
@@ -72,8 +70,7 @@ public class CreateModel : PageModel {
 
             return action switch {
                 CreateActions.SaveExisting => await HandleSaveExisting(versionId),
-                CreateActions.SaveAsNewMajorVersion => await HandleSaveNewMajorVersion(versionId),
-                CreateActions.SaveAsNewMinorVersion => await HandleSaveNewMinorVersion(versionId),
+                CreateActions.SaveAsNewVersion => await HandleSaveNewVersion(versionId),
                 CreateActions.NewIngredient => HandleNewIngredient(),
                 CreateActions.NewStep => HandleNewStep(),
                 CreateActions.RemoveIngredient => RemoveIngredient(kvp.Value.ToString()),
@@ -154,7 +151,7 @@ public class CreateModel : PageModel {
         return Page();
     }
 
-    private async Task<IActionResult> HandleSaveNewMajorVersion(int? versionId) {
+    private async Task<IActionResult> HandleSaveNewVersion(int? versionId) {
         if (versionId == null) {
             return Page();
         }
@@ -164,28 +161,11 @@ public class CreateModel : PageModel {
             PreviousVersionId = VersionId,
             VersionType = VersionType.Major,
             Recipe = RecipeMetadata.ToRecipeDb(),
-            Steps = RecipeSteps.Select(s => s.ToStepDb()).ToList(),
-            Ingredients = RecipeIngredients.Select(i => i.ToIngredientDb()).ToList()
-        });
-        if ((int)res.StatusCode < 300) {
-            return Redirect("/Index");
-        }
-
-        return Page();
-    }
-    
-    private async Task<IActionResult> HandleSaveNewMinorVersion(int? versionId) {
-        if (versionId == null) {
-            return Page();
-        }
-
-        VersionId = new VersionId(versionId.Value);
-        var res = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
-            PreviousVersionId = VersionId,
-            VersionType = VersionType.Minor,
-            Recipe = RecipeMetadata.ToRecipeDb(),
-            Steps = RecipeSteps.Select(s => s.ToStepDb()).ToList(),
-            Ingredients = RecipeIngredients.Select(i => i.ToIngredientDb()).ToList()
+            Steps = RecipeSteps.Select(s => s.ToStepDb())
+                .ToList(),
+            Ingredients = RecipeIngredients.Select(i => i.ToIngredientDb())
+                .ToList(),
+            Message = UpdateMessage
         });
         if ((int)res.StatusCode < 300) {
             return Redirect("/Index");

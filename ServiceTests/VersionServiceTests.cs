@@ -39,12 +39,12 @@ public class VersionServiceTests: Sequential {
         Assert.Empty(v2.ErrorMessage);
 
         await conn.OpenAsync(TestContext.Current.CancellationToken);
-        var list = await Common.Recipe.ListVersions(v1Res.Data!.RecipeId, conn);
+        var list = await Common.Version.List(v1Res.Data!.RecipeId, conn);
         Assert.Equal(2, list.Count);
         
         var deleteRes = await VersionService.DeleteRecipeVersion(v2.Data!);
         Assert.Empty(deleteRes.ErrorMessage);
-        list = await Common.Recipe.ListVersions(v1Res.Data!.RecipeId, conn);
+        list = await Common.Version.List(v1Res.Data!.RecipeId, conn);
         Assert.Single(list);
     }
 

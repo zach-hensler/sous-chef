@@ -11,8 +11,8 @@ public record CreateRecipeDb {
 }
 
 public record CreateRecipeVersionDb {
+    public required string Message { get; init; } 
     public required RecipeId RecipeId { get; init; }
-    public required string VersionNumber { get; init; }
     public required DateTime CreatedAt { get; init; }
 }
 

@@ -12,9 +12,15 @@
         <h1>@Model.RecipeName</h1>
         <table>
             <tr>
-                <td>@Model.Version1Number</td>
-                <td>@Model.Version2Number</td>
+                <td>Previous - @Model.Versions[^2].CreatedAt</td>
+                <td>Latest - @Model.Versions[^1].CreatedAt</td>
             </tr>
+            @if (!string.IsNullOrWhiteSpace(Model.Versions[^1].Message)) {
+                <tr>
+                    <td></td>
+                    <td>@Model.Versions[^1].Message</td>
+                </tr>
+            }
         </table>
         <h2>Ingredients</h2>
         <table>

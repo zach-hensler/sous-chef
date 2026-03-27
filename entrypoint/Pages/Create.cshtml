@@ -22,7 +22,7 @@
         <h1>Create New Recipe</h1>
     }
     else {
-        <h1>Edit @Model.RecipeMetadata?.Name @Model.VersionNumber</h1>
+        <h1>Edit @Model.RecipeMetadata?.Name</h1>
     }
     <form method="post">
         <div>
@@ -77,6 +77,7 @@
                     <label for="quantity-@i">Quantity: </label>
                     <input
                         asp-for="@Model.RecipeIngredients[i].Quantity"
+                        step=".01"
                         id="quantity-@i"
                         value="@Model.RecipeIngredients[i].Quantity"
                         type="number"
@@ -160,18 +161,25 @@
             }
         </div>
         <dialog id="@saveDialog">
-            <h1>Save changes as:</h1>
-            <p>Note: Updates will be tracked in version history.<br/>Corrections override the previous version.</p>
+            <h1>Save Changes</h1>
+            <hr />
+            <label for="update-message">Update Message</label>
+            <input
+                id="update-message"
+                asp-for="@Model.UpdateMessage"
+                autofocus />
             <div class="dialog-button-wrapper">
                 <button
-                    formaction="?@CreateActions.SaveAsNewMajorVersion"
-                    class="dialog-button">Major Update</button>
-                <button
-                    formaction="?@CreateActions.SaveAsNewMinorVersion"
-                    class="dialog-button primary">Minor Update</button>
+                    formaction="?@CreateActions.SaveAsNewVersion"
+                    type="submit"
+                    class="dialog-button primary"
+                    onclick="CloseSaveDialog()">Update</button>
                 <button
                     formaction="?@CreateActions.SaveExisting"
-                    class="dialog-button">Correction</button>
+                    type="submit"
+                    class="dialog-button"
+                    onclick="CloseSaveDialog()">Correction</button>
+                <hr />
                 <button
                     class="dialog-button"
                     type="button"

@@ -10,8 +10,6 @@ public class Compare : PageModel {
     public VersionId? VersionId2 { get; set; }
     
     public string RecipeName { get; set; }
-    public string Version1Number { get; set; }
-    public string Version2Number { get; set; }
 
     public record Comparison {
         public enum ComparisonType {
@@ -43,15 +41,12 @@ public class Compare : PageModel {
         }
 
         RecipeName = v1Res.Data!.RecipeMetadata.Name;
-        Version1Number = v1Res.Data.Version.VersionNumber;
 
         VersionId2 = new VersionId(id2.Value);
         var v2Res = await RecipeService.GetRecipeByVersion(VersionId2);
         if (v2Res.Data == null) {
             return Page();
         }
-
-        Version2Number = v2Res.Data.Version.VersionNumber;
 
         var listRes = await VersionService.List(VersionId1);
         if (listRes.Data != null) {
@@ -90,7 +85,7 @@ public class Compare : PageModel {
                 .Select(i => new Comparison {
                     Type = Comparison.ComparisonType.Added,
                     Item1Line1 = null,
-                    Item2Line1 = i.Name,
+                    Item2Line1 = $"{i.Name} {i.Quantity} {i.Unit}",
                     Item1Line2 = null,
                     Item2Line2 = null
                 }));

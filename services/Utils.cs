@@ -9,22 +9,6 @@ namespace services;
 
 public static class Utils {
     private static Logging log = new ();
-    public static class Domain {
-        public static string IncrementRecipeVersion(string currentVersion, VersionType versionType) {
-            var parts = currentVersion.Split('.');
-            if (parts.Length != 2) {
-                throw new Exception($"Unexpected number of version parts, received '{parts.Length}' instead of 2.");
-            }
-            var majorPart = int.Parse(parts[0]);
-            var minorPart = int.Parse(parts[1]);
-
-            return versionType switch {
-                VersionType.Major => $"{++majorPart}.0",
-                VersionType.Minor => $"{majorPart}.{++minorPart}",
-                _ => throw new ArgumentOutOfRangeException(nameof(versionType), versionType, null)
-            };
-        }
-    }
     private static readonly ConnectionFactory ConnectionFactory = new();
     public static async Task<Response> SafeRun(string sourceWorkflow, Func<Task<Response>> handle) {
         try {

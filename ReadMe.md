@@ -5,10 +5,9 @@ A kitchen helper with recipe versioning
 
 ## Missing v1 Features - Core Features
 - Original author citation for recipes
-- Versioning Updates
-  - change semantic versioning to incremental version number
-  - add "version message"
 - Track "active time" vs "total time"
+- Compare Page
+  - Add select input to change version
 
 ## v2 Going Public
 - Any user can read

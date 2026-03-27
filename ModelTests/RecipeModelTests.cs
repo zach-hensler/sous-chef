@@ -17,7 +17,7 @@ public class RecipeModelTests: Sequential {
         var recipe = await RecipeService.CreateRecipe(Rand.Domain.Requests.CreateRecipeRequest());
         Assert.Empty(recipe.ErrorMessage);
         
-        var latest = await Common.RecipeVersion.GetLatest(recipe.Data!.RecipeId, conn);
+        var latest = await Common.Version.GetLatest(recipe.Data!.RecipeId, conn);
         var model = new RecipeModel();
 
         await model.OnGet(latest.VersionId.Value);
@@ -40,7 +40,8 @@ public class RecipeModelTests: Sequential {
             VersionType = VersionType.Minor,
             Recipe = originalRecipe.Recipe,
             Steps = originalRecipe.Steps,
-            Ingredients = originalRecipe.Ingredients
+            Ingredients = originalRecipe.Ingredients,
+            Message = Rand.Primitive.String()
         });
         Assert.Empty(versionId2.ErrorMessage);
         
@@ -49,7 +50,8 @@ public class RecipeModelTests: Sequential {
             VersionType = VersionType.Minor,
             Recipe = originalRecipe.Recipe,
             Steps = originalRecipe.Steps,
-            Ingredients = originalRecipe.Ingredients
+            Ingredients = originalRecipe.Ingredients,
+            Message = Rand.Primitive.String()
         });
         Assert.Empty(versionId3.ErrorMessage);
         
@@ -58,17 +60,17 @@ public class RecipeModelTests: Sequential {
             VersionType = VersionType.Major,
             Recipe = originalRecipe.Recipe,
             Steps = originalRecipe.Steps,
-            Ingredients = originalRecipe.Ingredients
+            Ingredients = originalRecipe.Ingredients,
+            Message = Rand.Primitive.String()
         });
         Assert.Empty(versionId4.ErrorMessage);
 
-        var latest = await Common.RecipeVersion.GetLatest(recipe.Data!.RecipeId, conn);
+        var latest = await Common.Version.GetLatest(recipe.Data!.RecipeId, conn);
 
         var model = new RecipeModel();
         await model.OnGet(versionId3.Data!.Value);
         Assert.NotNull(model.Details);
-        Assert.Equal("1.2", model.Details.Version.VersionNumber);
-        Assert.NotEqual(model.Details.Version.VersionNumber, latest.VersionNumber);
+        Assert.NotEqual(model.Details.Version.Message, latest.Message);
         Assert.Equal(4, model.Versions.Count);
     }
 }

@@ -10,6 +10,7 @@ public enum VersionType {
 }
 
 public class CreateRecipeVersionRequest {
+    public required string Message { get; init; }
     public required VersionId PreviousVersionId { get; init; }
     public required VersionType VersionType { get; init; }
     public required CreateRecipeDb Recipe { get; init; }

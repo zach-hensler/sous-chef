@@ -1,3 +1,4 @@
+using core.Data;
 using core.Models;
 using core.Models.ViewModels;
 using Helpers;
@@ -72,7 +73,7 @@ public class CreateModelTests: Sequential {
     }
 
     [Fact]
-    public async Task ShouldCreateNewMinorVersion() {
+    public async Task ShouldCreateNewVersion() {
         _ = await Setup.ResetAndGetDatabase();
         var original = Rand.Domain.Requests.CreateRecipeRequest();
         var recipe = await RecipeService.CreateRecipe(original);
@@ -80,6 +81,7 @@ public class CreateModelTests: Sequential {
 
         var model = new CreateModel();
         await model.OnGet(recipe.Data!.VersionId.Value);
+
         model.RecipeIngredients.Add(Rand.Domain.Db.RecipeIngredientDb().ToViewIngredient());
         model.RecipeSteps.Add(Rand.Domain.Db.RecipeStepDb(original.Steps.Count).ToViewStep());
         var newName = "new_" + Rand.Primitive.String();
@@ -90,54 +92,16 @@ public class CreateModelTests: Sequential {
             Category = model.RecipeMetadata.Category,
             Time = model.RecipeMetadata.Time
         };
-        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveAsNewMinorVersion));
+        var message = Rand.Primitive.String();
+        model.UpdateMessage = message;
+
+        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveAsNewVersion));
         await model.OnPostAsync(recipe.Data.VersionId.Value);
+
         var details = await RecipeService.GetRecipe(recipe.Data.RecipeId);
         Assert.Empty(details.ErrorMessage);
-        Assert.Equal("1.1", details.Data?.Version.VersionNumber);
+        Assert.Equal(message, details.Data?.Version.Message);
         Assert.Equal(newName, details.Data?.RecipeMetadata.Name);
-    }
-    
-    [Fact]
-    public async Task ShouldCreateNewMajorVersion() {
-        _ = await Setup.ResetAndGetDatabase();
-        var original = Rand.Domain.Requests.CreateRecipeRequest();
-        var recipe = await RecipeService.CreateRecipe(original);
-        Assert.Empty(recipe.ErrorMessage);
-
-        var model = new CreateModel();
-        await model.OnGet(recipe.Data!.VersionId.Value);
-        model.RecipeIngredients.Add(Rand.Domain.Db.RecipeIngredientDb().ToViewIngredient());
-        model.RecipeSteps.Add(Rand.Domain.Db.RecipeStepDb(original.Steps.Count).ToViewStep());
-        var newName = "new_" + Rand.Primitive.String();
-        model.RecipeMetadata = new ViewRecipe {
-            Name = newName,
-            Description = model.RecipeMetadata.Description,
-            EffortLevel = model.RecipeMetadata.EffortLevel,
-            Category = model.RecipeMetadata.Category,
-            Time = model.RecipeMetadata.Time
-        };
-        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveAsNewMajorVersion));
-        await model.OnPostAsync(recipe.Data.VersionId.Value);
-        var details = await RecipeService.GetRecipe(recipe.Data.RecipeId);
-        Assert.Empty(details.ErrorMessage);
-        Assert.Equal("2.0", details.Data?.Version.VersionNumber);
-        Assert.Equal(newName, details.Data?.RecipeMetadata.Name);
-    }
-
-    [Fact]
-    public async Task ShouldAddNewSteps() {
-        _ = await Setup.ResetAndGetDatabase();
-        var original = Rand.Domain.Requests.CreateRecipeRequest();
-        var recipe = await RecipeService.CreateRecipe(original);
-        Assert.Empty(recipe.ErrorMessage);
-
-        var model = new CreateModel();
-        await model.OnGet(recipe.Data!.VersionId.Value);
-        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveAsNewMajorVersion));
-        await model.OnPostAsync(recipe.Data.VersionId.Value);
-        
-        //TODO verify this
     }
 
     [Fact]

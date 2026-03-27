@@ -73,18 +73,20 @@ public class RecipeServiceTests: Sequential {
         var createRecipeRes = await RecipeService.CreateRecipe(recipe);
         Assert.Empty(createRecipeRes.ErrorMessage);
 
+        var message = Rand.Primitive.String();
         var newVersionRes = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = createRecipeRes.Data!.VersionId,
             VersionType = VersionType.Major,
             Recipe = recipe.Recipe,
             Steps = recipe.Steps,
-            Ingredients = recipe.Ingredients
+            Ingredients = recipe.Ingredients,
+            Message = message
         });
         Assert.Empty(newVersionRes.ErrorMessage);
 
         var latest = await RecipeService.GetRecipe(createRecipeRes.Data!.RecipeId);
         Assert.Empty(latest.ErrorMessage);
-        Assert.Equal("2.0", latest.Data?.Version.VersionNumber);
+        Assert.Equal(message, latest.Data!.Version.Message);
     }
 
     [Fact]
@@ -96,14 +98,15 @@ public class RecipeServiceTests: Sequential {
         var recipe3 = await RecipeService.CreateRecipe(recipe3Data);
         
         await conn.OpenAsync(TestContext.Current.CancellationToken);
-        var latest = await Common.RecipeVersion.GetLatest(recipe3.Data!.RecipeId, conn);
+        var latest = await Common.Version.GetLatest(recipe3.Data!.RecipeId, conn);
 
         await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = latest.VersionId,
             VersionType = VersionType.Major,
             Recipe = recipe3Data.Recipe,
             Steps = recipe3Data.Steps,
-            Ingredients = recipe3Data.Ingredients
+            Ingredients = recipe3Data.Ingredients,
+            Message = Rand.Primitive.String()
         });
 
         var listed = await RecipeService.ListRecipes(new ListRecipesRequest {
@@ -114,13 +117,9 @@ public class RecipeServiceTests: Sequential {
         Assert.NotNull(listed.Data?.Items);
         Assert.Equal(3, listed.Data?.Total);
         foreach (var recipe in listed.Data!.Items) {
-            Assert.NotEmpty(recipe.LatestVersionNumber);
             Assert.NotEmpty(recipe.Name);
             Assert.NotEmpty(recipe.Description ?? "");
             Assert.NotEqual(0, recipe.RecipeId.Value);
-            if (recipe.RecipeId == recipe3.Data!.RecipeId) {
-                Assert.Equal("2.0", recipe.LatestVersionNumber);
-            }
         }
     }
 }

@@ -16,19 +16,19 @@ public static class VersionService {
     public static async Task<Response<RecipeVersionDb>> GetVersion(VersionId versionId) {
         return await Utils.SafeRun(
             nameof(GetVersion),
-            async (conn) => new Response<RecipeVersionDb>(await Common.RecipeVersion.Get(versionId, conn)));
+            async (conn) => new Response<RecipeVersionDb>(await Common.Version.Get(versionId, conn)));
     }
 
     public static async Task<Response<List<RecipeVersionDb>>> List(VersionId versionId) {
         return await Utils.SafeRun(nameof(GetVersion), async (conn) => {
-            var recipe = await Common.RecipeVersion.Get(versionId, conn);
-            return new Response<List<RecipeVersionDb>>(await Common.RecipeVersion.List(recipe.RecipeId, conn));
+            var recipe = await Common.Version.Get(versionId, conn);
+            return new Response<List<RecipeVersionDb>>(await Common.Version.List(recipe.RecipeId, conn));
         });
     }
 
     public static async Task<Response> AddComment(CreateRecipeCommentDb request) {
         return await Utils.SafeRun(nameof(AddComment), async (conn) => {
-            if (!await Common.RecipeVersion.Exists(request.VersionId, conn)) {
+            if (!await Common.Version.Exists(request.VersionId, conn)) {
                 return new Response(HttpStatusCode.NotFound, $"Version '{request.VersionId}' not found");
             }
 
@@ -40,9 +40,9 @@ public static class VersionService {
 
     public static async Task<Response> DeleteRecipeVersion(VersionId versionId) {
         return await Utils.SafeRun(nameof(DeleteRecipeVersion), async (conn) => {
-            var versions = await Common.RecipeVersion.ListOtherVersions(versionId, conn);
+            var versions = await Common.Version.ListOtherVersions(versionId, conn);
             if (versions.Count > 1) {
-                await Common.RecipeVersion.DeleteCascade(versionId, conn);    
+                await Common.Version.DeleteCascade(versionId, conn);    
             }
             else {
                 await Common.Recipe.DeleteCascade(versions.First().RecipeId, conn);
