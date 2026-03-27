@@ -21,8 +21,10 @@ public class Compare : PageModel {
             Same
         }
         public required ComparisonType Type { get; init; }
-        public required string? Item1 { get; init; }
-        public required string? Item2 { get; init; }
+        public required string? Item1Line1 { get; init; }
+        public required string? Item1Line2 { get; init; }
+        public required string? Item2Line1 { get; init; }
+        public required string? Item2Line2 { get; init; }
     }
     public List<Comparison> StepComparisons { get; set; } = [];
     public List<Comparison> IngredientComparisons { get; set; } = [];
@@ -67,7 +69,7 @@ public class Compare : PageModel {
             if (v2Ingredient == null) {
                 type = Comparison.ComparisonType.Deleted;
             }
-            else if (item1 == item2) {
+            else if (item1 != item2) {
                 type = Comparison.ComparisonType.Updated;
             }
             else {
@@ -76,8 +78,10 @@ public class Compare : PageModel {
             IngredientComparisons.Add(
                 new Comparison {
                     Type = type,
-                    Item1 = item1,
-                    Item2 = item2
+                    Item1Line1 = item1,
+                    Item2Line1 = item2,
+                    Item1Line2 = null,
+                    Item2Line2 = null
                 });
         }
         IngredientComparisons.AddRange(
@@ -85,18 +89,22 @@ public class Compare : PageModel {
                 .Where(i2 => v1Ingredients.Find(i1 => i1.Name == i2.Name) == null)
                 .Select(i => new Comparison {
                     Type = Comparison.ComparisonType.Added,
-                    Item1 = null,
-                    Item2 = i.Name
+                    Item1Line1 = null,
+                    Item2Line1 = i.Name,
+                    Item1Line2 = null,
+                    Item2Line2 = null
                 }));
 
         var v1Steps = v1Res.Data.Steps.OrderBy(s => s.StepNumber).ToList();
         var v2Steps = v2Res.Data.Steps.OrderBy(s => s.StepNumber).ToList();
         foreach (var step1 in v1Steps) {
-            var step2 = v2Steps.FirstOrDefault(s => s.StepNumber == step1.StepNumber);
+            var step2 = v2Steps.FirstOrDefault(s => s.Name == step1.Name);
             Comparison.ComparisonType type;
-            // TODO check for diff
             if (step2 == null) {
                 type = Comparison.ComparisonType.Deleted;
+            }
+            else if (step1.StepNumber+step1.Name+step1.Instruction != step2.StepNumber+step2.Name+step2.Instruction) {
+                type = Comparison.ComparisonType.Updated;
             }
             else {
                 type = Comparison.ComparisonType.Same;
@@ -104,17 +112,23 @@ public class Compare : PageModel {
             StepComparisons.Add(
                 new Comparison {
                     Type = type,
-                    Item1 = $"{step1.StepNumber}. {step1.Name}",
-                    Item2 = step2 != null ? $"{step2.StepNumber}. {step2.Name}" : null
+                    Item1Line1 = $"{step1.StepNumber}. {step1.Name}",
+                    Item2Line1 = step2 != null
+                        ? $"{step2.StepNumber}. {step2.Name}"
+                        : null,
+                    Item1Line2 = step1?.Instruction,
+                    Item2Line2 = step2?.Instruction
                 });
         }
         StepComparisons.AddRange(
             v2Steps
-                .Where(s2 => v1Steps.Find(s1 => s1.StepNumber == s2.StepNumber) == null)
+                .Where(s2 => v1Steps.Find(s1 => s1.Name == s2.Name) == null)
                 .Select(s => new Comparison {
                     Type = Comparison.ComparisonType.Added,
-                    Item1 = null,
-                    Item2 = $"{s.StepNumber}. {s.Name}"
+                    Item1Line1 = null,
+                    Item2Line1 = $"{s.StepNumber}. {s.Name}",
+                    Item1Line2 = null,
+                    Item2Line2 = s.Instruction
                 }));
         
         return Page();

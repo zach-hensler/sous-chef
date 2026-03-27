@@ -20,8 +20,8 @@
         <table>
             @foreach (var ingredient in Model.IngredientComparisons) {
                 <tr>
-                    <td class="@ingredient.Type">@ingredient.Item1</td>
-                    <td class="@ingredient.Type">@ingredient.Item2</td>
+                    <td class="@ingredient.Type">@ingredient.Item1Line1</td>
+                    <td class="@ingredient.Type">@ingredient.Item2Line1</td>
                 </tr>
             }
         </table>
@@ -29,8 +29,12 @@
         <table>
             @foreach (var step in Model.StepComparisons) {
                 <tr>
-                    <td class="@step.Type">@step.Item1</td>
-                    <td class="@step.Type">@step.Item2</td>
+                    <td class="@step.Type">@step.Item1Line1</td>
+                    <td class="@step.Type">@step.Item2Line1</td>
+                </tr>
+                <tr>
+                    <td class="@step.Type">@step.Item1Line2</td>
+                    <td class="@step.Type">@step.Item2Line2</td>
                 </tr>
             }
         </table>
