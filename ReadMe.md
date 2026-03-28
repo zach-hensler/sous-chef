@@ -8,22 +8,12 @@ A kitchen helper with recipe versioning
 - Track "active time" vs "total time"
 - Compare Page
   - Add select input to change version
-
-## v2 Going Public
-- Any user can read
-- Only I can write
-- Requires improved hosting requirements and bot-blocking
-- Auth Ideas:
-  - TS based authentication
-    - have public version w/ readonly db user and "read-only" env var for view purposes
-    - have tailnet exclusive version w/ full db user and no "read-only" env var
-  - Password based authentication
-    - hidden login form that requires specific password to enable "admin mode"
-    - login form hidden for UX not for security
-    - have to be more careful since both go through same API user
+  - Add comment comparison
+    - no highlighting, just averages and a list of comments ordered by created descending
+- Export Recipe to PDF
 
 
-## v3 Features - Ease of Use
+## v2 Features - Ease of Use
 Main Feed Updates
 - Filters on Home Feed
   - By: Star Rating, Category, Effort Level
@@ -38,14 +28,26 @@ Main Feed Updates
 - Recipe List page should use grid instead of list
 
 
+## v3 Going Public
+- Any user can read
+- Only I can write
+- Requires improved hosting requirements and bot-blocking
+- Auth Ideas:
+  - TS based authentication
+    - have public version w/ readonly db user and "read-only" env var for view purposes
+    - have tailnet exclusive version w/ full db user and no "read-only" env var
+  - Password based authentication
+    - hidden login form that requires specific password to enable "admin mode"
+    - login form hidden for UX not for security
+    - have to be more careful since both go through same API user
+
+
 ## Backlog
-- Convert steps to a jsonb list
 - Recipe drafts
 - Uploading image for a recipe
   - Should be automatically scaled down before saving image
 - Grocery List
   - adding recipe to grocery list
-- Export Recipe to PDF
 - Support marking a version as the "active version"
   - A recipe can have only one version be active
     - boolean on the recipe_versions row
@@ -94,6 +96,8 @@ Main Feed Updates
 - ~~Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"~~
 - ~~Autofocus rating dialog and remove default~~
 - ~~Auto focus after adding/removing/ordering on Create page~~
+- ~~Added Compare Page with diff checking for ingredients and steps~~
+- ~~Removed Semantic Recipe Versioning~~
 
 ---
 # Initial Roadmap
