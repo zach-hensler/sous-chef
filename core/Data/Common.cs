@@ -24,21 +24,23 @@ public static class Common {
         }
 
         public static async Task<RecipeId> Create(CreateRecipeDb recipe, DbConnection conn) {
-            return await conn.ExecuteScalarAsync<RecipeId>(
+            return (await conn.ExecuteScalarAsync<RecipeId>(
                 """
                 INSERT INTO recipes
-                    (name, description, time_minutes, effort_level, category)
+                    (name, description, total_time_minutes, active_time_minutes, original_author, effort_level, category)
                 VALUES
-                    (@Name, @Description, @TimeMinutes, @EffortLevel, @Category)
+                    (@Name, @Description, @TotalTimeMinutes, @ActiveTimeMinutes, @OriginalAuthor, @EffortLevel, @Category)
                 RETURNING recipe_id;
                 """,
                 new {
                     recipe.Name,
                     recipe.Description,
-                    recipe.TimeMinutes,
+                    recipe.TotalTimeMinutes,
+                    recipe.ActiveTimeMinutes,
+                    recipe.OriginalAuthor,
                     EffortLevel = recipe.EffortLevel.ToString(),
                     Category = recipe.Category.ToString()
-                });
+                }))!;
         }
 
         public static async Task Update(RecipeId recipeId, CreateRecipeDb recipe, DbConnection conn) {
@@ -47,12 +49,23 @@ public static class Common {
                 UPDATE recipes
                 SET name = @Name,
                     description = @Description,
-                    time_minutes = @TimeMinutes,
+                    total_time_minutes = @TotalTimeMinutes,
+                    active_time_minutes = @ActiveTimeMinutes,
+                    original_author = @OriginalAuthor,
                     effort_level = @EffortLevel,
                     category = @Category
                 WHERE recipe_id = @id;
                 """,
-                new { id = recipeId, recipe.Name, recipe.Description, recipe.EffortLevel, recipe.TimeMinutes, recipe.Category });
+                new {
+                    id = recipeId,
+                    recipe.Name,
+                    recipe.Description,
+                    recipe.EffortLevel,
+                    recipe.TotalTimeMinutes,
+                    recipe.ActiveTimeMinutes,
+                    recipe.OriginalAuthor,
+                    recipe.Category
+                });
         }
 
         public static async Task DeleteCascade(RecipeId recipeId, DbConnection conn) {
@@ -116,7 +129,7 @@ public static class Common {
                 .ToList();
         }
         public static async Task<VersionId> Create(CreateRecipeVersionDb version, DbConnection conn) {
-            return await conn.ExecuteScalarAsync<VersionId>(
+            return (await conn.ExecuteScalarAsync<VersionId>(
                 """
                 INSERT INTO recipe_versions
                 (message, recipe_id, created_at)
@@ -128,7 +141,7 @@ public static class Common {
                     version.RecipeId,
                     version.Message,
                     version.CreatedAt
-                });
+                }))!;
         }
 
         public static async Task DeleteCascade(VersionId versionId, DbConnection conn) {

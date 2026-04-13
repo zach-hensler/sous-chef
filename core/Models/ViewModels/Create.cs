@@ -15,7 +15,7 @@ public record ViewIngedient {
     }
 }
 
-public class ViewStep {
+public class CreateStepView {
     public required string Name { get; init; }
     public required string Instruction { get; init; }
 
@@ -27,20 +27,24 @@ public class ViewStep {
     }
 }
 
-public record ViewRecipe {
+public record CreateRecipeView {
     public required string Name { get; init; }
     public string? Description { get; init; }
     public required EffortLevels EffortLevel { get; init; }
     public required Categories Category { get; init; } = Categories.Uncategorized;
-    public required int Time { get; init; }
+    public string? OriginalAuthor { get; init; }
+    public required int TotalTime { get; init; }
+    public required int ActiveTime { get; init; }
 
     public CreateRecipeDb ToRecipeDb() {
         return new CreateRecipeDb {
             Name = Name,
             Description = Description,
-            TimeMinutes = Time,
             EffortLevel = EffortLevel,
-            Category = Category
+            Category = Category,
+            OriginalAuthor = OriginalAuthor,
+            TotalTimeMinutes = TotalTime,
+            ActiveTimeMinutes = ActiveTime
         };
     }
 }

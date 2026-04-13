@@ -52,7 +52,19 @@
                 <button class="header-action warning" onclick="ConfirmDelete()">Delete</button>
             </div>
         </div>
-        <p>Effort: @Model.Details.RecipeMetadata.EffortLevel, Time: @Model.Details.RecipeMetadata.TimeMinutes Minutes</p>
+        <p>
+            Effort: @Model.Details.RecipeMetadata.EffortLevel,
+            @if (Model.Details.RecipeMetadata.ActiveTimeMinutes == Model.Details.RecipeMetadata.TotalTimeMinutes) {
+                <span>Time: @Model.Details.RecipeMetadata.TotalTimeMinutes Minutes</span>
+            }
+            else {
+                <span>
+                    Total Time: @Model.Details.RecipeMetadata.TotalTimeMinutes Minutes,
+                    Active Time: @Model.Details.RecipeMetadata.ActiveTimeMinutes Minutes
+                </span>
+            }
+            
+        </p>
         <h2>Ingredients</h2>
         <ul>
             @foreach(var ingredient in Model.Details.Ingredients) {

@@ -9,8 +9,8 @@ public record RecipeStepDb {
     public required string StepNumber { get; init; }
     public required string Instruction { get; init; }
 
-    public ViewStep ToViewStep() {
-        return new ViewStep {
+    public CreateStepView ToViewStep() {
+        return new CreateStepView {
             Name = Name,
             Instruction = Instruction
         };

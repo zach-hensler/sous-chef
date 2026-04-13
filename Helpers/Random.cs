@@ -46,9 +46,11 @@ public static class Rand {
                     RecipeId = new RecipeId(0),
                     Name = Primitive.String(),
                     Description = Primitive.String(),
-                    TimeMinutes = Primitive.Int(0,120),
-                    EffortLevel = (EffortLevels)Primitive.Int(0,2),
-                    Category = (Categories)Primitive.Int(0,4)
+                    TotalTimeMinutes = Primitive.Int(0, 120),
+                    EffortLevel = (EffortLevels)Primitive.Int(0, 2),
+                    Category = (Categories)Primitive.Int(0, 4),
+                    OriginalAuthor = Primitive.String(),
+                    ActiveTimeMinutes = 0
                 };
             }
 
@@ -101,9 +103,11 @@ public static class Rand {
                     return new CreateRecipeDb {
                         Name = Primitive.String(),
                         Description = Primitive.String(),
-                        TimeMinutes = Primitive.Int(),
                         EffortLevel = EffortLevels.Easy,
-                        Category = Categories.Uncategorized
+                        Category = Categories.Uncategorized,
+                        OriginalAuthor = Primitive.String(),
+                        TotalTimeMinutes = Primitive.Int(),
+                        ActiveTimeMinutes = Primitive.Int()
                     };
                 }
             }

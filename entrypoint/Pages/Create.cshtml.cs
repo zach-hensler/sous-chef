@@ -22,14 +22,15 @@ public enum CreateActions {
     MoveStepUp
 }
 
+// TODO convert this into the create db models
 public class CreateModel : PageModel {
     [BindProperty] public string AutoFocusId { get; set; } = "";
     [BindProperty] public string UpdateMessage { get; set; } = "";
-    [BindProperty] public ViewRecipe RecipeMetadata { get; set; }
+    [BindProperty] public CreateRecipeView RecipeMetadata { get; set; }
 
     [BindProperty] public List<ViewIngedient> RecipeIngredients { get; set; } = [];
 
-    [BindProperty] public List<ViewStep> RecipeSteps { get; set; } = [];
+    [BindProperty] public List<CreateStepView> RecipeSteps { get; set; } = [];
     public VersionId? VersionId { get; set; }
 
     public string GetBaseRoute() {
@@ -87,8 +88,8 @@ public class CreateModel : PageModel {
     private void SyncStepAttemptedValues() {
         // TextAreas don't automatically sync and must be manually synced
         for (var i = 0; i < RecipeSteps.Count; i++) {
-            ModelState[$"{nameof(RecipeSteps)}[{i}].{nameof(ViewStep.Name)}"]?.AttemptedValue = RecipeSteps[i].Name;
-            ModelState[$"{nameof(RecipeSteps)}[{i}].{nameof(ViewStep.Instruction)}"]?.AttemptedValue = RecipeSteps[i].Instruction;
+            ModelState[$"{nameof(RecipeSteps)}[{i}].{nameof(CreateStepView.Name)}"]?.AttemptedValue = RecipeSteps[i].Name;
+            ModelState[$"{nameof(RecipeSteps)}[{i}].{nameof(CreateStepView.Instruction)}"]?.AttemptedValue = RecipeSteps[i].Instruction;
         }
     }
 
@@ -133,7 +134,7 @@ public class CreateModel : PageModel {
         return Page();
     }
     private IActionResult HandleNewStep() {
-        RecipeSteps.Add(new ViewStep {
+        RecipeSteps.Add(new CreateStepView {
             Name = "",
             Instruction = ""
         });
