@@ -22,7 +22,7 @@ public record NewComment {
 public class RecipeModel : PageModel {
     private Logging _log = new();
     public RecipeDetails? Details { get; set; }
-    public List<RecipeCommentDb> Comments { get; set; } = [];
+    // public List<RecipeCommentDb> Comments { get; set; } = [];
     public List<RecipeVersionDb> Versions { get; set; } = [];
     [BindProperty] public string DeleteConfirmation { get; set; } = "";
 
@@ -44,13 +44,13 @@ public class RecipeModel : PageModel {
             return;
         }
 
-        var commentRes = await RecipeService.GetComments(res.Data.Version.RecipeId);
-        if ((int)res.StatusCode < 300 && commentRes.Data != null) {
-            Comments = commentRes.Data;
-        }
-        else {
-            _log.LogError(res.ErrorMessage);
-        }
+        // var commentRes = await RecipeService.GetComments(res.Data.Version.RecipeId);
+        // if ((int)res.StatusCode < 300 && commentRes.Data != null) {
+        //     Comments = commentRes.Data;
+        // }
+        // else {
+        //     _log.LogError(res.ErrorMessage);
+        // }
 
         var versionRes = await VersionService.List(versionId);
         if ((int)res.StatusCode < 300 && versionRes.Data != null) {

@@ -26,6 +26,7 @@ public class Compare : PageModel {
     }
     public List<Comparison> StepComparisons { get; set; } = [];
     public List<Comparison> IngredientComparisons { get; set; } = [];
+    public List<Comparison> CommentComparisons { get; set; } = [];
     
     public List<RecipeVersionDb>? Versions { get; set; }
 
@@ -182,7 +183,23 @@ public class Compare : PageModel {
             v1Counter++;
             v2Counter++;
         }
-        
+
+        var v1Comments =
+            v1Res.Data.Comments.OrderByDescending(c => c.Rating).ToList();
+        var v2Comments =
+            v2Res.Data.Comments.OrderByDescending(c => c.Rating).ToList();
+        for (var i = 0; i < Math.Max(v1Comments.Count, v2Comments.Count); i++) {
+            var v1Comment = v1Comments.ElementAtOrDefault(i);
+            var v2Comment = v2Comments.ElementAtOrDefault(i);
+            CommentComparisons.Add(new Comparison {
+                Type = Comparison.ComparisonType.Same,
+                Item1Line1 = v1Comment != null ? $"{v1Comment.Rating} - {v1Comment.CreatedAt}" : null,
+                Item1Line2 = v1Comment?.Comment,
+                Item2Line1 = v2Comment != null ? $"{v2Comment.Rating} - {v2Comment.CreatedAt}" : null,
+                Item2Line2 = v2Comment?.Comment
+            });
+        }
+
         return Page();
     }
 }

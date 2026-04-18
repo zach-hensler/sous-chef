@@ -9,6 +9,7 @@ public record RecipeDetails {
     public required RecipeVersionDb Version { get; init; }
     public required List<StepDb> Steps { get; init; }
     public required List<RecipeIngredientDb> Ingredients { get; init; }
+    public required List<RecipeCommentDb> Comments { get; init; }
 }
 
 public static class GetRecipeDetails {
@@ -25,12 +26,14 @@ public static class GetRecipeDetails {
         
         var steps = await Common.RecipeSteps.Get(versionId, conn);
         var ingredients = await Common.RecipeIngredients.Get(versionId, conn);
+        var comments = await Common.RecipeComments.GetByVersion(versionId, conn);
 
         return new RecipeDetails {
             RecipeMetadata = recipe,
             Version = version,
             Steps = steps,
-            Ingredients = ingredients
+            Ingredients = ingredients,
+            Comments = comments
         };
     }
 }

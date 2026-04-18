@@ -85,11 +85,11 @@
         </ol>
     }
     <h1 id="comments">Comments</h1>
-    @if (Model.Comments.Count == 0) {
+    @if (Model.Details.Comments.Count == 0) {
         <p>No comments yet!</p>
     }
     else {
-        foreach (var comment in Model.Comments.Where(c => c.VersionId == Model.Details?.Version.VersionId).OrderByDescending(c => c.CreatedAt)) {
+        foreach (var comment in Model.Details.Comments.Where(c => c.VersionId == Model.Details?.Version.VersionId).OrderByDescending(c => c.CreatedAt)) {
             <hr />
             <p>Rating: @($"{comment.Rating}/5") at @comment.CreatedAt</p>
             @if (!string.IsNullOrWhiteSpace(comment.Comment)) {
@@ -97,7 +97,7 @@
             }
         }
         <h2>Previous Version Comments</h2>
-        foreach (var comment in Model.Comments.Where(c => c.VersionId != Model.Details?.Version.VersionId).OrderByDescending(c => c.CreatedAt)) {
+        foreach (var comment in Model.Details.Comments.Where(c => c.VersionId != Model.Details?.Version.VersionId).OrderByDescending(c => c.CreatedAt)) {
             <hr />
             <p>Rating: @($"{comment.Rating}/5") at @comment.CreatedAt</p>
             @if (!string.IsNullOrWhiteSpace(comment.Comment)) {
