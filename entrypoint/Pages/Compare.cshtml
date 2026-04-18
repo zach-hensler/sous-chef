@@ -46,7 +46,16 @@
         </table>
         <h2>Comments</h2>
         <table>
-            
+            @foreach (var comment in Model.CommentComparisons) {
+                <tr>
+                    <td class="@comment.Type">@comment.Item1Line1</td>
+                    <td class="@comment.Type">@comment.Item2Line1</td>
+                </tr>
+                <tr>
+                    <td class="@comment.Type">@comment.Item1Line2</td>
+                    <td class="@comment.Type">@comment.Item2Line2</td>
+                </tr>
+            }
         </table>
     }
 </div>

@@ -193,11 +193,16 @@ public class Compare : PageModel {
             var v2Comment = v2Comments.ElementAtOrDefault(i);
             CommentComparisons.Add(new Comparison {
                 Type = Comparison.ComparisonType.Same,
-                Item1Line1 = v1Comment != null ? $"{v1Comment.Rating} - {v1Comment.CreatedAt}" : null,
+                Item1Line1 = Format(v1Comment),
                 Item1Line2 = v1Comment?.Comment,
-                Item2Line1 = v2Comment != null ? $"{v2Comment.Rating} - {v2Comment.CreatedAt}" : null,
+                Item2Line1 = Format(v2Comment),
                 Item2Line2 = v2Comment?.Comment
             });
+
+            continue;
+
+            string? Format(RecipeCommentDb? comment) =>
+                comment == null ? null : $"Rating: {comment.Rating}/5 at {comment.CreatedAt}";
         }
 
         return Page();
