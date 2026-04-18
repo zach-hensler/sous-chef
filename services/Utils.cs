@@ -8,7 +8,7 @@ using core.Models.DbModels;
 namespace services;
 
 public static class Utils {
-    private static Logging log = new ();
+    private static readonly Logging Log = new ();
     private static readonly ConnectionFactory ConnectionFactory = new();
     public static async Task<Response> SafeRun(string sourceWorkflow, Func<Task<Response>> handle) {
         try {
@@ -61,7 +61,7 @@ public static class Utils {
                 conn);
         }
         catch (Exception errorHistoryEx) {
-            log.LogError("Unable to write error message" + errorHistoryEx.Message);
+            Log.LogError("Unable to write error message" + errorHistoryEx.Message);
         }
     }
 }

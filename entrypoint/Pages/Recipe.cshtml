@@ -52,18 +52,21 @@
                 <button class="header-action warning" onclick="ConfirmDelete()">Delete</button>
             </div>
         </div>
+        @if (!string.IsNullOrWhiteSpace(Model.Details.RecipeMetadata.OriginalAuthor)) {
+            <p>Original Author: @Model.Details.RecipeMetadata.OriginalAuthor</p>
+        }
         <p>
-            Effort: @Model.Details.RecipeMetadata.EffortLevel,
+            Effort: <span class="underlined">@Model.Details.RecipeMetadata.EffortLevel</span>,
             @if (Model.Details.RecipeMetadata.ActiveTimeMinutes == Model.Details.RecipeMetadata.TotalTimeMinutes) {
-                <span>Time: @Model.Details.RecipeMetadata.TotalTimeMinutes Minutes</span>
+                <span>Time: <span class="underlined">@Model.Details.RecipeMetadata.TotalTimeMinutes Minutes</span></span>
             }
             else {
                 <span>
-                    Total Time: @Model.Details.RecipeMetadata.TotalTimeMinutes Minutes,
-                    Active Time: @Model.Details.RecipeMetadata.ActiveTimeMinutes Minutes
+                Total Time: <span class="underlined">@Model.Details.RecipeMetadata.TotalTimeMinutes Minutes</span>,
+                Active Time: <span class="underlined">@Model.Details.RecipeMetadata.ActiveTimeMinutes Minutes</span>
                 </span>
             }
-            
+
         </p>
         <h2>Ingredients</h2>
         <ul>

@@ -4,8 +4,6 @@ A kitchen helper with recipe versioning
 # Backlog
 
 ## Missing v1 Features - Core Features
-- Original author citation for recipes
-- Track "active time" vs "total time"
 - Compare Page
   - Add select input to change version
   - Add comment comparison

@@ -152,3 +152,7 @@ td {
 .nav-item:hover {
   background-color: var(--accent-color-darker );
 }
+
+.underlined {
+  text-decoration: underline;
+}
