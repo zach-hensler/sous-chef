@@ -192,14 +192,13 @@ public static class Common {
             await conn.ExecuteAsync(
                 """
                 INSERT INTO recipe_ingredients
-                    (version_id, name, note, quantity, unit)
+                    (version_id, name, quantity, unit)
                 VALUES
-                    (@versionId, @name, @note, @quantity, @unit)
+                    (@versionId, @name, @quantity, @unit)
                 """,
                 new {
                     versionId,
                     ingredient.Name,
-                    ingredient.Note,
                     ingredient.Quantity,
                     ingredient.Unit
                 });

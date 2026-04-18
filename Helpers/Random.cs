@@ -78,7 +78,6 @@ public static class Rand {
                     RecipeId = new RecipeId(0),
                     VersionId = new VersionId(0),
                     Name = Primitive.String(),
-                    Note = null,
                     Quantity = Primitive.Int(),
                     Unit = Primitive.String()
                 };
@@ -102,7 +101,6 @@ public static class Rand {
                 public static CreateIngredientDb CreateRecipeIngredientDb() {
                     return new CreateIngredientDb {
                         Name = Primitive.String(),
-                        Note = Primitive.String(),
                         Quantity = Primitive.Int(),
                         Unit = Primitive.String()
                     };
