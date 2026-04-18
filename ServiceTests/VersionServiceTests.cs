@@ -1,5 +1,6 @@
 using core.Data;
 using core.Models;
+using core.Models.DbModels;
 using Helpers;
 using services;
 using Xunit;

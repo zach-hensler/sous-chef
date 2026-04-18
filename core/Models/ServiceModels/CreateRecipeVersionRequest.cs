@@ -14,6 +14,6 @@ public class CreateRecipeVersionRequest {
     public required VersionId PreviousVersionId { get; init; }
     public required VersionType VersionType { get; init; }
     public required CreateRecipeDb Recipe { get; init; }
-    public required List<CreateRecipeStepDb> Steps { get; init; }
-    public required List<CreateRecipeIngredientDb> Ingredients { get; init; }
+    public required List<CreateStepDb> Steps { get; init; }
+    public required List<CreateIngredientDb> Ingredients { get; init; }
 }

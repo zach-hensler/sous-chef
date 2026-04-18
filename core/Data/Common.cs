@@ -152,7 +152,7 @@ public static class Common {
     }
 
     public static class RecipeSteps {
-        public static async Task Create(CreateRecipeStepDb step, int stepIndex, VersionId versionId, DbConnection conn) {
+        public static async Task Create(CreateStepDb step, int stepIndex, VersionId versionId, DbConnection conn) {
             await conn.ExecuteAsync(
                 """
                 INSERT INTO recipe_steps
@@ -174,9 +174,9 @@ public static class Common {
                 new { versionId });
         }
         
-        public static async Task<List<RecipeStepDb>> Get(VersionId versionId, DbConnection conn) {
+        public static async Task<List<StepDb>> Get(VersionId versionId, DbConnection conn) {
             return
-                (await conn.QueryAsync<RecipeStepDb>(
+                (await conn.QueryAsync<StepDb>(
                     """
                     SELECT *
                     FROM recipe_steps
@@ -188,7 +188,7 @@ public static class Common {
     }
 
     public static class RecipeIngredients {
-        public static async Task Create(CreateRecipeIngredientDb ingredient, VersionId versionId, DbConnection conn) {
+        public static async Task Create(CreateIngredientDb ingredient, VersionId versionId, DbConnection conn) {
             await conn.ExecuteAsync(
                 """
                 INSERT INTO recipe_ingredients

@@ -7,3 +7,10 @@ public record RecipeCommentDb {
     public string? Comment { get; init; }
     public required DateTime CreatedAt { get; init; }
 }
+
+public record CreateRecipeCommentDb {
+    public required VersionId VersionId { get; init; }
+    public required int Rating { get; init; }
+    public string? Comment { get; init; }
+    public required DateTime CreatedAt { get; init; }
+}

@@ -7,7 +7,7 @@ namespace core.Data;
 public record RecipeDetails {
     public required RecipeDb RecipeMetadata { get; init; }
     public required RecipeVersionDb Version { get; init; }
-    public required List<RecipeStepDb> Steps { get; init; }
+    public required List<StepDb> Steps { get; init; }
     public required List<RecipeIngredientDb> Ingredients { get; init; }
 }
 

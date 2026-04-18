@@ -54,8 +54,17 @@ public static class Rand {
                 };
             }
 
-            public static RecipeStepDb RecipeStepDb(int idx) {
-                return new RecipeStepDb {
+            public static RecipeVersionDb RecipeVersionDb(RecipeId recipeId) {
+                return new RecipeVersionDb {
+                    VersionId = new VersionId(0),
+                    Message = Primitive.String(),
+                    RecipeId = recipeId,
+                    CreatedAt = Primitive.Date()
+                };
+            }
+
+            public static StepDb RecipeStepDb(int idx) {
+                return new StepDb {
                     RecipeId = new RecipeId(0),
                     VersionId = new VersionId(0),
                     Name = Primitive.String(),
@@ -83,15 +92,15 @@ public static class Rand {
             }
 
             public static class Create {
-                public static CreateRecipeStepDb CreateRecipeStepDb() {
-                    return new CreateRecipeStepDb {
+                public static CreateStepDb CreateRecipeStepDb() {
+                    return new CreateStepDb {
                         Name = Primitive.String(),
                         Instruction = Primitive.String()
                     };
                 }
 
-                public static CreateRecipeIngredientDb CreateRecipeIngredientDb() {
-                    return new CreateRecipeIngredientDb {
+                public static CreateIngredientDb CreateRecipeIngredientDb() {
+                    return new CreateIngredientDb {
                         Name = Primitive.String(),
                         Note = Primitive.String(),
                         Quantity = Primitive.Int(),
@@ -114,12 +123,12 @@ public static class Rand {
         }
         public static class Requests {
             public static CreateRecipeRequest CreateRecipeRequest() {
-                List<CreateRecipeStepDb> steps = [];
+                List<CreateStepDb> steps = [];
                 for (var i = 0; i < Primitive.Int(1, 4); i++) {
                     steps.Add(Db.Create.CreateRecipeStepDb());
                 }
 
-                List<CreateRecipeIngredientDb> ingredients = [];
+                List<CreateIngredientDb> ingredients = [];
                 for (var i = 0; i < Primitive.Int(1, 4); i++) {
                     ingredients.Add(Db.Create.CreateRecipeIngredientDb());
                 }
