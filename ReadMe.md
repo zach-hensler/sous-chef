@@ -6,8 +6,6 @@ A kitchen helper with recipe versioning
 ## Missing v1 Features - Core Features
 - Compare Page
   - Add select input to change version
-  - Add comment comparison
-    - no highlighting, just averages and a list of comments ordered by created descending
 - Export Recipe to PDF
 
 
@@ -19,8 +17,6 @@ Main Feed Updates
     - By name, description, and ingredients
   - Show avg rating (for latest version?) on home page
 - navbar updates
-  - icons for admin/create
-  - rename "recipes" as "Sous Chef"
   - media query, on mobile collapse to hamburger button + "Sous Chef"
     - hamburger button reveals the rest of the options
 - Recipe List page should use grid instead of list

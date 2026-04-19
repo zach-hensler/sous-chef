@@ -3,12 +3,12 @@
   
   /* colors - each "darker" is 4% darker */
   --font-color: #000;
-  --bg-color: hsl(300, 32.1%, 93%);
+  --bg-color: hsl(300, 32.1%, 95%);
   --bg-color-darker: hsl(from var(--bg-color) h s calc(l - 4));
   --bg-color-darkest: hsl(from var(--bg-color) h s calc(l - 8));
 
   --accent-font-color: #000;
-  --accent-color: hsl(255, 70%, 76%);
+  --accent-color: hsl(250, 70%, 76%);
   --accent-color-darker: hsl(from var(--accent-color) h s calc(l - 4));
 
   --warning-color: hsl(355, 61%, 76%);
@@ -135,19 +135,33 @@ td {
   background-color: var(--warning-darker);
 }
 
+svg {
+  fill: var(--font-color)
+}
+
 .nav-container {
   background-color: var(--accent-color);
 
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   /*border-bottom: solid 2px var(--bg-color-darkest);*/
   box-shadow: 0 var(--extra-small) var(--small) var(--bg-color-darker);
 }
 
+.nav-icon-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;  
+}
+
 .nav-item {
   color: var(--accent-font-color);
   padding: var(--medium);
+  display: flex;
+  align-items: center;
 }
 .nav-item:hover {
   background-color: var(--accent-color-darker );
