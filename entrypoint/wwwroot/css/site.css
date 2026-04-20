@@ -1,4 +1,5 @@
 :root {
+  font-size: 1rem;
   --font-family: 'Roboto, sans-serif';
   
   /* colors - each "darker" is 4% darker */
@@ -27,6 +28,8 @@
   --border-radius: 5px;
 }
 
+/* ---------------------- */
+/* Main Layout (+ Header) */
 body {
   margin: 0 0 var(--large) 0;
   color: var(--font-color);
@@ -34,6 +37,43 @@ body {
   font-family: var(--font-family);
 }
 
+main, nav {
+  width: 80%;
+  margin: auto;
+  max-width: 1000px;
+}
+
+header {
+  background-color: var(--accent-color);
+  box-shadow: 0 var(--extra-small) var(--small) var(--bg-color-darker);
+  width: 100%;
+}
+
+.nav-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--accent-font-color);
+}
+
+.nav-hero, .nav-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0 calc(-1 * var(--medium))
+}
+
+.nav-hero, .nav-icon {
+  padding: var(--medium);
+}
+
+.nav-hero:hover, .nav-icon:hover {
+  background-color: var(--accent-color-darker );
+}
+
+/* ---------------------- */
+/* Components */
 h1 {
   margin: var(--extra-large) 0 0 0;
 }
@@ -49,11 +89,6 @@ h3 {
 hr {
   margin: var(--medium) 0;
   color: var(--bg-color-darker);
-}
-
-main {
-  width: 80%;
-  margin: auto;
 }
 
 dialog {
@@ -118,6 +153,12 @@ td {
   border-radius: var(--border-radius);
 }
 
+svg {
+  fill: var(--font-color)
+}
+
+/* ---------------------- */
+/* Classes */
 .primary {
   color: var(--accent-font-color);
   background-color: var(--accent-color);
@@ -133,38 +174,6 @@ td {
 
 .warning:hover {
   background-color: var(--warning-darker);
-}
-
-svg {
-  fill: var(--font-color)
-}
-
-.nav-container {
-  background-color: var(--accent-color);
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  /*border-bottom: solid 2px var(--bg-color-darkest);*/
-  box-shadow: 0 var(--extra-small) var(--small) var(--bg-color-darker);
-}
-
-.nav-icon-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;  
-}
-
-.nav-item {
-  color: var(--accent-font-color);
-  padding: var(--medium);
-  display: flex;
-  align-items: center;
-}
-.nav-item:hover {
-  background-color: var(--accent-color-darker );
 }
 
 .underlined {
