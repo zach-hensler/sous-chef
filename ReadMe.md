@@ -11,10 +11,6 @@ A kitchen helper with recipe versioning
   - if more than x backups found, delete the oldest
 
 ## v2 Features - Bells and Whistles
-- Wishlist
-  - List of items that I want to learn to make
-  - Name, CreatedAt, Priority (int or enum), References (json list)
-  - New page with list, create modals, delete modals, view details modal (details could be new page)
 - "Stats" page
   - history of last x items that I made (based off of comments left)
   - Stats for:
@@ -23,9 +19,6 @@ A kitchen helper with recipe versioning
 - navbar updates
   - media query, on mobile collapse to hamburger button + "Sous Chef"
     - hamburger button reveals the rest of the options
-- Response Updates
-  - Delete Response type
-  - Update Utils.SafeRun to return T? instead
 
 Main Feed Updates
 - Filtering by Category
