@@ -8,8 +8,8 @@ namespace sous_chef.Pages;
 public class Compare : PageModel {
     public VersionId? VersionId1 { get; set; }
     public VersionId? VersionId2 { get; set; }
-    
-    public string RecipeName { get; set; }
+
+    public string RecipeName { get; set; } = "";
 
     public record Comparison {
         public enum ComparisonType {
@@ -37,25 +37,22 @@ public class Compare : PageModel {
 
         VersionId1 = new VersionId(id1.Value);
         var v1Res = await RecipeService.GetRecipeByVersion(VersionId1);
-        if (v1Res.Data == null) {
+        if (v1Res == null) {
             return Page();
         }
 
-        RecipeName = v1Res.Data!.RecipeMetadata.Name;
+        RecipeName = v1Res.RecipeMetadata.Name;
 
         VersionId2 = new VersionId(id2.Value);
         var v2Res = await RecipeService.GetRecipeByVersion(VersionId2);
-        if (v2Res.Data == null) {
+        if (v2Res == null) {
             return Page();
         }
 
-        var listRes = await VersionService.List(VersionId1);
-        if (listRes.Data != null) {
-            Versions = listRes.Data;
-        }
+        Versions = await VersionService.List(VersionId1);
 
-        var v1Ingredients = v1Res.Data.Ingredients.OrderBy(i => i.Name).ToList();
-        var v2Ingredients = v2Res.Data.Ingredients.OrderBy(i => i.Name).ToList();
+        var v1Ingredients = v1Res.Ingredients.OrderBy(i => i.Name).ToList();
+        var v2Ingredients = v2Res.Ingredients.OrderBy(i => i.Name).ToList();
         foreach (var v1Ingredient in v1Ingredients) {
             var v2Ingredient = v2Ingredients.FirstOrDefault(i => i.Name == v1Ingredient.Name);
             var item1 = $"{v1Ingredient.Name} {v1Ingredient.Quantity} {v1Ingredient.Unit}";
@@ -91,8 +88,8 @@ public class Compare : PageModel {
                     Item2Line2 = null
                 }));
 
-        var v1Steps = v1Res.Data.Steps.OrderBy(s => s.StepNumber).ToList();
-        var v2Steps = v2Res.Data.Steps.OrderBy(s => s.StepNumber).ToList();
+        var v1Steps = v1Res.Steps.OrderBy(s => s.StepNumber).ToList();
+        var v2Steps = v2Res.Steps.OrderBy(s => s.StepNumber).ToList();
         var v1Counter = 0;
         var v2Counter = 0;
         for (var i = 0; i < Math.Max(v1Steps.Count, v2Steps.Count); i++) {
@@ -116,7 +113,7 @@ public class Compare : PageModel {
                         Type = Comparison.ComparisonType.Deleted,
                         Item1Line1 = null,
                         Item1Line2 = null,
-                        Item2Line1 = $"{v1Step!.StepNumber}. {v1Step.Name}",
+                        Item2Line1 = $"{v1Step.StepNumber}. {v1Step.Name}",
                         Item2Line2 = v1Step.Instruction
                     });
                 v1Counter++;
@@ -185,9 +182,9 @@ public class Compare : PageModel {
         }
 
         var v1Comments =
-            v1Res.Data.Comments.OrderByDescending(c => c.Rating).ToList();
+            v1Res.Comments.OrderByDescending(c => c.Rating).ToList();
         var v2Comments =
-            v2Res.Data.Comments.OrderByDescending(c => c.Rating).ToList();
+            v2Res.Comments.OrderByDescending(c => c.Rating).ToList();
         for (var i = 0; i < Math.Max(v1Comments.Count, v2Comments.Count); i++) {
             var v1Comment = v1Comments.ElementAtOrDefault(i);
             var v2Comment = v2Comments.ElementAtOrDefault(i);

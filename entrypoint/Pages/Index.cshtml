@@ -6,13 +6,7 @@
 
 <div>
     <h1>Recipes</h1>
-    @if (Model.Error != null) {
-        <div>
-            <p>An error occured while fetching recipes.</p>
-            <p>@Model.Error.Value.Item1 - @Model.Error.Value.Item2</p>
-        </div>
-    }
-    else if (Model.RecipeData != null) {
+    @if (Model.RecipeData != null) {
         <div class="recipe-list-container">
             @foreach (var recipe in Model.RecipeData.Items) {
                 <div class="recipe-list-container">

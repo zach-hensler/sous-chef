@@ -7,28 +7,6 @@
     const string rating = "rating";
 }
 
-<script>
-    function ConfirmDelete() {
-        const dialog = document.getElementById("@deleteDialog")
-        dialog.showModal();
-    }
-    function CloseDeleteDialog() {
-        const dialog = document.getElementById("@deleteDialog")
-        dialog.close();
-    }
-    
-    function OpenMadeIt() {
-        const dialog = document.getElementById("@madeItDialog");
-        dialog.showModal();
-        const rating = document.getElementById("@rating");
-        rating.focus();
-    }
-    function CloseMadeIt() {
-        const dialog = document.getElementById("@madeItDialog")
-        dialog.close();
-    }
-</script>
-
 <div>
     @if (Model.Details == null) {
         <p>Unable to load recipe</p>
@@ -37,7 +15,7 @@
         <div class="header-wrapper">
             <h1>@Model.Details.RecipeMetadata.Name</h1>
             <div class="header-action-wrapper">
-                <button class="header-action primary" onclick="OpenMadeIt()">Review</button>
+                <button class="header-action primary" onclick="OpenDialogById('@madeItDialog')">Review</button>
                 @if (Model.Versions.Count > 1) {
                     <a
                         asp-page="/Compare"
@@ -49,7 +27,7 @@
                 <a asp-page="/Create" asp-route-versionId="@Model.Id">
                     <button class="header-action">Edit</button>
                 </a>
-                <button class="header-action warning" onclick="ConfirmDelete()">Delete</button>
+                <button class="header-action warning" onclick="OpenDialogById('@deleteDialog')">Delete</button>
             </div>
         </div>
         @if (!string.IsNullOrWhiteSpace(Model.Details.RecipeMetadata.OriginalAuthor)) {
@@ -124,7 +102,7 @@
             <div class="dialog-footer">
                 <hr />
                 <div class="dialog-button-wrapper">
-                    <button class="dialog-button" onclick="CloseMadeIt()">Cancel</button>
+                    <button class="dialog-button" onclick="CloseDialogById('@madeItDialog')">Cancel</button>
                     <button
                         class="primary dialog-button"
                         formaction="?action=@RecipeDetailsAction.AddComment"
@@ -152,7 +130,7 @@
                 <button
                     class="dialog-button"
                     type="button"
-                    onclick="CloseDeleteDialog()">
+                    onclick="CloseDialogById('@deleteDialog')">
                     Cancel
                 </button>
             </div>

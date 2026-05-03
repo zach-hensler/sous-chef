@@ -20,13 +20,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "services", "services\servic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1EE60536-DC9E-422E-B348-074769A18907}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceTests", "ServiceTests\ServiceTests.csproj", "{B827F09B-A3F6-4061-94CC-792F9A209B0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Services", "Tests.Services\Tests.Services.csproj", "{B827F09B-A3F6-4061-94CC-792F9A209B0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{770766BE-8701-4D12-8A8A-AA2B6BEEDEA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTests", "DataTests\DataTests.csproj", "{79E163E8-620D-410A-A407-1A57A9800670}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Data", "Tests.Data\Tests.Data.csproj", "{79E163E8-620D-410A-A407-1A57A9800670}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelTests", "ModelTests\ModelTests.csproj", "{6153C4F2-248B-485C-8D37-80C1A1435C7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Models", "Tests.Models\Tests.Models.csproj", "{6153C4F2-248B-485C-8D37-80C1A1435C7A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalSetup", "LocalSetup\LocalSetup.csproj", "{D872D989-4A5F-40E3-8D51-C925E8BA3BE1}"
 EndProject

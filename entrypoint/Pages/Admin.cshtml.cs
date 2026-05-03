@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using core;
 using core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,10 +15,7 @@ public class AdminModel : PageModel {
     public ListErrorsResponse? ErrorRes { get; set; }
 
     private async Task LoadPageData() {
-        var res = await ErrorService.ListErrors();
-        if ((int)res.StatusCode < 300 && res.Data != null) {
-            ErrorRes = res.Data;
-        }
+        ErrorRes = await ErrorService.ListErrors();
         
     }
     public async Task<IActionResult> OnGetAsync() {
@@ -46,7 +42,7 @@ public class AdminModel : PageModel {
     }
 
     public async Task<IActionResult> HandleMigrate() {
-        var res = await MigrationService.Migrate();
+        await MigrationService.Migrate();
         return Page();
     }
 }

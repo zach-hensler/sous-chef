@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Text.Json;
 using core.Models;
 using core.Models.DbModels;
 using Dapper;
@@ -273,6 +274,49 @@ public static class Common {
                 "SELECT * FROM error_history ORDER BY occurred_at DESC LIMIT @count OFFSET @offset",
                 new { count, offset }))
                 .ToList();
+        }
+    }
+
+    public static class Wishlist {
+        public static async Task<WishlistId> Add(AddWishlistDb db, DbConnection conn) {
+            return (await conn.ExecuteScalarAsync<WishlistId>(
+                """
+                INSERT INTO wishlist
+                    (name, priority, completed, reference, created_at)
+                VALUES
+                    (@name, @priority, @completed, @reference, now())
+                RETURNING wishlist_id;
+                """,
+                new {
+                    db.Name,
+                    db.Priority,
+                    db.Completed,
+                    db.Reference
+                }))!;
+        }
+
+        public static async Task<WishlistDb> Get(WishlistId id, DbConnection conn) {
+            return await conn.QuerySingleAsync<WishlistDb>(
+                "SELECT * FROM wishlist WHERE wishlist_id = @id",
+                new { id });
+        }
+
+        public static async Task<List<WishlistDb>> List(DbConnection conn) {
+            return
+                (await conn.QueryAsync<WishlistDb>(
+                    "SELECT * FROM wishlist WHERE completed = false ORDER BY priority DESC, name;"))
+                .ToList();
+        }
+
+        public static async Task<WishlistId?> Update(UpdateWishlistDb db, DbConnection conn) {
+            return await conn.ExecuteScalarAsync<WishlistId>(
+                """
+                UPDATE wishlist
+                SET priority = @priority, completed = @completed, reference = @reference
+                WHERE wishlist_id = @wishlistId
+                RETURNING wishlist_id;
+                """,
+                new { db.WishlistId, db.Priority, db.Completed, db.Reference });
         }
     }
 }

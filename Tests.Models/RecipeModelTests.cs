@@ -11,13 +11,12 @@ namespace PageTests;
 public class RecipeModelTests: Sequential {
     [Fact]
     public async Task ShouldGetPageWithOneVersion() {
-        await using var conn = (await Setup.ResetAndGetDatabase()).GetConnection();
-        await conn.OpenAsync(TestContext.Current.CancellationToken);
+        await using var conn = await Setup.ResetAndGetDatabase();
 
         var recipe = await RecipeService.CreateRecipe(Rand.Domain.Requests.CreateRecipeRequest());
-        Assert.Empty(recipe.ErrorMessage);
+        Assert.NotNull(recipe);
         
-        var latest = await Common.Version.GetLatest(recipe.Data!.RecipeId, conn);
+        var latest = await Common.Version.GetLatest(recipe.RecipeId, conn);
         var model = new RecipeModel();
 
         await model.OnGet(latest.VersionId.Value);
@@ -27,12 +26,11 @@ public class RecipeModelTests: Sequential {
 
     [Fact]
     public async Task ShouldGetPageWhenMultipleVersionsExist() {
-        await using var conn = (await Setup.ResetAndGetDatabase()).GetConnection();
-        await conn.OpenAsync(TestContext.Current.CancellationToken);
+        await using var conn = await Setup.ResetAndGetDatabase();
 
         var originalRecipe = Rand.Domain.Requests.CreateRecipeRequest();
         var recipe = await RecipeService.CreateRecipe(originalRecipe);
-        Assert.Empty(recipe.ErrorMessage);
+        Assert.NotNull(recipe);
         
         var versionId1 = new VersionId(1); //we know this because fresh db
         var versionId2 = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
@@ -43,7 +41,7 @@ public class RecipeModelTests: Sequential {
             Ingredients = originalRecipe.Ingredients,
             Message = Rand.Primitive.String()
         });
-        Assert.Empty(versionId2.ErrorMessage);
+        Assert.NotNull(versionId2);
         
         var versionId3 = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = versionId1,
@@ -53,7 +51,7 @@ public class RecipeModelTests: Sequential {
             Ingredients = originalRecipe.Ingredients,
             Message = Rand.Primitive.String()
         });
-        Assert.Empty(versionId3.ErrorMessage);
+        Assert.NotNull(versionId3);
         
         var versionId4 = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = versionId1,
@@ -63,12 +61,12 @@ public class RecipeModelTests: Sequential {
             Ingredients = originalRecipe.Ingredients,
             Message = Rand.Primitive.String()
         });
-        Assert.Empty(versionId4.ErrorMessage);
+        Assert.NotNull(versionId4);
 
-        var latest = await Common.Version.GetLatest(recipe.Data!.RecipeId, conn);
+        var latest = await Common.Version.GetLatest(recipe!.RecipeId, conn);
 
         var model = new RecipeModel();
-        await model.OnGet(versionId3.Data!.Value);
+        await model.OnGet(versionId3!.Value);
         Assert.NotNull(model.Details);
         Assert.NotEqual(model.Details.Version.Message, latest.Message);
         Assert.Equal(4, model.Versions.Count);

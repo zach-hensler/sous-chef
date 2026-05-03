@@ -1,0 +1,70 @@
+@page
+@model WishlistModel
+@{
+    ViewData["Title"] = "Wishlist";
+    const string addDialog = "add-dialog";
+}
+
+<div>
+    <div class="header-wrapper">
+        <h1>Wishlist</h1>
+        <button onclick="OpenDialogById('@addDialog')">Add</button>
+    </div>
+    @if (Model.Items.Count == 0) {
+        <p>No wishlist items were found.</p>
+    }
+    else {
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Priority</th>
+                <th>Created At</th>
+                <th>Reference</th>
+            </tr>
+            </thead>
+            @foreach (var item in Model.Items) {
+                <tr>
+                    <td><a asp-page="/WishlistEdit" asp-route-wishlistId="@item.WishlistId">@item.Name</a></td>
+                    <td>@item.Priority</td>
+                    <td>@item.CreatedAt</td>
+                    <td>
+                        @if (string.IsNullOrWhiteSpace(item.Reference)) {
+                            <text>N/A</text>
+                        }
+                        else if (item.Reference.StartsWith("https://")) {
+                            <a href="@item.Reference">@item.Reference</a>
+                        }
+                        else {
+                            <text>@item.Reference</text>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    <dialog id="@addDialog">
+        <h1>Add to Wishlist</h1>
+        <hr />
+        <form method="post">
+            <label for="name">Name</label>
+            <input
+                id="name"
+                asp-for="@Model.NewWishlistItem.Name"
+                autofocus />
+            <label for="refs">References</label>
+            <input id="refs" asp-for="@Model.NewWishlistItem.Reference" />
+            <hr />
+            <div class="dialog-button-wrapper">
+                <button
+                    class="dialog-button"
+                    type="button"
+                    onclick="CloseDialogById('@addDialog')">Close</button>
+                <button
+                    class="dialog-button primary"
+                    formaction="?@WishlistActions.Add"
+                    type="submit">Save</button>
+            </div>
+        </form>
+    </dialog>
+</div>

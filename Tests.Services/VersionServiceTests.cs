@@ -10,80 +10,75 @@ namespace ServiceTests;
 public class VersionServiceTests: Sequential {
     [Fact]
     public async Task ShouldLeaveComments() {
-        _ = await Setup.ResetAndGetDatabase();
+        await Setup.ResetAndSetupDatabase();
         var createRes = await RecipeService.CreateRecipe(Rand.Domain.Requests.CreateRecipeRequest());
 
         const int commentCount = 4;
         for (var i = 0; i < 4; i++) {
             await VersionService.AddComment(new CreateRecipeCommentDb {
-                VersionId = createRes.Data!.VersionId,
+                VersionId = createRes!.VersionId,
                 Rating = Rand.Primitive.Int(0, 5),
                 Comment = Rand.Primitive.String(),
                 CreatedAt = Rand.Primitive.Date()
             });
         }
 
-        var comments = await RecipeService.GetComments(createRes.Data!.RecipeId);
-        Assert.Empty(comments.ErrorMessage);
-        Assert.Equal(commentCount, comments.Data?.Count);
+        var comments = await RecipeService.GetComments(createRes!.RecipeId);
+        Assert.Equal(commentCount, comments.Count);
     }
 
     [Fact]
     public async Task ShouldDeleteLatestVersion() {
-        await using var conn = (await Setup.ResetAndGetDatabase()).GetConnection();
+        await using var conn = await Setup.ResetAndGetDatabase();
         
         var v1Res = await RecipeService.CreateRecipe(Rand.Domain.Requests.CreateRecipeRequest());
-        Assert.Empty(v1Res.ErrorMessage);
+        Assert.NotNull(v1Res);
 
         var v2 = await RecipeService.CreateRecipeVersion(
-            Rand.Domain.Requests.CreateRecipeVersionRequest(v1Res.Data!.VersionId));
-        Assert.Empty(v2.ErrorMessage);
+            Rand.Domain.Requests.CreateRecipeVersionRequest(v1Res.VersionId));
+        Assert.NotNull(v2);
 
-        await conn.OpenAsync(TestContext.Current.CancellationToken);
-        var list = await Common.Version.List(v1Res.Data!.RecipeId, conn);
+        var list = await Common.Version.List(v1Res.RecipeId, conn);
         Assert.Equal(2, list.Count);
         
-        var deleteRes = await VersionService.DeleteRecipeVersion(v2.Data!);
-        Assert.Empty(deleteRes.ErrorMessage);
-        list = await Common.Version.List(v1Res.Data!.RecipeId, conn);
+        await VersionService.DeleteRecipeVersion(v2);
+        list = await Common.Version.List(v1Res.RecipeId, conn);
         Assert.Single(list);
     }
 
     [Fact]
     public async Task ShouldDeleteRecipeForSingleVersion() {
-        _ = await Setup.ResetAndGetDatabase();
+        await Setup.ResetAndSetupDatabase();
         var createR1Res = await RecipeService.CreateRecipe(Rand.Domain.Requests.CreateRecipeRequest());
-        Assert.Empty(createR1Res.ErrorMessage);
+        Assert.NotNull(createR1Res);
         var createR2Res = await RecipeService.CreateRecipe(Rand.Domain.Requests.CreateRecipeRequest());
-        Assert.Empty(createR2Res.ErrorMessage);
+        Assert.NotNull(createR2Res);
 
         var list = await RecipeService.ListRecipes(new ListRecipesRequest { Count = 2, Offset = 0 });
-        Assert.Empty(list.ErrorMessage);
-        Assert.Equal(2, list.Data!.Total);
-        await VersionService.DeleteRecipeVersion(createR2Res.Data!.VersionId);
+        Assert.NotNull(list);
+        Assert.Equal(2, list.Total);
+        await VersionService.DeleteRecipeVersion(createR2Res.VersionId);
         
         list = await RecipeService.ListRecipes(new ListRecipesRequest { Count = 2, Offset = 0 });
-        Assert.Empty(list.ErrorMessage);
-        Assert.Equal(1, list.Data!.Total);
+        Assert.NotNull(list);
+        Assert.Equal(1, list.Total);
     }
 
     [Fact]
     public async Task ShouldDeleteEntireRecipe() {
-        await using var conn = (await Setup.ResetAndGetDatabase()).GetConnection();
+        await using var conn = await Setup.ResetAndGetDatabase();
         
         var v1Res = await RecipeService.CreateRecipe(Rand.Domain.Requests.CreateRecipeRequest());
-        Assert.Empty(v1Res.ErrorMessage);
+        Assert.NotNull(v1Res);
 
         var v2 = await RecipeService.CreateRecipeVersion(
-            Rand.Domain.Requests.CreateRecipeVersionRequest(v1Res.Data!.VersionId));
-        Assert.Empty(v2.ErrorMessage);
+            Rand.Domain.Requests.CreateRecipeVersionRequest(v1Res.VersionId));
+        Assert.NotNull(v2);
 
-        await conn.OpenAsync(TestContext.Current.CancellationToken);
         var list = await ListRecipeData.Get(10, 0, conn);
         Assert.Single(list);
         
-        var deleteRes = await VersionService.DeleteEntireRecipe(v2.Data!);
-        Assert.Empty(deleteRes.ErrorMessage);
+        await VersionService.DeleteEntireRecipe(v2);
         list = await ListRecipeData.Get(10, 0, conn);
         Assert.Empty(list);
     }

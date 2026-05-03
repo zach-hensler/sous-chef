@@ -1,4 +1,3 @@
-using System.Net;
 using System.Text.Json.Serialization;
 using core.Models;
 using core.Models.DbModels;
@@ -24,7 +23,7 @@ public enum CreateActions {
 public class CreateModel : PageModel {
     [BindProperty] public string AutoFocusId { get; set; } = "";
     [BindProperty] public string UpdateMessage { get; set; } = "";
-    [BindProperty] public CreateRecipeView RecipeMetadata { get; set; }
+    [BindProperty] public CreateRecipeView? RecipeMetadata { get; set; }
 
     [BindProperty] public List<ViewIngedient> RecipeIngredients { get; set; } = [];
 
@@ -42,10 +41,10 @@ public class CreateModel : PageModel {
 
     private async Task LoadPageData(VersionId versionId) {
         var res = await VersionService.GetRecipeByVersion(versionId);
-        if (res.Data != null) {
-            RecipeMetadata = res.Data.RecipeMetadata.ToViewRecipe();
-            RecipeIngredients = res.Data.Ingredients.Select(i => i.ToViewIngredient()).ToList();
-            RecipeSteps = res.Data.Steps.Select(s => s.ToViewStep()).ToList();
+        if (res != null) {
+            RecipeMetadata = res.RecipeMetadata.ToViewRecipe();
+            RecipeIngredients = res.Ingredients.Select(i => i.ToViewIngredient()).ToList();
+            RecipeSteps = res.Steps.Select(s => s.ToViewStep()).ToList();
         }
     }
 
@@ -151,7 +150,7 @@ public class CreateModel : PageModel {
     }
 
     private async Task<IActionResult> HandleSaveNewVersion(int? versionId) {
-        if (versionId == null) {
+        if (versionId == null || RecipeMetadata == null) {
             return Page();
         }
 
@@ -166,7 +165,7 @@ public class CreateModel : PageModel {
                 .ToList(),
             Message = UpdateMessage
         });
-        if ((int)res.StatusCode < 300) {
+        if (res != null) {
             return Redirect("/Index");
         }
 
@@ -174,29 +173,25 @@ public class CreateModel : PageModel {
     }
 
     private async Task<IActionResult> HandleSaveExisting(int? versionId) {
+        if (RecipeMetadata == null) {
+            return Page();
+        }
         var createRequest = new CreateRecipeRequest {
             Recipe = RecipeMetadata.ToRecipeDb(),
             Steps = RecipeSteps.Select(s => s.ToStepDb()).ToList(),
             Ingredients = RecipeIngredients.Select(i => i.ToIngredientDb()).ToList()
         };
 
-        Response? response;
-        int redirectId;
+        VersionId? redirectId;
         if (versionId == null) {
-            var createRes = await RecipeService.CreateRecipe(createRequest);
-            if (!string.IsNullOrWhiteSpace(createRes.ErrorMessage)) {
-                return Page();
-            }
-            redirectId = createRes.Data!.VersionId.Value;
-            response = createRes;
+            redirectId = (await RecipeService.CreateRecipe(createRequest))?.VersionId;
         }
         else {
-            VersionId = new VersionId(versionId.Value);
-            response = await RecipeService.UpdateRecipeVersion(VersionId, createRequest);
-            redirectId = versionId.Value;
+            redirectId =
+                await RecipeService.UpdateRecipeVersion(new VersionId(versionId.Value), createRequest);
         }
 
-        if (response.StatusCode == HttpStatusCode.OK) {
+        if (redirectId != null) {
             return Redirect($"/Recipe/{redirectId}");
         }
 

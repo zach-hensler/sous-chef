@@ -6,17 +6,6 @@
     const string saveDialog = "saveDialog";
 }
 
-<script>
-    function OpenSaveDialog() {
-        const dialog = document.getElementById("@saveDialog")
-        dialog.showModal();
-    }
-    function CloseSaveDialog() {
-        const dialog = document.getElementById("@saveDialog")
-        dialog.close();
-    }
-</script>
-
 <div>
     @if (Model.VersionId == null) {
         <h1>Create New Recipe</h1>
@@ -163,7 +152,7 @@
                 </button>
             }
             else {
-                <button class="submitButton primary" onclick="OpenSaveDialog()" type="button">
+                <button class="submitButton primary" onclick="OpenDialogById('@saveDialog')" type="button">
                     Save
                 </button>
             }
@@ -181,17 +170,17 @@
                     formaction="?@CreateActions.SaveAsNewVersion"
                     type="submit"
                     class="dialog-button primary"
-                    onclick="CloseSaveDialog()">Update</button>
+                    onclick="CloseDialogById('@saveDialog')">Update</button>
                 <button
                     formaction="?@CreateActions.SaveExisting"
                     type="submit"
                     class="dialog-button"
-                    onclick="CloseSaveDialog()">Correction</button>
+                    onclick="CloseDialogById('@saveDialog')">Correction</button>
                 <hr />
                 <button
                     class="dialog-button"
                     type="button"
-                    onclick="CloseSaveDialog()">Close</button>
+                    onclick="CloseDialogById('@saveDialog')">Close</button>
             </div>
         </dialog>
     </form>

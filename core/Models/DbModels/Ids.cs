@@ -14,5 +14,8 @@ public record IdBase(int Value) {
     }
 }
 
+// Make sure to register any new ids w/ the dapper mapper
 public record RecipeId(int Value) : IdBase(Value);
 public record VersionId(int Value) : IdBase(Value);
+
+public record WishlistId(int Value) : IdBase(Value);

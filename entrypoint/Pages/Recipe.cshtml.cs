@@ -1,6 +1,4 @@
-using core;
 using core.Data;
-using core.Models;
 using core.Models.DbModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,7 +18,6 @@ public record NewComment {
 }
 
 public class RecipeModel : PageModel {
-    private Logging _log = new();
     public RecipeDetails? Details { get; set; }
     public List<RecipeCommentDb> Comments { get; set; } = [];
     public List<RecipeVersionDb> Versions { get; set; } = [];
@@ -32,33 +29,15 @@ public class RecipeModel : PageModel {
         Comment = null
     };
 
-    public VersionId Id { get; set; }
+    public VersionId? Id { get; set; }
 
     private async Task LoadPageData(VersionId versionId) {
-        var res = await VersionService.GetRecipeByVersion(versionId);
-        if ((int)res.StatusCode < 300 && res.Data != null) {
-            Details = res.Data;
-        }
-        else {
-            _log.LogError(res.ErrorMessage);
+        Details = await VersionService.GetRecipeByVersion(versionId);
+        if (Details == null) {
             return;
         }
-
-        var commentRes = await RecipeService.GetComments(res.Data.Version.RecipeId);
-        if ((int)res.StatusCode < 300 && commentRes.Data != null) {
-            Comments = commentRes.Data;
-        }
-        else {
-            _log.LogError(res.ErrorMessage);
-        }
-
-        var versionRes = await VersionService.List(versionId);
-        if ((int)res.StatusCode < 300 && versionRes.Data != null) {
-            Versions = versionRes.Data;
-        }
-        else {
-            _log.LogError(res.ErrorMessage);
-        }
+        Comments = await RecipeService.GetComments(Details.Version.RecipeId);
+        Versions = await VersionService.List(versionId);
     }
     
     public async Task OnGet(int versionId) {
@@ -88,15 +67,12 @@ public class RecipeModel : PageModel {
             return Page();
         }
 
-        var res = await VersionService.AddComment(new CreateRecipeCommentDb {
+        await VersionService.AddComment(new CreateRecipeCommentDb {
             VersionId = Id,
             Rating = NewComment.Rating.Value,
             Comment = NewComment.Comment,
             CreatedAt = DateTime.UtcNow
         });
-        if (!string.IsNullOrWhiteSpace(res.ErrorMessage)) {
-            _log.LogError("Error adding comment: " + res.ErrorMessage);
-        }
         return Redirect($"/Recipe/{Id}#comments");
     }
 
@@ -105,10 +81,7 @@ public class RecipeModel : PageModel {
             return Page();
         }
         Id = new VersionId(versionId);
-        var res = await VersionService.DeleteRecipeVersion(Id);
-        if ((int)res.StatusCode >= 300) {
-            _log.LogError(res.ErrorMessage);
-        }
+        await VersionService.DeleteRecipeVersion(Id);
         return RedirectToPage("Index");
     }
 
@@ -117,10 +90,7 @@ public class RecipeModel : PageModel {
             return Page();
         }
         Id = new VersionId(versionId);
-        var res = await VersionService.DeleteEntireRecipe(Id);
-        if ((int)res.StatusCode >= 300) {
-            _log.LogError(res.ErrorMessage);
-        }
+        await VersionService.DeleteEntireRecipe(Id);
         return RedirectToPage("Index");
     }
 }

@@ -10,7 +10,7 @@ namespace PageTests;
 public class CreateModelTests: Sequential {
     [Fact]
     public async Task ShouldCreateNewRecipe() {
-        _ = await Setup.ResetAndGetDatabase();
+        await Setup.ResetAndSetupDatabase();
         var model = new CreateModel {
             RecipeMetadata = Rand.Domain.Db.RecipeDb().ToViewRecipe(),
             RecipeIngredients = [
@@ -31,28 +31,26 @@ public class CreateModelTests: Sequential {
             Count = 10,
             Offset = 0
         });
-        Assert.Empty(listRecipes.ErrorMessage);
-        Assert.NotNull(listRecipes.Data);
-        Assert.Single(listRecipes.Data.Items);
+        Assert.NotNull(listRecipes);
+        Assert.Single(listRecipes.Items);
 
-        var details = await RecipeService.GetRecipe(listRecipes.Data.Items.First().RecipeId);
-        Assert.Empty(details.ErrorMessage);
-        Assert.NotNull(details.Data);
-        Assert.Equal(3, details.Data.Steps.Count);
+        var details = await RecipeService.GetRecipe(listRecipes.Items.First().RecipeId);
+        Assert.NotNull(details);
+        Assert.Equal(3, details.Steps.Count);
     }
 
     [Fact]
     public async Task ShouldUpdateExistingRecipe() {
-        _ = await Setup.ResetAndGetDatabase();
+        await Setup.ResetAndSetupDatabase();
         var original = Rand.Domain.Requests.CreateRecipeRequest();
         var recipe = await RecipeService.CreateRecipe(original);
-        Assert.Empty(recipe.ErrorMessage);
 
         var model = new CreateModel();
-        await model.OnGet(recipe.Data?.VersionId.Value);
+        await model.OnGet(recipe?.VersionId.Value);
         model.RecipeIngredients.Add(Rand.Domain.Db.RecipeIngredientDb().ToViewIngredient());
         model.RecipeSteps.Add(Rand.Domain.Db.RecipeStepDb(original.Steps.Count).ToViewStep());
         var newName = "new_" + Rand.Primitive.String();
+        Assert.NotNull(model.RecipeMetadata);
         model.RecipeMetadata = new CreateRecipeView {
             Name = newName,
             Description = model.RecipeMetadata.Description,
@@ -62,29 +60,29 @@ public class CreateModelTests: Sequential {
             ActiveTime = model.RecipeMetadata.ActiveTime
         };
         model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveExisting));
-        await model.OnPostAsync(recipe.Data?.VersionId.Value);
+        await model.OnPostAsync(recipe?.VersionId.Value);
 
-        var details = await RecipeService.GetRecipe(recipe.Data!.RecipeId);
-        Assert.Empty(details.ErrorMessage);
-        Assert.NotNull(details.Data);
-        Assert.Equal(newName, details.Data.RecipeMetadata.Name);
-        Assert.Equal(original.Steps.Count + 1, details.Data.Steps.Count);
-        Assert.Equal(original.Ingredients.Count + 1, details.Data.Ingredients.Count);
+        var details = await RecipeService.GetRecipe(recipe!.RecipeId);
+        Assert.NotNull(details);
+        Assert.Equal(newName, details.RecipeMetadata.Name);
+        Assert.Equal(original.Steps.Count + 1, details.Steps.Count);
+        Assert.Equal(original.Ingredients.Count + 1, details.Ingredients.Count);
     }
 
     [Fact]
     public async Task ShouldCreateNewVersion() {
-        _ = await Setup.ResetAndGetDatabase();
+        await Setup.ResetAndSetupDatabase();
         var original = Rand.Domain.Requests.CreateRecipeRequest();
         var recipe = await RecipeService.CreateRecipe(original);
-        Assert.Empty(recipe.ErrorMessage);
+        Assert.NotNull(recipe);
 
         var model = new CreateModel();
-        await model.OnGet(recipe.Data!.VersionId.Value);
+        await model.OnGet(recipe.VersionId.Value);
 
         model.RecipeIngredients.Add(Rand.Domain.Db.RecipeIngredientDb().ToViewIngredient());
         model.RecipeSteps.Add(Rand.Domain.Db.RecipeStepDb(original.Steps.Count).ToViewStep());
         var newName = "new_" + Rand.Primitive.String();
+        Assert.NotNull(model.RecipeMetadata);
         model.RecipeMetadata = new CreateRecipeView {
             Name = newName,
             Description = model.RecipeMetadata.Description,
@@ -97,12 +95,12 @@ public class CreateModelTests: Sequential {
         model.UpdateMessage = message;
 
         model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveAsNewVersion));
-        await model.OnPostAsync(recipe.Data.VersionId.Value);
+        await model.OnPostAsync(recipe.VersionId.Value);
 
-        var details = await RecipeService.GetRecipe(recipe.Data.RecipeId);
-        Assert.Empty(details.ErrorMessage);
-        Assert.Equal(message, details.Data?.Version.Message);
-        Assert.Equal(newName, details.Data?.RecipeMetadata.Name);
+        var details = await RecipeService.GetRecipe(recipe.RecipeId);
+        Assert.NotNull(details);
+        Assert.Equal(message, details.Version.Message);
+        Assert.Equal(newName, details.RecipeMetadata.Name);
     }
 
     [Fact]

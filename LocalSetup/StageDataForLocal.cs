@@ -7,8 +7,7 @@ namespace LocalSetup;
 public class StageDataForLocal: Sequential {
     [Fact]
     public async Task ShouldStageGeneralData() {
-        var conn = (await Setup.ResetAndGetDatabase()).GetConnection();
-        await conn.OpenAsync(TestContext.Current.CancellationToken);
+        await using var conn = await Setup.ResetAndGetDatabase();
 
         for (var recipeCount = 0; recipeCount < Rand.Primitive.Int(10, 20); recipeCount++) {
             var recipeId = await Common.Recipe.Create(Rand.Domain.Db.RecipeDb().ToCreateRecipeDb(), conn);

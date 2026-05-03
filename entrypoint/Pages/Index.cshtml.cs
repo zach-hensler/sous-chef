@@ -7,8 +7,6 @@ using services;
 namespace sous_chef.Pages;
 
 public class IndexModel : PageModel {
-    public (HttpStatusCode, string)? Error { get; set; }
-    
     public ListRecipesResponse? RecipeData { get; set; }
     public ListRecipesRequest? RecipesRequest = new() {
         Count = 100,
@@ -16,12 +14,9 @@ public class IndexModel : PageModel {
     };
 
     public async Task OnGet() {
-        var res = await RecipeService.ListRecipes(RecipesRequest);
-        if ((int)res.StatusCode < 300) {
-            RecipeData = res.Data;
+        if (RecipesRequest == null) {
+            return;
         }
-        else {
-            Error = (res.StatusCode, res.ErrorMessage);
-        }
+        RecipeData = await RecipeService.ListRecipes(RecipesRequest);
     }
 }

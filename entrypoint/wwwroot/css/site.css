@@ -5,18 +5,18 @@
   /* colors - each "darker" is 4% darker */
   --font-color: #000;
   --bg-color: hsl(300, 32.1%, 95%);
-  --bg-color-darker: hsl(from var(--bg-color) h s calc(l - 4));
-  --bg-color-darkest: hsl(from var(--bg-color) h s calc(l - 8));
+  --bg-color-darker: hsl(from var(--bg-color) h s calc(l - 3));
+  --bg-color-darkest: hsl(from var(--bg-color) h s calc(l - 6));
 
   --accent-font-color: #000;
   --accent-color: hsl(250, 70%, 76%);
-  --accent-color-darker: hsl(from var(--accent-color) h s calc(l - 4));
+  --accent-color-darker: hsl(from var(--accent-color) h s calc(l - 3));
 
   --warning-color: hsl(355, 61%, 76%);
-  --warning-darker: hsl(from var(--warning-color) h s calc(l - 4));
+  --warning-darker: hsl(from var(--warning-color) h s calc(l - 3));
   
   --success-color: lightgreen;
-  --success-darker: hsl(from var(--success-color) h s calc(l - 4));
+  --success-darker: hsl(from var(--success-color) h s calc(l - 3));
 
   /* spacing - each level should double */
   --extra-small: 5px;
@@ -68,8 +68,16 @@ header {
   padding: var(--medium);
 }
 
+.nav-icon {
+  display: flex;
+}
+
 .nav-hero:hover, .nav-icon:hover {
   background-color: var(--accent-color-darker );
+}
+
+.mobile-nav {
+  display: none;
 }
 
 /* ---------------------- */
@@ -146,11 +154,12 @@ table {
   width: 100%;
 }
 
-td {
+td, th {
   background-color: var(--bg-color-darker);
   border: 2px solid var(--bg-color-darkest);
   padding: var(--small);
   border-radius: var(--border-radius);
+  text-align: start;
 }
 
 svg {

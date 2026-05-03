@@ -41,6 +41,14 @@ public static class Rand {
 
     public static class Domain {
         public static class Db {
+            public static ErrorHistoryDb ErrorHistoryDb() {
+                return new ErrorHistoryDb {
+                    Source = Primitive.String(),
+                    Message = Primitive.String(),
+                    OccurredAt = Primitive.Date()
+                };
+            }
+
             public static RecipeDb RecipeDb() {
                 return new RecipeDb {
                     RecipeId = new RecipeId(0),
@@ -82,13 +90,6 @@ public static class Rand {
                     Unit = Primitive.String()
                 };
             }
-            public static ErrorHistoryDb ErrorHistoryDb() {
-                return new ErrorHistoryDb {
-                    Source = Primitive.String(),
-                    Message = Primitive.String(),
-                    OccurredAt = Primitive.Date()
-                };
-            }
 
             public static class Create {
                 public static CreateStepDb CreateRecipeStepDb() {
@@ -119,6 +120,18 @@ public static class Rand {
                 }
             }
         }
+
+        public static class Wishlist {
+            public static AddWishlistDb AddWishlistDb() {
+                return new AddWishlistDb {
+                    Name = Primitive.String(),
+                    Priority = 1,
+                    Reference = Primitive.String(),
+                    Completed = false
+                };
+            }
+        }
+        
         public static class Requests {
             public static CreateRecipeRequest CreateRecipeRequest() {
                 List<CreateStepDb> steps = [];

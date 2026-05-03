@@ -1,3 +1,4 @@
+using System.Data.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Mvc;
@@ -8,16 +9,24 @@ using Microsoft.AspNetCore.Routing;
 using services;
 using core;
 using Dapper;
+using Xunit;
 
 namespace Helpers;
 
 public static class Setup {
-    public static async Task<ConnectionFactory> ResetAndGetDatabase() {
+    public static async Task<DbConnection> ResetAndGetDatabase() {
+        await ResetAndSetupDatabase();
+        var conn = new ConnectionFactory(true).GetConnection();
+        await conn.OpenAsync(TestContext.Current.CancellationToken);
+
+        return conn;
+    }
+    public static async Task ResetAndSetupDatabase() {
         Environment.SetEnvironmentVariable(EnvVars.ConnectionString, "User ID=test-user;Password=test-pass;Host=localhost;Port=5433;Database=tests;");
 
         var connFactory = new ConnectionFactory(true);
         await using var conn = connFactory.GetConnection();
-        await conn.OpenAsync();
+        await conn.OpenAsync(TestContext.Current.CancellationToken);
         await conn.ExecuteAsync(
             """
             DROP SCHEMA public CASCADE;
@@ -26,11 +35,9 @@ public static class Setup {
         await conn.CloseAsync();
         DapperConfigurations.Register();
 
-        var migrationRes = await MigrationService.Migrate(true);
-        return
-            !string.IsNullOrWhiteSpace(migrationRes.ErrorMessage)
-                ? throw new Exception(migrationRes.ErrorMessage)
-                : connFactory;
+        if (await MigrationService.Migrate(true) != true) {
+            throw new Exception("Unable to migrate");
+        }
     }
 
     public static PageContext GetPageContext(string key, string? value = null) {

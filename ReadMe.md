@@ -6,23 +6,37 @@ A kitchen helper with recipe versioning
 ## Missing v1 Features - Core Features
 - Compare Page
   - Add select input to change version
-- Export Recipe to PDF
+- backups
+  - chron script to regularly backup to a usb drive
+  - if more than x backups found, delete the oldest
 
-
-## v2 Features - Ease of Use
-Main Feed Updates
-- Filters on Home Feed
-  - By: Star Rating, Category, Effort Level
-  - Searching on Home Feed
-    - By name, description, and ingredients
-  - Show avg rating (for latest version?) on home page
+## v2 Features - Bells and Whistles
+- Wishlist
+  - List of items that I want to learn to make
+  - Name, CreatedAt, Priority (int or enum), References (json list)
+  - New page with list, create modals, delete modals, view details modal (details could be new page)
+- "Stats" page
+  - history of last x items that I made (based off of comments left)
+  - Stats for:
+    - you made x items this week/month/year
+    - your top 3 most made items are ...
 - navbar updates
   - media query, on mobile collapse to hamburger button + "Sous Chef"
     - hamburger button reveals the rest of the options
-- Recipe List page should use grid instead of list
+- Response Updates
+  - Delete Response type
+  - Update Utils.SafeRun to return T? instead
+
+Main Feed Updates
+- Filtering by Category
+- Searching
+  - By name, description, and ingredients
+- Show avg rating (for latest version?) on home page
+
+- Export Recipe to PDF
 
 
-## v3 Going Public
+## Going Public - TBD if I'll actually do this
 - Any user can read
 - Only I can write
 - Requires improved hosting requirements and bot-blocking
@@ -36,7 +50,14 @@ Main Feed Updates
     - have to be more careful since both go through same API user
 
 
-## Backlog
+## Unscheduled Ideas
+- Linked Recipes
+  - Link types (similar, pairs with, inspired by)
+  - fk to two different recipes
+  - recipe details will list linked recipes
+- Additional Filters:
+  - Star Rating, Effort Level
+- Grid option for recipe list page
 - Recipe drafts
 - Uploading image for a recipe
   - Should be automatically scaled down before saving image
@@ -45,7 +66,7 @@ Main Feed Updates
 - Support marking a version as the "active version"
   - A recipe can have only one version be active
     - boolean on the recipe_versions row
-  - On create screen add a "make active" checkbox
+  - On compare screen add a "make active" checkbox
   - List recipes should return the "active" version instead of the latest
   - On compare screen, you can change which one is active
 
@@ -65,6 +86,7 @@ Main Feed Updates
 ## Tools to research
 - nginx
 - upgraded server
+- htmx
 
 ## Completed Features
 - ~~Create New Recipes~~
@@ -94,22 +116,4 @@ Main Feed Updates
 - ~~Removed Semantic Recipe Versioning~~
 
 ---
-# Initial Roadmap
-## v1.0 Features
-1. Recipe versioning
-2. UI for recipe viewing
-3. UI for recipe creation
-4. UI for recipe editing
-5. UI for version comparison
-6. Recipe comments/ratings
-
-## Follow-up features
-1. Uploading images (with thumbnail creation)
-2. Search by ingredients
-3. Search by recipe name/description
-4. Random recipe (meeting criteria)
-
-### Recipe History
-- can view the steps/ingredients for each version
-- can view the notes/rating for each version
-- can compare the differences between versions
+# TODO Add a setup guide here

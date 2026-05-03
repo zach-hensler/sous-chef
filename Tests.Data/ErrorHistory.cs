@@ -1,5 +1,4 @@
 ﻿using core.Data;
-using core.Models;
 using core.Models.DbModels;
 using Helpers;
 using Xunit;
@@ -9,8 +8,7 @@ namespace DataTests;
 public class ErrorHistory: Sequential {
     [Fact]
     public async Task ShouldAddErrorsToHistory() {
-        await using var conn = (await Setup.ResetAndGetDatabase()).GetConnection();
-        await conn.OpenAsync(TestContext.Current.CancellationToken);
+        await using var conn = await Setup.ResetAndGetDatabase();
 
         List<ErrorHistoryDb> errors = [];
         for (var i = 0; i < Rand.Primitive.Int(5, 10); i ++) {

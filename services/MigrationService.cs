@@ -10,12 +10,10 @@ namespace services;
 public static class MigrationService {
     private static readonly string? ConnectionString = Environment.GetEnvironmentVariable(EnvVars.ConnectionString);
 
-    public static async Task<Response> Migrate(bool testEnv = false) {
+    public static async Task<bool?> Migrate(bool testEnv = false) {
         return await Utils.SafeRun(nameof(Migrate), () => {
             if (string.IsNullOrWhiteSpace(ConnectionString)) {
-                return Task.FromResult(new Response(
-                    HttpStatusCode.InternalServerError,
-                    "Connection String not configured"));
+                throw new Exception("Connection String not configured");
             }
 
             if (testEnv && !ConnectionString.Contains("test")) {
@@ -30,12 +28,11 @@ public static class MigrationService {
                     .ScanIn(typeof(Initial).Assembly).For.Migrations())
                 .BuildServiceProvider();
 
-            using (var scope = sp.CreateScope()) {
-                var runner =  scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-                runner.MigrateUp();
-            }
+            using var scope = sp.CreateScope();
+            var runner =  scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
+            runner.MigrateUp();
 
-            return Task.FromResult(new Response());
+            return Task.FromResult(true);
         });
     }
 }
