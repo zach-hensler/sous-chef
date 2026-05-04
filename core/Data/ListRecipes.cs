@@ -4,7 +4,7 @@ using Dapper;
 
 namespace core.Data;
 
-public static class ListRecipeData {
+public static class ListRecipes {
     public static async Task<List<ListRecipesResponse.RecipeItem>> Get(int limit, int offset, DbConnection conn) {
         return (await conn.QueryAsync<ListRecipesResponse.RecipeItem>(@"
 WITH latest_versions AS (

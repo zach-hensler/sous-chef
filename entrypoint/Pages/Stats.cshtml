@@ -1,0 +1,38 @@
+@page
+@model StatsModel
+
+<script type="module">
+    const Chart = window.Chart;
+    (async function () {
+        new Chart(
+            document.getElementById('total-counts'),
+            {
+                type: 'line',
+                data: {
+                    labels: @Json.Serialize(Model?.LineChart?.Labels),
+                    datasets: [{
+                        label: 'Recipes Made per Month',
+                        data: @Json.Serialize(Model?.LineChart?.DataSet)
+                    }]
+                }
+            }
+        )
+    })()
+</script>
+
+<div>
+    <h1>Stats</h1>
+    <h2>Recipes Made per Month</h2>
+    <canvas id="total-counts"></canvas>
+    <hr />
+    <h2>Recent Favorites</h2>
+    <p>(@ViewUtils.FormatDate(DateTime.UtcNow.AddMonths(-2)) - now)</p>
+    <ol>
+        @foreach (var recipe in Model.RecipeCounts) {
+            <li>
+                <h3>@recipe.Name</h3>
+                <p>Made @recipe.Count time(s), average score @Math.Round(recipe.AvgScore, 2)</p>
+            </li>
+        }
+    </ol>
+</div>

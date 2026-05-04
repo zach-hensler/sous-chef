@@ -65,7 +65,7 @@ header {
 }
 
 .nav-hero, .nav-icon {
-  padding: var(--medium);
+  padding: var(--medium) var(--small);
 }
 
 .nav-icon {

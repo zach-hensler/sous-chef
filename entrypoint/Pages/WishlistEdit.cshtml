@@ -7,7 +7,7 @@
     }
     else {
         <h2>@Model.Item.Name</h2>
-        <p>Added on @Model.Item.CreatedAt</p>
+        <p>Added on @ViewUtils.FormatDate(Model.Item.CreatedAt)</p>
         <form method="post">
             <label for="ref">Reference</label>
             <input id="ref" asp-for="@Model.Item.Reference" />

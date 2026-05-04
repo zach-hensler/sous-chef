@@ -75,11 +75,11 @@ public class VersionServiceTests: Sequential {
             Rand.Domain.Requests.CreateRecipeVersionRequest(v1Res.VersionId));
         Assert.NotNull(v2);
 
-        var list = await ListRecipeData.Get(10, 0, conn);
+        var list = await ListRecipes.Get(10, 0, conn);
         Assert.Single(list);
         
         await VersionService.DeleteEntireRecipe(v2);
-        list = await ListRecipeData.Get(10, 0, conn);
+        list = await ListRecipes.Get(10, 0, conn);
         Assert.Empty(list);
     }
 }

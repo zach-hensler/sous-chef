@@ -10,10 +10,31 @@ public static class DapperConfigurations {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
         
         SqlMapper.AddTypeHandler(typeof(List<string>), new JsonStringListHandler());
+        SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
 
         SqlMapper.AddTypeHandler(new IdMapper<RecipeId>());
         SqlMapper.AddTypeHandler(new IdMapper<VersionId>());
         SqlMapper.AddTypeHandler(new IdMapper<WishlistId>());
+    }
+    
+    public class DateOnlyTypeHandler : SqlMapper.TypeHandler<DateOnly> {
+        public override DateOnly Parse(object value) {
+            switch (value) {
+                case DateOnly dateOnly:
+                    return dateOnly;
+                case DateTime dateTime:
+                    return DateOnly.FromDateTime(dateTime.Date);
+                case string s:
+                    return DateOnly.FromDateTime(DateTime.Parse(s).Date);
+            }
+
+            throw new Exception($"Unable to convert value '{value}'");
+        }
+
+        public override void SetValue(IDbDataParameter parameter, DateOnly value) {
+            parameter.Value = value.ToDateTime(TimeOnly.MinValue);
+            parameter.DbType = DbType.Date;
+        }
     }
 
     private class JsonStringListHandler : SqlMapper.ITypeHandler {

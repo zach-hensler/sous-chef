@@ -11,11 +11,6 @@ A kitchen helper with recipe versioning
   - if more than x backups found, delete the oldest
 
 ## v2 Features - Bells and Whistles
-- "Stats" page
-  - history of last x items that I made (based off of comments left)
-  - Stats for:
-    - you made x items this week/month/year
-    - your top 3 most made items are ...
 - navbar updates
   - media query, on mobile collapse to hamburger button + "Sous Chef"
     - hamburger button reveals the rest of the options
