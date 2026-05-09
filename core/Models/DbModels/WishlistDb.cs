@@ -7,6 +7,15 @@ public record WishlistDb {
     public string? Reference { get; init; }
     public required bool Completed { get; init; }
     public required DateTime CreatedAt { get; init; }
+
+    public UpdateWishlistDb ToUpdateWishlistDb() {
+        return new UpdateWishlistDb {
+            WishlistId = WishlistId,
+            Priority = Priority,
+            Reference = Reference,
+            Completed = Completed
+        };
+    }
 }
 
 public record AddWishlistDb {

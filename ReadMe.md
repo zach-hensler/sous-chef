@@ -23,19 +23,12 @@ Main Feed Updates
 
 - Export Recipe to PDF
 
-
-## Going Public - TBD if I'll actually do this
-- Any user can read
-- Only I can write
-- Requires improved hosting requirements and bot-blocking
-- Auth Ideas:
-  - TS based authentication
-    - have public version w/ readonly db user and "read-only" env var for view purposes
-    - have tailnet exclusive version w/ full db user and no "read-only" env var
-  - Password based authentication
-    - hidden login form that requires specific password to enable "admin mode"
-    - login form hidden for UX not for security
-    - have to be more careful since both go through same API user
+Status Updates
+- Add to graph
+  - recipe versions added per month
+  - new recipes added per month
+- Add a "The Classics" section
+  - top 3(?) recipes that have the most comments, but haven't been made in the last 2-3(?) months
 
 
 ## Unscheduled Ideas
@@ -76,32 +69,19 @@ Main Feed Updates
 - upgraded server
 - htmx
 
-## Completed Features
-- ~~Create New Recipes~~
-- ~~List Recipes~~
-- ~~Delete Recipes (with confirmation modal)~~
-- ~~Basic Theming (css vars for colors and spacing)~~
-- ~~Improved UX on Recipe creation~~
-  - ~~Autofocus when adding new steps/ingredients~~
-  - ~~Larger inputs & text areas~~
-  - ~~Step deletion/re-ordering~~
-  - ~~Ingredient re-ordering~~
-- ~~Basic Admin Panel~~
-- ~~Adding Comments with ratings~~
-- ~~Viewing Comments on Recipes~~
-- ~~Creating Docker Image on GH Action~~
-- ~~Able to run image on PI and reach from external device~~
-- ~~Rename EffortLevels from (Low, Medium, High) -> (Easy, Medium, Hard)~~
-- ~~Error History log on Admin Page~~
-- ~~Tmux on Server for session management~~
-- ~~Recipe Versions support~~
-- ~~Display comments from previous versions on details page~~
-- ~~Bug w/ "Move Up" and "Move Down" buttons~~
-- ~~Delete Dialog should have "Delete this Version" and "Delete Entire Recipe"~~
-- ~~Autofocus rating dialog and remove default~~
-- ~~Auto focus after adding/removing/ordering on Create page~~
-- ~~Added Compare Page with diff checking for ingredients and steps~~
-- ~~Removed Semantic Recipe Versioning~~
+
+## Going Public - TBD if I'll actually do this
+- Any user can read
+- Only I can write
+- Requires improved hosting requirements and bot-blocking
+- Auth Ideas:
+  - TS based authentication
+    - have public version w/ readonly db user and "read-only" env var for view purposes
+    - have tailnet exclusive version w/ full db user and no "read-only" env var
+  - Password based authentication
+    - hidden login form that requires specific password to enable "admin mode"
+    - login form hidden for UX not for security
+    - have to be more careful since both go through same API user
 
 ---
 # TODO Add a setup guide here

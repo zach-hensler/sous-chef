@@ -1,0 +1,37 @@
+@model WishlistModel
+
+@if (Model.Items.Count == 0) {
+    <p>No wishlist items were found.</p>
+}
+else {
+    <table>
+        <thead>
+        <tr>
+            <th>Name (Priority)</th>
+            <th>Reference</th>
+        </tr>
+        </thead>
+        @foreach (var item in Model.Items) {
+            <tr>
+                <td>
+                    <button
+                        hx-get="/Wishlist?handler=edit&id=@item.WishlistId"
+                        hx-target="#@ViewIds.WishlistEditWrapper">
+                        @item.Name (@item.Priority)
+                    </button>
+                </td>
+                <td>
+                    @if (string.IsNullOrWhiteSpace(item.Reference)) {
+                        <text>N/A</text>
+                    }
+                    else if (item.Reference.StartsWith("https://")) {
+                        <a href="@item.Reference">@item.Reference</a>
+                    }
+                    else {
+                        <text>@item.Reference</text>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}

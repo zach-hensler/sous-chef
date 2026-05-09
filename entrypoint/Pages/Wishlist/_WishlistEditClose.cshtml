@@ -1,0 +1,8 @@
+@model WishlistModel
+
+<script>
+    CloseDialogById("@ViewIds.WishlistEditDialog");
+</script>
+<div id="@ViewIds.WishlistList" hx-swap-oob="true">
+    @await Html.PartialAsync("_Wishlistlist", Model)
+</div>

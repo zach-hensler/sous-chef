@@ -80,6 +80,20 @@ header {
   display: none;
 }
 
+
+/* ---------------------- */
+/* Dialog */
+.dialog-button-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-button {
+  margin: var(--small) 0
+}
+
+
 /* ---------------------- */
 /* Components */
 h1 {
@@ -151,6 +165,7 @@ textarea {
 }
 
 table {
+  max-width: 100vw;
   width: 100%;
   margin-top: var(--small);
 }

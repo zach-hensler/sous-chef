@@ -1,0 +1,17 @@
+@page
+@model WishlistModel
+@{
+    ViewData["Title"] = "Wishlist";
+}
+
+<div>
+    <div class="header-wrapper">
+        <h1>Wishlist</h1>
+        <button hx-get="/Wishlist?handler=add" hx-target="#@ViewIds.WishlistAddWrapper">Add</button>
+    </div>
+    <div id="@ViewIds.WishlistList">
+        @await Html.PartialAsync("_WishlistList", Model)
+    </div>
+    <div id="@ViewIds.WishlistAddWrapper"></div>
+    <div id="@ViewIds.WishlistEditWrapper"></div>
+</div>

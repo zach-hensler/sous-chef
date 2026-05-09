@@ -13,13 +13,3 @@
 .submitButton {
     margin-right: var(--medium)
 }
-
-.dialog-button-wrapper {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.dialog-button {
-    margin: var(--small)
-}

@@ -1,0 +1,35 @@
+@model WishlistModel
+
+
+<dialog id="@ViewIds.WishlistAddDialog">
+    <h1>Add to Wishlist</h1>
+    <hr/>
+    <form
+          hx-post="/Wishlist?handler=Add"
+          hx-target="#@ViewIds.WishlistAddWrapper">
+        @Html.AntiForgeryToken()
+        <div>
+            <label for="name">Name</label>
+            <input
+                id="name"
+                name="Name"
+                autofocus/>
+        </div>
+        <div>
+            <label for="refs">References</label>
+            <input id="refs" name="Reference"/>
+        </div>
+        <hr/>
+        <div class="dialog-button-wrapper">
+            <button
+                class="dialog-button"
+                type="button"
+                onclick="CloseDialogById('@ViewIds.WishlistAddDialog')">Close
+            </button>
+            <button class="dialog-button primary" type="submit">Save</button>
+        </div>
+    </form>
+    <script>
+        OpenDialogById('@ViewIds.WishlistAddDialog')
+    </script>
+</dialog>

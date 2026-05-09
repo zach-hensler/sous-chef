@@ -17,15 +17,3 @@
     flex: 1 1 0;
     margin: var(--small);
 }
-
-.dialog-button-wrapper {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-content: stretch;
-}
-
-.dialog-button {
-    margin: var(--small) 0;
-    width: 100%;
-}

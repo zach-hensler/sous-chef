@@ -1,0 +1,56 @@
+@model WishlistModel
+
+<dialog id="@ViewIds.WishlistEditDialog">
+    @if (Model.EditWishlistItem == null) {
+        <p>Wishlist Item was null</p>
+    }
+    else {
+        <h1>Edit @Model.EditWishlistItem.Name</h1>
+        <form
+            hx-post="/Wishlist?handler=Update"
+            hx-vals='{ "WishlistId": "@Model.EditWishlistItem.WishlistId" }'
+            hx-target="#@ViewIds.WishlistEditDialog">
+            @Html.AntiForgeryToken()
+            <div>
+                <label for="ref">Reference</label>
+                <input
+                    id="ref"
+                    value="@Model.EditWishlistItem.Reference"
+                    name="Reference"/>
+            </div>
+            <div>
+                <label for="priority">Priority</label>
+                <input
+                    id="priority"
+                    step="1"
+                    type="number"
+                    value="@Model.EditWishlistItem.Priority"
+                    name="Priority"/>
+            </div>
+            <div>
+                <label for="completed">Completed</label>
+                <input
+                    id="completed"
+                    type="checkbox"
+                    is="boolean-checkbox"
+                    value="@Model.EditWishlistItem.Completed"
+                    name="Completed"/>
+            </div>
+            <hr/>
+            <div class="dialog-button-wrapper">
+                <button
+                    class="dialog-button"
+                    type="button"
+                    onclick="CloseDialogById('@ViewIds.WishlistEditDialog')">
+                    Close
+                </button>
+                <button class="primary dialog-button" type="submit">Save</button>
+            </div>
+        </form>
+    }
+
+    <script>
+        OpenDialogById("@ViewIds.WishlistEditDialog");
+    </script>
+</dialog>
+
