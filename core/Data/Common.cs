@@ -264,8 +264,10 @@ public static class Common {
                 new { source = errorHistory.Source, message = errorHistory.Message, occurred_at = errorHistory.OccurredAt });
         }
 
-        public static async Task<int> Count(DbConnection conn) {
-            return await conn.QuerySingleAsync<int>("SELECT count(*) FROM error_history");
+        public static async Task<int> Count(DateTime cutoff, DbConnection conn) {
+            return await conn.QuerySingleAsync<int>(
+                "SELECT count(*) FROM error_history WHERE occurred_at > @cutoff",
+                new { cutoff });
         }
 
         public static async Task<List<ErrorHistoryDb>> List(int offset, int count, DbConnection conn) {

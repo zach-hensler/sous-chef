@@ -19,11 +19,11 @@
   --success-darker: hsl(from var(--success-color) h s calc(l - 3));
 
   /* spacing - each level should double */
-  --extra-small: 5px;
-  --small: 10px;
-  --medium: 20px;
-  --large: 40px;
-  --extra-large: 80px;
+  --extra-small: 6px;
+  --small: calc(var(--extra-small) * 2);
+  --medium: calc(var(--small) * 2);
+  --large: calc(var(--medium) * 2);
+  --extra-large: calc(var(--large) * 2);
   
   --border-radius: 5px;
 }
@@ -76,8 +76,16 @@ header {
   background-color: var(--accent-color-darker );
 }
 
-.mobile-nav {
-  display: none;
+@media screen and (width <= 600px) {
+  .desktop-nav {
+    display: none;
+  }
+}
+
+@media screen and (width > 600px) {
+  .desktop-nav {
+    display: flex;
+  }
 }
 
 

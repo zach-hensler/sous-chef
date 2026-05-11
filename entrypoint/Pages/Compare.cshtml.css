@@ -9,6 +9,7 @@
 
 .Updated {
     background-color: var(--bg-color-darkest);
+    font-weight: bold;
 }
 
 td {

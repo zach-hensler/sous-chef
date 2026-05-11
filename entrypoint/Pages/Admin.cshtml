@@ -18,9 +18,13 @@
         <p>No errors were found!</p>
     }
     else {
+        var firstError = true;
         foreach (var errors in Model.ErrorRes.Errors) {
             <div>
-                <hr />
+                @if (!firstError) {
+                    <hr/>
+                }
+                @firstError = false;
                 <h3>@errors.Source - @errors.OccurredAt</h3>
                 <p>@errors.Message</p>
             </div>

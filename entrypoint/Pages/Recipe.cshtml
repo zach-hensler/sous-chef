@@ -62,21 +62,29 @@
             }
         </ol>
     }
-    <h1 id="comments">Comments</h1>
+    <h2 id="comments">Comments</h2>
     @if (Model.Comments.Count == 0) {
         <p>No comments yet!</p>
     }
     else {
+        var isFirstComment = true;
         foreach (var comment in Model.Comments.Where(c => c.VersionId == Model.Details?.Version.VersionId).OrderByDescending(c => c.CreatedAt)) {
-            <hr />
+            if (!isFirstComment) {
+                <hr />
+            }
+            isFirstComment = false;
             <p>Rating: @($"{comment.Rating}/5") at @ViewUtils.FormatDate(comment.CreatedAt)</p>
             @if (!string.IsNullOrWhiteSpace(comment.Comment)) {
                 <p>Comment: @comment.Comment</p>
             }
         }
-        <h2>Previous Version Comments</h2>
+        <h2>Previous Comments</h2>
+        isFirstComment = true;
         foreach (var comment in Model.Comments.Where(c => c.VersionId != Model.Details?.Version.VersionId).OrderByDescending(c => c.CreatedAt)) {
-            <hr />
+            if (!isFirstComment) {
+                <hr />
+            }
+            isFirstComment = false;
             <p>Rating: @($"{comment.Rating}/5") at @ViewUtils.FormatDate(comment.CreatedAt)</p>
             @if (!string.IsNullOrWhiteSpace(comment.Comment)) {
                 <p>Comment: @comment.Comment</p>

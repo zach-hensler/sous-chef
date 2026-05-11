@@ -15,8 +15,7 @@ public class AdminModel : PageModel {
     public ListErrorsResponse? ErrorRes { get; set; }
 
     private async Task LoadPageData() {
-        ErrorRes = await ErrorService.ListErrors();
-        
+        ErrorRes = await ErrorService.ListErrors(DateTime.UtcNow.AddMonths(-2));
     }
     public async Task<IActionResult> OnGetAsync() {
         await LoadPageData();

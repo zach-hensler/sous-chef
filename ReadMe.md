@@ -3,14 +3,13 @@ A kitchen helper with recipe versioning
 ---
 # Backlog
 
-## Missing v1 Features - Core Features
-- Compare Page
-  - Add select input to change version
-- backups
-  - chron script to regularly backup to a usb drive
-  - if more than x backups found, delete the oldest
-
 ## v2 Features - Bells and Whistles
+- "infra"
+  - automate backups
+    - chron script to regularly backup to a usb drive
+    - if more than x backups found, delete the oldest
+  - create script on pi to pull latest image and load it into docker
+
 - navbar updates
   - media query, on mobile collapse to hamburger button + "Sous Chef"
     - hamburger button reveals the rest of the options
@@ -23,7 +22,7 @@ Main Feed Updates
 
 - Export Recipe to PDF
 
-Status Updates
+Stats Updates
 - Add to graph
   - recipe versions added per month
   - new recipes added per month
@@ -31,7 +30,9 @@ Status Updates
   - top 3(?) recipes that have the most comments, but haven't been made in the last 2-3(?) months
 
 
-## Unscheduled Ideas
+## Unscheduled Ideas (Add it when ya want it)
+- Compare Page
+  - Add select input to change version
 - Linked Recipes
   - Link types (similar, pairs with, inspired by)
   - fk to two different recipes
@@ -67,7 +68,6 @@ Status Updates
 ## Tools to research
 - nginx
 - upgraded server
-- htmx
 
 
 ## Going Public - TBD if I'll actually do this
