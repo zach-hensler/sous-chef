@@ -24,7 +24,7 @@
                 @if (!firstError) {
                     <hr/>
                 }
-                @firstError = false;
+                @{ firstError = false; }
                 <h3>@errors.Source - @errors.OccurredAt</h3>
                 <p>@errors.Message</p>
             </div>
