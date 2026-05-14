@@ -1,6 +1,7 @@
 using core.Data;
 using core.Models;
 using core.Models.DbModels;
+using core.Models.ServiceModels;
 
 namespace services;
 
@@ -95,11 +96,9 @@ public static class RecipeService {
 
     public static async Task<ListRecipesResponse?> ListRecipes(ListRecipesRequest request) {
         return await Utils.SafeRun(nameof(ListRecipes), async conn => {
-            var total = await Common.Recipe.Count(conn);
-            var recipes = await core.Data.ListRecipes.Get(request.Count, request.Offset, conn);
+            var recipes = await ListRecipesData.Get(request, conn);
 
             return new ListRecipesResponse {
-                Total = total,
                 Items = recipes
             };
         });

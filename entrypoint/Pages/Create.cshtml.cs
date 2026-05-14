@@ -157,7 +157,6 @@ public class CreateModel : PageModel {
         VersionId = new VersionId(versionId.Value);
         var res = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = VersionId,
-            VersionType = VersionType.Major,
             Recipe = RecipeMetadata.ToRecipeDb(),
             Steps = RecipeSteps.Select(s => s.ToStepDb())
                 .ToList(),

@@ -1,6 +1,6 @@
 using core.Data;
-using core.Models;
 using core.Models.DbModels;
+using core.Models.ServiceModels;
 using Helpers;
 using services;
 using Xunit;
@@ -54,14 +54,14 @@ public class VersionServiceTests: Sequential {
         var createR2Res = await RecipeService.CreateRecipe(Rand.Domain.Requests.CreateRecipeRequest());
         Assert.NotNull(createR2Res);
 
-        var list = await RecipeService.ListRecipes(new ListRecipesRequest { Count = 2, Offset = 0 });
+        var list = await RecipeService.ListRecipes(new ListRecipesRequest());
         Assert.NotNull(list);
-        Assert.Equal(2, list.Total);
+        Assert.Equal(2, list.Items.Count);
         await VersionService.DeleteRecipeVersion(createR2Res.VersionId);
         
-        list = await RecipeService.ListRecipes(new ListRecipesRequest { Count = 2, Offset = 0 });
+        list = await RecipeService.ListRecipes(new ListRecipesRequest());
         Assert.NotNull(list);
-        Assert.Equal(1, list.Total);
+        Assert.Single(list.Items);
     }
 
     [Fact]
@@ -75,11 +75,11 @@ public class VersionServiceTests: Sequential {
             Rand.Domain.Requests.CreateRecipeVersionRequest(v1Res.VersionId));
         Assert.NotNull(v2);
 
-        var list = await ListRecipes.Get(10, 0, conn);
+        var list = await ListRecipesData.Get(new ListRecipesRequest(), conn);
         Assert.Single(list);
         
         await VersionService.DeleteEntireRecipe(v2);
-        list = await ListRecipes.Get(10, 0, conn);
+        list = await ListRecipesData.Get(new ListRecipesRequest(), conn);
         Assert.Empty(list);
     }
 }

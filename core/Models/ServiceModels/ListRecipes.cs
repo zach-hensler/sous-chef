@@ -1,6 +1,6 @@
 using core.Models.DbModels;
 
-namespace core.Models;
+namespace core.Models.ServiceModels;
 
 public record ListRecipesResponse {
     public record RecipeItem {
@@ -10,12 +10,11 @@ public record ListRecipesResponse {
         public required EffortLevels EffortLevel { get; init; }
         public required Categories Category { get; init; }
         public required VersionId LatestVersionId { get; init; }
+        public required float AvgScore { get; init; }
     }
-    public required int Total { get; init; }
     public required List<RecipeItem> Items { get; init; }
 }
 
 public record ListRecipesRequest {
-    public required int Count { get; init; }
-    public required int Offset { get; init; }
+    public Categories? CategoryFilter { get; set; }
 }

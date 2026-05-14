@@ -5,31 +5,20 @@
 }
 
 <div>
-    <h1>Recipes</h1>
-    @if (Model.RecipeData != null) {
-        <div class="recipe-list-container">
-            @foreach (var recipe in Model.RecipeData.Items) {
-                <div class="recipe-list-container">
-                    <hr />
-                    <div class="recipe-list-item">
-                        <a asp-page="/Recipe" asp-route-versionId="@recipe.LatestVersionId">
-                            <div class="recipe-list-text">
-                                <h2>@recipe.Name</h2>
-                                <p>@recipe.Description</p>
-                            </div>
-                        </a>
-                        <div class="recipe-list-chip-container">
-                            <p class="recipe-list-chip">@recipe.EffortLevel</p>
-                            <p class="recipe-list-chip">@recipe.Category</p>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
-    else {
-        <div>
-            <p>An unexpected error occured while fetching recipes.</p>
-        </div>
-    }
+    <div class="recipe-list-header">
+        <h1>Recipes</h1>
+        <select
+            id="category"
+            name="category"
+            hx-get="/Index?handler=WithFilter"
+            hx-target="#recipe-list-container">
+            <option value="">Select Category</option>
+            <option value="entree">Entree</option>
+            <option value="side">Side</option>
+            <option value="desert">Desert</option>
+        </select>
+    </div>
+    <div id="recipe-list-container" class="recipe-list-container">
+        @await Html.PartialAsync("_RecipeList", Model)
+    </div>
 </div>

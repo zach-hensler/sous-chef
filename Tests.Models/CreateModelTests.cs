@@ -1,5 +1,5 @@
-using core.Models;
 using core.Models.DbModels;
+using core.Models.ServiceModels;
 using Helpers;
 using services;
 using sous_chef.Pages;
@@ -27,10 +27,7 @@ public class CreateModelTests: Sequential {
         model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveExisting));
         await model.OnPostAsync(null);
 
-        var listRecipes = await RecipeService.ListRecipes(new ListRecipesRequest {
-            Count = 10,
-            Offset = 0
-        });
+        var listRecipes = await RecipeService.ListRecipes(new ListRecipesRequest {});
         Assert.NotNull(listRecipes);
         Assert.Single(listRecipes.Items);
 

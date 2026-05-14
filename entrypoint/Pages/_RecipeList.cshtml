@@ -1,0 +1,24 @@
+@model IndexModel
+
+@if (Model.RecipeData != null) {
+    @foreach (var recipe in Model.RecipeData.Items) {
+        <div class="recipe-list-container">
+            <hr/>
+            <div class="recipe-list-item">
+                <a asp-page="/Recipe" asp-route-versionId="@recipe.LatestVersionId">
+                    <div class="recipe-list-text">
+                        <h2>@recipe.Name</h2>
+                        <p>@recipe.Description</p>
+                    </div>
+                </a>
+                <div class="recipe-list-chip-container">
+                    <p class="recipe-list-chip">@recipe.Category</p>
+                    <p class="recipe-list-chip">@Math.Round(recipe.AvgScore, 1)/5</p>
+                </div>
+            </div>
+        </div>
+    }
+}
+else {
+    <p>An unexpected error occured while fetching recipes.</p>
+}

@@ -1,5 +1,6 @@
 :root {
-  font-size: 1rem;
+  font-size: 1.1rem;
+  --max-width: 800px;
   --font-family: 'Roboto, sans-serif';
   
   /* colors - each "darker" is 4% darker */
@@ -30,6 +31,7 @@
 
 /* ---------------------- */
 /* Main Layout (+ Header) */
+/* ---------------------- */
 body {
   margin: 0 0 var(--large) 0;
   color: var(--font-color);
@@ -40,7 +42,7 @@ body {
 main, nav {
   width: 80%;
   margin: auto;
-  max-width: 1000px;
+  max-width: var(--max-width);
 }
 
 header {
@@ -76,13 +78,13 @@ header {
   background-color: var(--accent-color-darker );
 }
 
-@media screen and (width <= 600px) {
+@media screen and (width <= 650px) {
   .desktop-nav {
     display: none;
   }
 }
 
-@media screen and (width > 600px) {
+@media screen and (width > 650px) {
   .desktop-nav {
     display: flex;
   }
@@ -104,6 +106,7 @@ header {
 
 /* ---------------------- */
 /* Components */
+/* ---------------------- */
 h1 {
   margin: var(--extra-large) 0 0 0;
 }
@@ -192,6 +195,7 @@ svg {
 
 /* ---------------------- */
 /* Classes */
+/* ---------------------- */
 .primary {
   color: var(--accent-font-color);
   background-color: var(--accent-color);
@@ -211,4 +215,48 @@ svg {
 
 .underlined {
   text-decoration: underline;
+}
+
+
+/* ---------------------- */
+/* Site - Index */
+/* ---------------------- */
+.recipe-list-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.recipe-list-container {
+  width: 100%;
+}
+
+.recipe-list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.recipe-list-text {
+  min-width: 300px;
+}
+
+.recipe-list-chip-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.recipe-list-chip {
+  font-size: small;
+  margin: var(--extra-small);
+  padding: var(--extra-small);
+  height: fit-content;
+  border-radius: var(--border-radius);
+  border: 2px solid var(--bg-color-darkest);
+  background-color: var(--bg-color-darker);
 }

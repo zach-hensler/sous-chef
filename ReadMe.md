@@ -8,16 +8,24 @@ A kitchen helper with recipe versioning
   - automate backups
     - chron script to regularly backup to a usb drive
     - if more than x backups found, delete the oldest
-  - create script on pi to pull latest image and load it into docker
+
+Create Page Updates
+- Use HTMX
+- Make elements larger?
+- Fix Alignments
 
 - navbar updates
   - media query, on mobile collapse to hamburger button + "Sous Chef"
     - hamburger button reveals the rest of the options
 
 Main Feed Updates
-- Filtering by Category
 - Searching
   - By name, description, and ingredients
+- Feed "Strategies"
+  - Last Updates
+  - Last Made
+  - Highest Rated
+  - "Favorites" (most made and highly rated)
 - Show avg rating (for latest version?) on home page
 
 - Export Recipe to PDF

@@ -35,7 +35,6 @@ public class RecipeModelTests: Sequential {
         var versionId1 = new VersionId(1); //we know this because fresh db
         var versionId2 = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = versionId1,
-            VersionType = VersionType.Minor,
             Recipe = originalRecipe.Recipe,
             Steps = originalRecipe.Steps,
             Ingredients = originalRecipe.Ingredients,
@@ -45,7 +44,6 @@ public class RecipeModelTests: Sequential {
         
         var versionId3 = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = versionId1,
-            VersionType = VersionType.Minor,
             Recipe = originalRecipe.Recipe,
             Steps = originalRecipe.Steps,
             Ingredients = originalRecipe.Ingredients,
@@ -55,7 +53,6 @@ public class RecipeModelTests: Sequential {
         
         var versionId4 = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = versionId1,
-            VersionType = VersionType.Major,
             Recipe = originalRecipe.Recipe,
             Steps = originalRecipe.Steps,
             Ingredients = originalRecipe.Ingredients,

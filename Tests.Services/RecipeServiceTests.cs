@@ -1,5 +1,6 @@
 ﻿using core.Data;
 using core.Models;
+using core.Models.ServiceModels;
 using Xunit;
 using Helpers;
 using services;
@@ -75,7 +76,6 @@ public class RecipeServiceTests: Sequential {
         var message = Rand.Primitive.String();
         var newVersionRes = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = createRecipeRes.VersionId,
-            VersionType = VersionType.Major,
             Recipe = recipe.Recipe,
             Steps = recipe.Steps,
             Ingredients = recipe.Ingredients,
@@ -100,20 +100,16 @@ public class RecipeServiceTests: Sequential {
 
         await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
             PreviousVersionId = latest.VersionId,
-            VersionType = VersionType.Major,
             Recipe = recipe3Data.Recipe,
             Steps = recipe3Data.Steps,
             Ingredients = recipe3Data.Ingredients,
             Message = Rand.Primitive.String()
         });
 
-        var listed = await RecipeService.ListRecipes(new ListRecipesRequest {
-            Count = 10,
-            Offset = 0
-        });
+        var listed = await RecipeService.ListRecipes(new ListRecipesRequest());
         Assert.NotNull(listed);
         Assert.NotNull(listed.Items);
-        Assert.Equal(3, listed.Total);
+        Assert.Equal(3, listed.Items.Count);
         foreach (var recipe in listed.Items) {
             Assert.NotEmpty(recipe.Name);
             Assert.NotEmpty(recipe.Description ?? "");

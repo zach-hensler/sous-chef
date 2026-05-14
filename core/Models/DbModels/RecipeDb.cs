@@ -64,5 +64,5 @@ public record CreateRecipeDb {
     public required int TotalTimeMinutes { get; init; }
     public required int ActiveTimeMinutes { get; init; }
     public required EffortLevels EffortLevel { get; init; }
-    public required Categories Category { get; init; }
+    public required Categories Category { get; set; }
 }

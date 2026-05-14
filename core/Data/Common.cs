@@ -61,11 +61,11 @@ public static class Common {
                     id = recipeId,
                     recipe.Name,
                     recipe.Description,
-                    recipe.EffortLevel,
                     recipe.TotalTimeMinutes,
                     recipe.ActiveTimeMinutes,
                     recipe.OriginalAuthor,
-                    recipe.Category
+                    EffortLevel = recipe.EffortLevel.ToString(),
+                    Category = recipe.Category.ToString()
                 });
         }
 
@@ -261,7 +261,11 @@ public static class Common {
         public static async Task Add(ErrorHistoryDb errorHistory, DbConnection conn) {
             await conn.ExecuteAsync(
                 "INSERT INTO error_history (source, message, occurred_at) VALUES (@source, @message, @occurred_at)",
-                new { source = errorHistory.Source, message = errorHistory.Message, occurred_at = errorHistory.OccurredAt });
+                new {
+                    source = errorHistory.Source,
+                    message = errorHistory.Message,
+                    occurred_at = errorHistory.OccurredAt
+                });
         }
 
         public static async Task<int> Count(DateTime cutoff, DbConnection conn) {
