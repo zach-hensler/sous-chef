@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using services;
 
-namespace sous_chef.Pages;
+namespace view.Pages;
 
 public class Compare : PageModel {
     public VersionId? VersionId1 { get; set; }

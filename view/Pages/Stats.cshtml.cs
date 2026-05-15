@@ -2,7 +2,7 @@ using core.Data;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using services;
 
-namespace sous_chef.Pages;
+namespace view.Pages;
 
 public record LineChartData {
     public record Point {

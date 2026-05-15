@@ -1,4 +1,4 @@
-namespace sous_chef;
+namespace view;
 
 public static class ViewUtils {
     public static string FormatDate(DateTime? date) {

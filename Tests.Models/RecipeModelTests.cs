@@ -3,7 +3,7 @@ using core.Models;
 using core.Models.DbModels;
 using Helpers;
 using services;
-using sous_chef.Pages;
+using view.Pages;
 using Xunit;
 
 namespace PageTests;

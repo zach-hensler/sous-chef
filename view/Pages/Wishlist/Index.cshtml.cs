@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using services;
 
-namespace sous_chef.Pages.Wishlist;
+namespace view.Pages.Wishlist;
 
 public record UpdateWishlistView {
     public required int WishlistId { get; init; }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using services;
 
-namespace sous_chef.Pages;
+namespace view.Pages;
 
 public enum RecipeDetailsAction {
     AddComment,

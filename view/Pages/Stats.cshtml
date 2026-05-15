@@ -1,11 +1,13 @@
 @page
 @model StatsModel
 
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js "></script>
 <script type="module">
     const Chart = window.Chart;
     (async function () {
         new Chart(
-            document.getElementById('total-counts'),
+            document.getElementById('metrics-chart'),
             {
                 type: 'line',
                 data: {
@@ -32,8 +34,7 @@
 
 <div>
     <h1>Stats</h1>
-    <h2>Recipes Made per Month</h2>
-    <canvas id="total-counts"></canvas>
+    <canvas id="metrics-chart"></canvas>
     <hr />
     <h2>Recent Favorites</h2>
     <p>(@ViewUtils.FormatDate(DateTime.UtcNow.AddMonths(-2)) - @ViewUtils.FormatDate(DateTime.UtcNow))</p>
