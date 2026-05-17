@@ -155,15 +155,16 @@ public class CreateModel : PageModel {
         }
 
         VersionId = new VersionId(versionId.Value);
-        var res = await RecipeService.CreateRecipeVersion(new CreateRecipeVersionRequest {
-            PreviousVersionId = VersionId,
-            Recipe = RecipeMetadata.ToRecipeDb(),
-            Steps = RecipeSteps.Select(s => s.ToStepDb())
-                .ToList(),
-            Ingredients = RecipeIngredients.Select(i => i.ToIngredientDb())
-                .ToList(),
-            Message = UpdateMessage
-        });
+        var res = await RecipeService.CreateRecipeVersion(
+            new CreateRecipeVersionRequest {
+                PreviousVersionId = VersionId,
+                Recipe = RecipeMetadata.ToRecipeDb(),
+                Steps = RecipeSteps.Select(s => s.ToStepDb())
+                    .ToList(),
+                Ingredients = RecipeIngredients.Select(i => i.ToIngredientDb())
+                    .ToList(),
+                Message = UpdateMessage
+            });
         if (res != null) {
             return Redirect("/Index");
         }

@@ -7,6 +7,27 @@
     const string rating = "rating";
 }
 
+<style>
+    .header-wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: end;
+        flex-wrap: wrap;
+    }
+
+    .header-action-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: end;
+    }
+    .header-action {
+        flex: 1 1 0;
+        margin: var(--small);
+    }
+</style>
 <div>
     @if (Model.Details == null) {
         <p>Unable to load recipe</p>
@@ -24,7 +45,7 @@
                         <button class="header-action">Compare</button>
                     </a>
                 }
-                <a asp-page="/Create" asp-route-versionId="@Model.Id">
+                <a asp-page="/Create/Index" asp-route-versionId="@Model.Id">
                     <button class="header-action">Edit</button>
                 </a>
                 <button class="header-action warning" onclick="OpenDialogById('@deleteDialog')">Delete</button>

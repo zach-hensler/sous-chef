@@ -6,6 +6,18 @@
     const string saveDialog = "saveDialog";
 }
 
+<style>
+    .submitContainer {
+        display: flex;
+        flex-wrap: wrap-reverse;
+        justify-content: flex-start;
+        margin: var(--medium) 0;
+    }
+
+    .submitButton {
+        margin-right: var(--medium)
+    }
+</style>
 <div>
     @if (Model.VersionId == null) {
         <h1>Create New Recipe</h1>
