@@ -1,0 +1,21 @@
+@model AdminModel
+
+@if (Model.ErrorRes == null) {
+    <p>Unable to load Errors</p>
+}
+else if (Model.ErrorRes.Total == 0) {
+    <p>No errors were found!</p>
+}
+else {
+    var firstError = true;
+    foreach (var errors in Model.ErrorRes.Errors) {
+        <div>
+            @if (!firstError) {
+                <hr/>
+            }
+            @{ firstError = false; }
+            <h3>@errors.Source - @errors.OccurredAt</h3>
+            <p>@errors.Message</p>
+        </div>
+    }
+}

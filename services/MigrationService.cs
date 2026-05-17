@@ -1,6 +1,4 @@
-using System.Net;
 using core;
-using core.Models;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using migrations;

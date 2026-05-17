@@ -1,0 +1,17 @@
+@page
+@model AdminModel
+
+<div>
+    <h1>Admin Panel</h1>
+    <h2>Actions</h2>
+    @Html.AntiForgeryToken()
+    <input
+        hx-post="/Admin/Index?handler=Migrate"
+        hx-target="#@ViewIds.AdminErrorFeedWrapper"
+        type="button"
+        value="Migrate"/>
+    <h2>Error History</h2>
+    <div id="@ViewIds.AdminErrorFeedWrapper">
+        @await Html.PartialAsync("_AdminErrorFeed", Model)
+    </div>
+</div>
