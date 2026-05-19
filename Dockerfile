@@ -9,4 +9,4 @@ RUN dotnet publish -o=out sousChef.sln
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /source/out .
-ENTRYPOINT ["dotnet", "entrypoint.dll"]
+ENTRYPOINT ["dotnet", "view.dll"]
