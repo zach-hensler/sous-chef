@@ -22,7 +22,7 @@ public static class Setup {
         return conn;
     }
     public static async Task ResetAndSetupDatabase() {
-        Environment.SetEnvironmentVariable(EnvVars.ConnectionString, "User ID=test-user;Password=test-pass;Host=localhost;Port=5433;Database=tests;");
+        Environment.SetEnvironmentVariable(EnvVars.ConnectionString, "User ID=test-user;Password=test-pass;Host=localhost;Port=5433;Database=postgres;");
 
         var connFactory = new ConnectionFactory(true);
         await using var conn = connFactory.GetConnection();

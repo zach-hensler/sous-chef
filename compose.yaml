@@ -1,12 +1,4 @@
 services:
-  sous-chef-db:
-    image: 'postgres:latest'
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: sous-chef
   sous-chef-tests-db:
     image: 'postgres:latest'
     ports:
@@ -14,4 +6,4 @@ services:
     environment:
       POSTGRES_USER: test-user
       POSTGRES_PASSWORD: test-pass
-      POSTGRES_DB: tests
+      POSTGRES_DB: postgres

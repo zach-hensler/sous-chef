@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>view</RootNamespace>
+        <ScopedCssEnabled>false</ScopedCssEnabled>
     </PropertyGroup>
 
     <ItemGroup>

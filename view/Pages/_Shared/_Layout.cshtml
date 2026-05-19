@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@(!string.IsNullOrWhiteSpace(ViewData["Title"]?.ToString()) ? $"{ViewData["Title"]} - Sous Chef" : "Sous Chef")</title>
     <script type="importmap"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    @* <link rel="stylesheet" href="~/entrypoint.styles.css"/> *@
+    <script src="@Url.Content("~/js/site.js")"></script>
+    <link rel="stylesheet" href="@Url.Content("~/css/site.css")"/>
     <link rel="icon" type="image/x-icon" href="/icon.png?v=2">
 </head>
 <body>
