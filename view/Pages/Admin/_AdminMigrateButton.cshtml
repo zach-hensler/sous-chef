@@ -1,0 +1,6 @@
+@model AdminModel
+
+<input
+    hx-post="/Admin/Index?handler=Migrate"
+    type="button"
+    value="Migrate (v@(Model.LatestVersion?.Version))" />

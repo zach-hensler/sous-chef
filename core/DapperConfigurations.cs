@@ -15,6 +15,10 @@ public static class DapperConfigurations {
         SqlMapper.AddTypeHandler(new IdMapper<RecipeId>());
         SqlMapper.AddTypeHandler(new IdMapper<VersionId>());
         SqlMapper.AddTypeHandler(new IdMapper<WishlistId>());
+
+        SqlMapper.Settings.PreferTypeHandlersForEnums = true;
+        SqlMapper.AddTypeHandler(new EnumStringMapper<Categories>());
+        SqlMapper.AddTypeHandler(new EnumStringMapper<EffortLevels>());
     }
     
     public class DateOnlyTypeHandler : SqlMapper.TypeHandler<DateOnly> {
@@ -56,6 +60,16 @@ public static class DapperConfigurations {
 
         public override T Parse(object dbValue) {
             return (T)Activator.CreateInstance(typeof(T), (int)dbValue)!;
+        }
+    }
+
+    private class EnumStringMapper<T> : SqlMapper.TypeHandler<T> where T : struct {
+        public override void SetValue(IDbDataParameter parameter, T value) {
+            parameter.DbType = DbType.String;
+            parameter.Value = value.ToString();
+        }
+        public override T Parse(object value) {
+            return Enum.Parse<T>(value.ToString());
         }
     }
 }

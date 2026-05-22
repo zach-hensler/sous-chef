@@ -67,7 +67,7 @@ public class RecipeModel : PageModel {
             return Page();
         }
 
-        await VersionService.AddComment(new CreateRecipeCommentDb {
+        await VersionService.AddComment(new CreateCommentDb {
             VersionId = Id,
             Rating = NewComment.Rating.Value,
             Comment = NewComment.Comment,

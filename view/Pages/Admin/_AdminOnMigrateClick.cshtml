@@ -1,0 +1,8 @@
+@model AdminModel
+
+<div id="@ViewIds.AdminMigrateButtonWrapper" hx-swap-oob="true">
+    @await Html.PartialAsync("_AdminMigrateButton", Model)
+</div>
+<div id="@ViewIds.AdminErrorFeedWrapper" hx-swap-oob="true">
+    @await Html.PartialAsync("_AdminErrorFeed", Model)
+</div>

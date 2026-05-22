@@ -1,6 +1,4 @@
 using System.Data.Common;
-using System.Text.Json;
-using core.Models;
 using core.Models.DbModels;
 using Dapper;
 
@@ -39,8 +37,8 @@ public static class Common {
                     recipe.TotalTimeMinutes,
                     recipe.ActiveTimeMinutes,
                     recipe.OriginalAuthor,
-                    EffortLevel = recipe.EffortLevel.ToString(),
-                    Category = recipe.Category.ToString()
+                    recipe.EffortLevel,
+                    recipe.Category
                 }))!;
         }
 
@@ -64,8 +62,8 @@ public static class Common {
                     recipe.TotalTimeMinutes,
                     recipe.ActiveTimeMinutes,
                     recipe.OriginalAuthor,
-                    EffortLevel = recipe.EffortLevel.ToString(),
-                    Category = recipe.Category.ToString()
+                    recipe.EffortLevel,
+                    recipe.Category
                 });
         }
 
@@ -225,7 +223,7 @@ public static class Common {
     }
 
     public static class RecipeComments {
-        public static async Task<int> Create(CreateRecipeCommentDb comment, DbConnection conn) {
+        public static async Task<int> Create(CreateCommentDb comment, DbConnection conn) {
             return await conn.ExecuteScalarAsync<int>(
                 """
                 INSERT INTO recipe_comments
@@ -280,6 +278,13 @@ public static class Common {
                 "SELECT * FROM error_history ORDER BY occurred_at DESC LIMIT @count OFFSET @offset",
                 new { count, offset }))
                 .ToList();
+        }
+    }
+
+    public static class VersionInfo {
+        public static async Task<VersionInfoDb> GetLatest(DbConnection conn) {
+            return await conn.QuerySingleAsync<VersionInfoDb>(
+                "SELECT * FROM \"VersionInfo\" ORDER BY \"AppliedOn\" DESC LIMIT 1;");
         }
     }
 

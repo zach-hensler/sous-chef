@@ -62,6 +62,16 @@ public static class Rand {
                 };
             }
 
+            public static RecipeCommentDb RecipeCommentDb(VersionId version) {
+                return new RecipeCommentDb {
+                    CommentId = 0,
+                    VersionId = version,
+                    Rating = Primitive.Int(0, 5),
+                    Comment = Primitive.String(),
+                    CreatedAt = Primitive.Date()
+                };
+            }
+
             public static RecipeVersionDb RecipeVersionDb(RecipeId recipeId) {
                 return new RecipeVersionDb {
                     VersionId = new VersionId(0),

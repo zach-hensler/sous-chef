@@ -1,5 +1,4 @@
 using System.Data.Common;
-using core.Models;
 using core.Models.DbModels;
 
 namespace core.Data;

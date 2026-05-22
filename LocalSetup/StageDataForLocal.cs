@@ -27,6 +27,11 @@ public class StageDataForLocal: Sequential {
                     await Common.RecipeIngredients.Create(
                         Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb(), versionId, conn);
                 }
+
+                for (var commentCount = 0; commentCount < Rand.Primitive.Int(0, 4); commentCount++) {
+                    await Common.RecipeComments.Create(
+                        Rand.Domain.Db.RecipeCommentDb(versionId).ToCreateCommentDb(), conn);
+                }
             }
         }
     }

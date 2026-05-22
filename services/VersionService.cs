@@ -25,7 +25,7 @@ public static class VersionService {
             ?? [];
     }
 
-    public static async Task AddComment(CreateRecipeCommentDb request) {
+    public static async Task AddComment(CreateCommentDb request) {
         await Utils.SafeRun(nameof(AddComment), async conn => {
             if (!await Common.Version.Exists(request.VersionId, conn)) {
                 throw new Exception($"Version '{request.VersionId}' not found");

@@ -15,7 +15,7 @@ public class VersionServiceTests: Sequential {
 
         const int commentCount = 4;
         for (var i = 0; i < 4; i++) {
-            await VersionService.AddComment(new CreateRecipeCommentDb {
+            await VersionService.AddComment(new CreateCommentDb {
                 VersionId = createRes!.VersionId,
                 Rating = Rand.Primitive.Int(0, 5),
                 Comment = Rand.Primitive.String(),
