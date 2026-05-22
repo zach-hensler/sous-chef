@@ -6,6 +6,7 @@
   /* colors - each "darker" is 4% darker */
   --font-color: #000;
   --bg-color: hsl(300, 32.1%, 95%);
+  --bg-lighter: hsl(from var(--bg-color) h s calc(l + 3));
   --bg-color-darker: hsl(from var(--bg-color) h s calc(l - 3));
   --bg-color-darkest: hsl(from var(--bg-color) h s calc(l - 6));
 
@@ -141,14 +142,14 @@ a:hover {
 }
 
 button, select, input, textarea {
-  background-color: var(--bg-color);
+  background-color: var(--bg-lighter);
   border: 3px solid var(--bg-color-darker);
   text-decoration: none;
 }
 
 button:hover, select:hover, input:hover, textarea:hover {
-  background-color: var(--bg-color-darker);
-  border-color: var(--bg-color-darkest);
+  background-color: var(--bg-color);
+  box-shadow: 0 0 var(--extra-small) var(--bg-color-darker);
 }
 
 button:hover, select:hover {
@@ -182,8 +183,7 @@ table {
 }
 
 td, th {
-  background-color: var(--bg-color-darker);
-  border: 2px solid var(--bg-color-darkest);
+  border-bottom: 2px solid var(--bg-color-darker);
   padding: var(--small);
   border-radius: var(--border-radius);
   text-align: start;

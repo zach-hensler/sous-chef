@@ -7,15 +7,10 @@
 }
 
 <style>
-    .submitContainer {
-        display: flex;
-        flex-wrap: wrap-reverse;
-        justify-content: flex-start;
-        margin: var(--medium) 0;
-    }
-
     .submitButton {
-        margin-right: var(--medium)
+        text-decoration: none;
+        margin: var(--medium) 0;
+        width: 100%;
     }
 </style>
 <div>
@@ -154,21 +149,16 @@
                 value="Add Step"/>
         </div>
         <hr />
-        <div class="submitContainer">
-            <a href="/Index">
-                <button class="submitButton" type="button">Cancel</button>
-            </a>
-            @if (Model.VersionId == null) {
-                <button formaction="?@CreateActions.SaveExisting" class="submitButton primary">
-                    Save
-                </button>
-            }
-            else {
-                <button class="submitButton primary" onclick="OpenDialogById('@saveDialog')" type="button">
-                    Save
-                </button>
-            }
-        </div>
+        @if (Model.VersionId == null) {
+            <button formaction="?@CreateActions.SaveExisting" class="submitButton primary">
+                Save
+            </button>
+        }
+        else {
+            <button class="submitButton primary" onclick="OpenDialogById('@saveDialog')" type="button">
+                Save
+            </button>
+        }
         <dialog id="@saveDialog">
             <h1>Save Changes</h1>
             <hr />
