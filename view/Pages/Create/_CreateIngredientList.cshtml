@@ -1,0 +1,43 @@
+@model CreateIngredientListModel
+
+@for (var i = 0; i < Model.Ingredients.Count; i++) {
+    <hr/>
+    <div>
+        <input
+            hx-post="/Create/Index?handler=RemoveIngredient&index=@i"
+            hx-target="#@ViewIds.CreateIngredientsList"
+            hx-vals='{ "list": "@Model.Ingredients", "index": "@i" }'
+            type="button"
+            value="X"/>
+        <label for="ingredient-name-@i">Name: </label>
+        <input
+            asp-for="@Model.Ingredients[i].Name"
+            id="ingredient-name-@i"
+            autofocus="@(Model.AutoFocusId == $"ingredient-name-{i}")"
+            value="@Model.Ingredients[i].Name"
+            required/>
+    </div>
+    <div>
+        <label for="quantity-@i">Quantity: </label>
+        <input
+            asp-for="@Model.Ingredients[i].Quantity"
+            step=".01"
+            id="quantity-@i"
+            value="@Model.Ingredients[i].Quantity"
+            type="number"
+            required/>
+    </div>
+    <div>
+        <label for="unit-@i">Unit: </label>
+        <input
+            asp-for="@Model.Ingredients[i].Unit"
+            id="unit-@i"
+            value="@Model.Ingredients[i].Unit"/>
+    </div>
+}
+<input
+    hx-post="/Create/Index?handler=AddIngredient"
+    hx-target="#@ViewIds.CreateIngredientsList"
+    hx-vals="@Model.Ingredients"
+    type="button"
+    value="Add Ingredient"/>

@@ -26,7 +26,7 @@ public class WishlistTests: Sequential {
     public async Task ShouldUpdateWishlistItems() {
         await using var conn = await Setup.ResetAndGetDatabase();
 
-        var id = await Common.Wishlist.Add(Rand.Domain.Wishlist.AddWishlistDb(), conn);
+        var id = await Common.Wishlist.Add(Rand.Domain.Db.WishlistDb().ToAddWishlistDb(), conn);
         var updateReq = new UpdateWishlistDb {
             WishlistId = id,
             Priority = 7,
@@ -52,11 +52,11 @@ public class WishlistTests: Sequential {
             Completed = false
         }, conn);
 
-        var req = Rand.Domain.Wishlist.AddWishlistDb();
+        var req = Rand.Domain.Db.WishlistDb().ToAddWishlistDb();
         req.Completed = true;
         await Common.Wishlist.Add(req, conn);
 
-        req = Rand.Domain.Wishlist.AddWishlistDb();
+        req = Rand.Domain.Db.WishlistDb().ToAddWishlistDb();
         req.Completed = true;
         await Common.Wishlist.Add(req, conn);
 

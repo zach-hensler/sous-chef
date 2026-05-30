@@ -129,7 +129,7 @@ dialog {
   padding: var(--medium) var(--extra-large);
   border-radius: var(--border-radius);
   border: solid 2px var(--bg-color-darkest);
-  box-shadow: 0 var(--medium) var(--large) var(--bg-color-darkest);
+  box-shadow: 0 0 var(--small) var(--bg-color-darkest)
 }
 
 a {

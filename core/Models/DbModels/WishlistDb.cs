@@ -16,6 +16,16 @@ public record WishlistDb {
             Completed = Completed
         };
     }
+
+    public AddWishlistDb ToAddWishlistDb() {
+        return new AddWishlistDb {
+            Name = Name,
+            Priority = Priority,
+            Reference = Reference,
+            Completed = Completed
+        };
+        
+    }
 }
 
 public record AddWishlistDb {

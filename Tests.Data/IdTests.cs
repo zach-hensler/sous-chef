@@ -11,14 +11,14 @@ public class IdTests {
     }
 
     [Fact]
-    public void ShouldEqual() {
+    public void ShouldEqualWhenSame() {
         var id1 = new VersionId(4);
         var id2 = new VersionId(4);
         Assert.Equal(id1, id2);
     }
 
     [Fact]
-    public void ShouldNotEqual() {
+    public void ShouldNotEqualWhenDifferent() {
         var id1 = new VersionId(53);
         var id2 = new VersionId(104);
         Assert.NotEqual(id1, id2);

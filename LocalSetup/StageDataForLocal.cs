@@ -15,7 +15,7 @@ public class StageDataForLocal: Sequential {
                 var versionId = await Common.Version.Create(
                     Rand.Domain.Db.RecipeVersionDb(recipeId).ToCreateVersionDb(), conn);
                 
-                for (var stepCount = 0; stepCount < Rand.Primitive.Int(1, 10); stepCount++) {
+                for (var stepCount = 0; stepCount < Rand.Primitive.Int(2, 10); stepCount++) {
                     await Common.RecipeSteps.Create(
                         Rand.Domain.Db.RecipeStepDb(stepCount + 1).ToCreateStepDb(),
                         stepCount + 1,
@@ -24,8 +24,8 @@ public class StageDataForLocal: Sequential {
                 }
 
                 for (var ingrCount = 0; ingrCount < Rand.Primitive.Int(3, 8); ingrCount++) {
-                    await Common.RecipeIngredients.Create(
-                        Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb(), versionId, conn);
+                    var ingredient = Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb();
+                    await Common.RecipeIngredients.Create(ingredient, versionId, conn);
                 }
 
                 for (var commentCount = 0; commentCount < Rand.Primitive.Int(0, 4); commentCount++) {
@@ -33,6 +33,10 @@ public class StageDataForLocal: Sequential {
                         Rand.Domain.Db.RecipeCommentDb(versionId).ToCreateCommentDb(), conn);
                 }
             }
+        }
+
+        for (var wishlistCount = 0; wishlistCount < Rand.Primitive.Int(3, 7); wishlistCount++) {
+            await Common.Wishlist.Add(Rand.Domain.Db.WishlistDb().ToAddWishlistDb(), conn);
         }
     }
 }

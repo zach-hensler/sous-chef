@@ -3,42 +3,49 @@ A kitchen helper with recipe versioning
 ---
 # Backlog
 
+## Bugs
+- compare page
+  - steps added at end don't display on compare page
+- main feed
+  - if no comments, score shows as zero
+  - hide score instead
+
 ## v2 Features - Bells and Whistles
 - "infra"
   - automate backups
     - chron script to regularly backup to a usb drive
     - if more than x backups found, delete the oldest
 
-Create Page Updates
-- Use HTMX
-- Make elements larger?
-- Fix Alignments
+- Recipe Details
+  - Move Edit/Compare/Delete buttons to a "Manage Button"
+  - Manage button would launch a dialog or a collapsible section
+  - Review button would still be visible
 
 - navbar updates
   - media query, on mobile collapse to hamburger button + "Sous Chef"
     - hamburger button reveals the rest of the options
 
-Main Feed Updates
-- Searching
-  - By name, description, and ingredients
-- Feed "Strategies"
-  - Last Updates
-  - Last Made
-  - Highest Rated
-  - "Favorites" (most made and highly rated)
-- Show avg rating (for latest version?) on home page
+- Main Feed Updates
+  - Feed "Strategies"
+    - Alphabetical
+    - Last Updates
+    - Last Made
+    - Highest Rated
+    - "Favorites" (most made and highly rated)
 
 - Export Recipe to PDF
 
-Stats Updates
-- Add to graph
-  - recipe versions added per month
-  - new recipes added per month
-- Add a "The Classics" section
-  - top 3(?) recipes that have the most comments, but haven't been made in the last 2-3(?) months
+- Stats Updates
+  - Add to graph
+    - recipe versions added per month
+    - new recipes added per month
+  - Add a "The Classics" section
+    - top 3(?) recipes that have the most comments, but haven't been made in the last 2-3(?) months
 
 
 ## Unscheduled Ideas (Add it when ya want it)
+- Searching
+  - By name, description, and ingredients
 - Compare Page
   - Add select input to change version
 - Linked Recipes
@@ -49,6 +56,10 @@ Stats Updates
   - Star Rating, Effort Level
 - Grid option for recipe list page
 - Recipe drafts
+  - "Save as Draft" button next "Save"
+  - would save a "draft" boolean on the version (or just the recipe?)
+  - separate drafts page?
+  - do they show up in the main feed?
 - Uploading image for a recipe
   - Should be automatically scaled down before saving image
 - Grocery List
@@ -61,7 +72,6 @@ Stats Updates
   - On compare screen, you can change which one is active
 
 ## Tech Debt
-- Better response model (current isn't wrong, just odd)
 - Reconsider how versions are stored
   - instead of storing entire steps/ingredients, only store modified
   - each version would reference it's child ingredients/steps

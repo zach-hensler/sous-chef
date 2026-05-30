@@ -25,13 +25,13 @@ public static class VersionService {
             ?? [];
     }
 
-    public static async Task AddComment(CreateCommentDb request) {
-        await Utils.SafeRun(nameof(AddComment), async conn => {
+    public static async Task<int?> AddComment(CreateCommentDb request) {
+        return await Utils.SafeRun(nameof(AddComment), async conn => {
             if (!await Common.Version.Exists(request.VersionId, conn)) {
                 throw new Exception($"Version '{request.VersionId}' not found");
             }
 
-            await Common.RecipeComments.Create(request, conn);
+            return await Common.RecipeComments.Create(request, conn);
         });
     }
 
