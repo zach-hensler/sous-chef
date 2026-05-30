@@ -13,7 +13,6 @@ public enum Direction {
     Down
 }
 
-// TODO convert this into the create db models
 public class CreateModel : PageModel {
     [BindProperty] public string AutoFocusId { get; set; } = "";
     [BindProperty] public string? UpdateMessage { get; set; } = "";
