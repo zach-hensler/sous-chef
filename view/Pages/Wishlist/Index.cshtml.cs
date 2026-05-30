@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using core.Models.DbModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,9 +8,9 @@ namespace view.Pages.Wishlist;
 
 public record UpdateWishlistView {
     public required int WishlistId { get; init; }
-    public required int Priority { get; init; }
-    public string? Reference { get; init; }
-    public string? Completed { get; init; }
+    public required int Priority { get; set; }
+    public string? Reference { get; set; }
+    public string? Completed { get; set; }
     public UpdateWishlistDb ToDb() {
         return new UpdateWishlistDb {
             WishlistId = new WishlistId(WishlistId),
@@ -17,6 +18,14 @@ public record UpdateWishlistView {
             Reference = Reference,
             Completed = Completed == "on" // HTML form post returns this when checked
         };
+    }
+
+    [SetsRequiredMembers]
+    public UpdateWishlistView(UpdateWishlistDb db) {
+        WishlistId = db.WishlistId.Value;
+        Priority = db.Priority;
+        Reference = db.Reference;
+        Completed = db.Completed ? "on" : "off";
     }
 }
 

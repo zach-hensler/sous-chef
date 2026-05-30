@@ -3,31 +3,34 @@ using core.Models.ServiceModels;
 using Helpers;
 using services;
 using view.Pages;
+using view.Pages.Create;
 using Xunit;
 
 namespace PageTests;
 
 public class CreateModelTests: Sequential {
+    #region save
+    
     [Fact]
     public async Task ShouldCreateNewRecipe() {
         await Setup.ResetAndSetupDatabase();
         var model = new CreateModel {
-            RecipeMetadata = Rand.Domain.Db.RecipeDb().ToViewRecipe(),
-            RecipeIngredients = [
-                Rand.Domain.Db.RecipeIngredientDb().ToViewIngredient(),
-                Rand.Domain.Db.RecipeIngredientDb().ToViewIngredient()
+            RecipeMetadata = Rand.Domain.Db.RecipeDb().ToCreateRecipeDb(),
+            Ingredients = [
+                Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb(),
+                Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb()
             ],
-            RecipeSteps = [
-                Rand.Domain.Db.RecipeStepDb(1).ToViewStep(),
-                Rand.Domain.Db.RecipeStepDb(2).ToViewStep(),
-                Rand.Domain.Db.RecipeStepDb(3).ToViewStep()
+            Steps = [
+                Rand.Domain.Db.RecipeStepDb(1).ToCreateStepDb(),
+                Rand.Domain.Db.RecipeStepDb(2).ToCreateStepDb(),
+                Rand.Domain.Db.RecipeStepDb(3).ToCreateStepDb()
             ]
         };
         await model.OnGet(null);
-        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveExisting));
-        await model.OnPostAsync(null);
+        model.PageContext = Setup.GetPageContext();
+        await model.OnPostSaveExisting(null, model.RecipeMetadata, model.Ingredients, model.Steps);
 
-        var listRecipes = await RecipeService.ListRecipes(new ListRecipesRequest {});
+        var listRecipes = await RecipeService.ListRecipes(new ListRecipesRequest());
         Assert.NotNull(listRecipes);
         Assert.Single(listRecipes.Items);
 
@@ -44,20 +47,13 @@ public class CreateModelTests: Sequential {
 
         var model = new CreateModel();
         await model.OnGet(recipe?.VersionId.Value);
-        model.RecipeIngredients.Add(Rand.Domain.Db.RecipeIngredientDb().ToViewIngredient());
-        model.RecipeSteps.Add(Rand.Domain.Db.RecipeStepDb(original.Steps.Count).ToViewStep());
+        model.Ingredients.Add(Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb());
+        model.Steps.Add(Rand.Domain.Db.RecipeStepDb(original.Steps.Count).ToCreateStepDb());
         var newName = "new_" + Rand.Primitive.String();
         Assert.NotNull(model.RecipeMetadata);
-        model.RecipeMetadata = new CreateRecipeView {
-            Name = newName,
-            Description = model.RecipeMetadata.Description,
-            EffortLevel = model.RecipeMetadata.EffortLevel,
-            Category = model.RecipeMetadata.Category,
-            TotalTime = model.RecipeMetadata.TotalTime,
-            ActiveTime = model.RecipeMetadata.ActiveTime
-        };
-        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveExisting));
-        await model.OnPostAsync(recipe?.VersionId.Value);
+        model.RecipeMetadata.Name = newName;
+        model.PageContext = Setup.GetPageContext();
+        await model.OnPostSaveExisting(recipe?.VersionId.Value, model.RecipeMetadata, model.Ingredients, model.Steps);
 
         var details = await RecipeService.GetRecipe(recipe!.RecipeId);
         Assert.NotNull(details);
@@ -76,55 +72,121 @@ public class CreateModelTests: Sequential {
         var model = new CreateModel();
         await model.OnGet(recipe.VersionId.Value);
 
-        model.RecipeIngredients.Add(Rand.Domain.Db.RecipeIngredientDb().ToViewIngredient());
-        model.RecipeSteps.Add(Rand.Domain.Db.RecipeStepDb(original.Steps.Count).ToViewStep());
+        model.Ingredients.Add(Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb());
+        model.Steps.Add(Rand.Domain.Db.RecipeStepDb(original.Steps.Count).ToCreateStepDb());
         var newName = "new_" + Rand.Primitive.String();
         Assert.NotNull(model.RecipeMetadata);
-        model.RecipeMetadata = new CreateRecipeView {
-            Name = newName,
-            Description = model.RecipeMetadata.Description,
-            EffortLevel = model.RecipeMetadata.EffortLevel,
-            Category = model.RecipeMetadata.Category,
-            TotalTime = model.RecipeMetadata.TotalTime,
-            ActiveTime = model.RecipeMetadata.ActiveTime
-        };
+        model.RecipeMetadata.Name = newName;
         var message = Rand.Primitive.String();
         model.UpdateMessage = message;
 
-        model.PageContext = Setup.GetPageContext(nameof(CreateActions.SaveAsNewVersion));
-        await model.OnPostAsync(recipe.VersionId.Value);
+        model.PageContext = Setup.GetPageContext();
+        await model.OnPostSaveNew(recipe.VersionId.Value, model.RecipeMetadata, model.Ingredients, model.Steps);
 
         var details = await RecipeService.GetRecipe(recipe.RecipeId);
         Assert.NotNull(details);
         Assert.Equal(message, details.Version.Message);
         Assert.Equal(newName, details.RecipeMetadata.Name);
     }
+    
+    #endregion
+    
+    #region steps
 
-    [Fact]
-    public async Task ShouldMoveSteps() {
+    [Theory]
+    [InlineData(Direction.Up, 1)]
+    [InlineData(Direction.Down, 0)]
+    public void ShouldMoveSteps(Direction direction, int index) {
         var model = new CreateModel {
-            PageContext = Setup.GetPageContext(nameof(CreateActions.NewStep))
+            PageContext = Setup.GetPageContext(),
+            MetadataProvider = Setup.MetadataProvider()
         };
-        await model.OnPostAsync(null);
-        Assert.Single(model.RecipeSteps);
-        model.RecipeSteps[0] = new CreateStepView {
+        model.OnPostAddStep(model.Steps);
+        Assert.Single(model.Steps);
+        model.Steps[0] = new CreateStepDb {
             Name = "name0",
             Instruction = "instruct0"
         };
-        
-        model.PageContext = Setup.GetPageContext(nameof(CreateActions.NewStep));
-        await model.OnPostAsync(null);
-        model.RecipeSteps[1] = new CreateStepView {
+
+        model.OnPostAddStep(model.Steps);
+        model.Steps[1] = new CreateStepDb {
             Name = "name1",
             Instruction = "instruct1"
         };
+
+        model.OnPostMoveStep(model.Steps, index, direction);
         
-        model.PageContext = Setup.GetPageContext(nameof(CreateActions.MoveStepUp), "1");
-        await model.OnPostAsync(null);
-        
-        Assert.Equal("name1",model.RecipeSteps[0].Name);
-        Assert.Equal("instruct1",model.RecipeSteps[0].Instruction);
-        Assert.Equal("name0",model.RecipeSteps[1].Name);
-        Assert.Equal("instruct0",model.RecipeSteps[1].Instruction);
+        Assert.Equal("name1",model.Steps[0].Name);
+        Assert.Equal("instruct1",model.Steps[0].Instruction);
+        Assert.Equal("name0",model.Steps[1].Name);
+        Assert.Equal("instruct0",model.Steps[1].Instruction);
     }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public void ShouldRemoveSteps(int removedIndex) {
+        var model = new CreateModel {
+            PageContext = Setup.GetPageContext(),
+            MetadataProvider = Setup.MetadataProvider(),
+            Steps = [
+                Rand.Domain.Db.RecipeStepDb(1).ToCreateStepDb(),
+                Rand.Domain.Db.RecipeStepDb(2).ToCreateStepDb(),
+                Rand.Domain.Db.RecipeStepDb(3).ToCreateStepDb(),
+                Rand.Domain.Db.RecipeStepDb(4).ToCreateStepDb()
+            ]
+        };
+
+        var initialCount = model.Steps.Count;
+        var removed = model.Steps[removedIndex];
+        model.OnPostRemoveStep(model.Steps, removedIndex);
+        Assert.Equal(initialCount - 1, model.Steps.Count);
+        Assert.DoesNotContain(model.Steps, s => s.Name == removed.Name);
+    }
+    
+    #endregion
+
+    #region ingredients
+
+    [Fact]
+    public void ShouldAddIngredients() {
+        var model = new CreateModel {
+            PageContext = Setup.GetPageContext(),
+            MetadataProvider = Setup.MetadataProvider()
+        };
+
+        model.OnPostAddIngredient(model.Ingredients);
+        Assert.Single(model.Ingredients);
+
+        model.OnPostAddIngredient(model.Ingredients);
+        Assert.Equal(2, model.Ingredients.Count);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public void ShouldRemoveIngredients(int removedIndex) {
+        var model = new CreateModel {
+            PageContext = Setup.GetPageContext(),
+            MetadataProvider = Setup.MetadataProvider(),
+            Ingredients = [
+                Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb(),
+                Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb(),
+                Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb(),
+                Rand.Domain.Db.RecipeIngredientDb().ToCreateIngredientDb()
+            ]
+        };
+        var initialCount = model.Ingredients.Count;
+
+        var removedName = model.Ingredients[removedIndex].Name;
+        model.OnPostRemoveIngredient(model.Ingredients, removedIndex);
+        Assert.Equal(initialCount - 1, model.Ingredients.Count);
+        Assert.DoesNotContain(model.Ingredients, i => i.Name == removedName);
+    }
+
+    #endregion
 }

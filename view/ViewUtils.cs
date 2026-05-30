@@ -10,6 +10,10 @@ public static class ViewUtils {
 public static class ViewIds {
     public static string AdminErrorFeedWrapper = "admin-error-feed-wrapper";
     public static string AdminMigrateButtonWrapper = "admin-migrate-buton";
+
+    public static string CreateIngredientsList = "create-ingredients-list";
+    public static string CreateStepList = "create-step-list";
+    public static string CreateSaveDialog = "create-save-dialog"; 
     
     public static string WishlistAddDialog = "wishlist-add-dialog";
     public static string WishlistAddWrapper = "wishlist-add-wrapper";

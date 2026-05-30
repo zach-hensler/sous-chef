@@ -1,3 +1,4 @@
+using System.Reflection;
 using FluentMigrator;
 
 namespace migrations;

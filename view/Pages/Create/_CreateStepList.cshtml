@@ -1,0 +1,47 @@
+@model CreateStepListModel
+
+@for (var i = 0; i < Model.Steps.Count; i++) {
+    <hr/>
+    <div>
+        <div>
+            <input
+                hx-post="/Create/Index?handler=RemoveStep&index=@i"
+                hx-target="#@ViewIds.CreateStepList"
+                type="button"
+                value="X"/>
+            @if (i < Model.Steps.Count - 1) {
+                <input
+                    hx-post="/Create/Index?handler=MoveStep&index=@i&direction=@Direction.Down"
+                    hx-target="#@ViewIds.CreateStepList"
+                    type="button"
+                    value="Down"/>
+            }
+            @if (i > 0) {
+                <input
+                    hx-post="/Create/Index?handler=MoveStep&index=@i&direction=@Direction.Up"
+                    hx-target="#@ViewIds.CreateStepList"
+                    type="button"
+                    value="Up"/>
+            }
+        </div>
+        <label for="step-name-@i">@(i + 1): Name: </label>
+        <input
+            asp-for="@Model.Steps[i].Name"
+            id="step-name-@i"
+            autofocus="@(Model.AutoFocusId == $"step-name-{i}")"
+            value="@Model.Steps[i].Name"
+            required/>
+    </div>
+    <textarea
+        rows="5"
+        id="step-instruction-@Model.Steps[i].Name"
+        asp-for="@Model.Steps[i].Instruction"
+        required>
+                </textarea>
+}
+<input
+    hx-post="/Create/Index?handler=AddStep"
+    hx-target="#@ViewIds.CreateStepList"
+    hx-vals="@Model.Steps"
+    type="button"
+    value="Add Step"/>

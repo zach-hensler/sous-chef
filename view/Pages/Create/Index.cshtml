@@ -3,12 +3,10 @@
 @model CreateModel
 @{
     ViewData["Title"] = "Create New Recipe";
-    const string saveDialog = "saveDialog";
 }
 
 <style>
     .submitButton {
-        text-decoration: none;
         margin: var(--medium) 0;
         width: 100%;
     }
@@ -20,7 +18,8 @@
     else {
         <h1>Edit @Model.RecipeMetadata?.Name</h1>
     }
-    <form method="post">
+    <form>
+        @Html.AntiForgeryToken()
         <div>
             <label for="name">Recipe Name: </label>
             <input asp-for="RecipeMetadata.Name" id="name" required/>
@@ -53,136 +52,75 @@
         </div>
         <div>
             <label for="totalTime">Total Time (minutes): </label>
-            <input asp-for="RecipeMetadata.TotalTime" id="totalTime" type="number" required/>
+            <input asp-for="RecipeMetadata.TotalTimeMinutes" id="totalTime" type="number" required/>
         </div>
         <div>
             <label for="activeTime">Active Time (minutes): </label>
-            <input asp-for="RecipeMetadata.ActiveTime" id="activeTime" type="number" required/>
+            <input asp-for="RecipeMetadata.ActiveTimeMinutes" id="activeTime" type="number" required/>
         </div>
         <h2 id="ingredients">Ingredients</h2>
-        <div>
-            @for (var i = 0; i < Model.RecipeIngredients.Count; i++) {
-                <hr/>
-                <div>
-                    <input
-                        formaction="@Model.GetBaseRoute()?@CreateActions.RemoveIngredient=@i"
-                        formnovalidate
-                        type="submit"
-                        value="X"/>
-                    <label for="ingredient-name-@i">Name: </label>
-                    <input
-                        asp-for="@Model.RecipeIngredients[i].Name"
-                        id="ingredient-name-@i"
-                        autofocus="@(Model.AutoFocusId == $"ingredient-name-{i}")"
-                        value="@Model.RecipeIngredients[i].Name"
-                        required/>
-                </div>
-                <div>
-                    <label for="quantity-@i">Quantity: </label>
-                    <input
-                        asp-for="@Model.RecipeIngredients[i].Quantity"
-                        step=".01"
-                        id="quantity-@i"
-                        value="@Model.RecipeIngredients[i].Quantity"
-                        type="number"
-                        required/>
-                </div>
-                <div>
-                    <label for="unit-@i">Unit: </label>
-                    <input
-                        asp-for="@Model.RecipeIngredients[i].Unit"
-                        id="unit-@i"
-                        value="@Model.RecipeIngredients[i].Unit"/>
-                </div>
-            }
-            <input
-                formaction="@Model.GetBaseRoute()?@CreateActions.NewIngredient"
-                formnovalidate
-                type="submit"
-                value="Add Ingredient"/>
+        <div id="@ViewIds.CreateIngredientsList">
+            @await Html.PartialAsync(
+                "_CreateIngredientList",
+                new CreateIngredientListModel {
+                    Ingredients = Model.Ingredients,
+                    AutoFocusId = Model.AutoFocusId
+                })
         </div>
         <h2 id="steps">Steps</h2>
-        <div>
-            @for (var i = 0; i < Model.RecipeSteps.Count; i++) {
-                <hr/>
-                <div>
-                    <div>
-                        <input
-                            formaction="@Model.GetBaseRoute()?@CreateActions.RemoveStep=@i"
-                            formnovalidate
-                            type="submit"
-                            value="X"/>
-                        @if (i < Model.RecipeSteps.Count - 1) {
-                            <input
-                                formaction="@Model.GetBaseRoute()?@CreateActions.MoveStepDown=@i"
-                                formnovalidate
-                                type="submit"
-                                value="Down"/>
-                        }
-                        @if (i > 0) {
-                            <input
-                                formaction="@Model.GetBaseRoute()?@CreateActions.MoveStepUp=@i"
-                                formnovalidate
-                                type="submit"
-                                value="Up"/>
-                        }
-                    </div>
-                    <label for="step-name-@i">@(i + 1): Name: </label>
-                    <input
-                        asp-for="@Model.RecipeSteps[i].Name"
-                        id="step-name-@i"
-                        autofocus="@(Model.AutoFocusId == $"step-name-{i}")"
-                        value="@Model.RecipeSteps[i].Name"
-                        required/>
-                </div>
-                <textarea
-                    rows="5"
-                    id="step-instruction-@Model.RecipeSteps[i].Name"
-                    asp-for="@Model.RecipeSteps[i].Instruction"
-                    required>
-                </textarea>
-            }
-            <input
-                formaction="@Model.GetBaseRoute()?@CreateActions.NewStep"
-                formnovalidate
-                type="submit"
-                value="Add Step"/>
+        <div id="@ViewIds.CreateStepList">
+            @await Html.PartialAsync(
+                "_CreateStepList",
+                new CreateStepListModel {
+                    Steps = Model.Steps,
+                    AutoFocusId = Model.AutoFocusId
+                })
         </div>
-        <hr />
+        <hr/>
         @if (Model.VersionId == null) {
-            <button formaction="?@CreateActions.SaveExisting" class="submitButton primary">
+            <button
+                hx-swap="none"
+                hx-post="Create/Index?handler=SaveExisting"
+                class="submitButton primary">
                 Save
             </button>
         }
         else {
-            <button class="submitButton primary" onclick="OpenDialogById('@saveDialog')" type="button">
+            <button
+                class="submitButton primary"
+                onclick="OpenDialogById('@ViewIds.CreateSaveDialog')"
+                type="button">
                 Save
             </button>
         }
-        <dialog id="@saveDialog">
+        <dialog id="@ViewIds.CreateSaveDialog">
             <h1>Save Changes</h1>
-            <hr />
+            <hr/>
             <label for="update-message">Update Message</label>
             <input
                 id="update-message"
                 asp-for="@Model.UpdateMessage"
-                autofocus />
+                autofocus/>
             <div class="dialog-button-wrapper">
                 <button
-                    formaction="?@CreateActions.SaveAsNewVersion"
+                    hx-swap="none"
+                    hx-vals='{ "versionId": "@Model.VersionId" }'
+                    hx-post="Index?handler=SaveNew"
                     type="submit"
                     class="dialog-button primary"
-                    onclick="CloseDialogById('@saveDialog')">Update</button>
+                    onclick="CloseDialogById('@ViewIds.CreateSaveDialog')">Update</button>
                 <button
-                    formaction="?@CreateActions.SaveExisting"
+                    hx-swap="none"
+                    hx-vals='{ "versionId": "@Model.VersionId" }'
+                    hx-post="Index?handler=SaveExisting"
                     type="submit"
                     class="dialog-button"
-                    onclick="CloseDialogById('@saveDialog')">Correction</button>
-                <hr />
+                    onclick="CloseDialogById('@ViewIds.CreateSaveDialog')">Correction</button>
+                <hr/>
                 <button
                     class="dialog-button"
                     type="button"
-                    onclick="CloseDialogById('@saveDialog')">Close</button>
+                    onclick="CloseDialogById('@ViewIds.CreateSaveDialog')">Close</button>
             </div>
         </dialog>
     </form>

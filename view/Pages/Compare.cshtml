@@ -55,12 +55,16 @@
         <table>
             @foreach (var step in Model.StepComparisons) {
                 <tr>
-                    <td class="@step.Type">@step.Item1Line1</td>
-                    <td class="@step.Type">@step.Item2Line1</td>
-                </tr>
-                <tr>
-                    <td class="@step.Type">@step.Item1Line2</td>
-                    <td class="@step.Type">@step.Item2Line2</td>
+                    <td class="@step.Type">
+                        @step.Item1Line1
+                        <br/>
+                        @step.Item1Line2
+                    </td>
+                    <td class="@step.Type">
+                        @step.Item2Line1
+                        <br/>
+                        @step.Item2Line2
+                    </td>
                 </tr>
             }
         </table>
@@ -68,12 +72,16 @@
         <table>
             @foreach (var comment in Model.CommentComparisons) {
                 <tr>
-                    <td class="@comment.Type">@comment.Item1Line1</td>
-                    <td class="@comment.Type">@comment.Item2Line1</td>
-                </tr>
-                <tr>
-                    <td class="@comment.Type">@comment.Item1Line2</td>
-                    <td class="@comment.Type">@comment.Item2Line2</td>
+                    <td class="@comment.Type">
+                        @comment.Item1Line1
+                        <br/>
+                        @comment.Item1Line2
+                    </td>
+                    <td class="@comment.Type">
+                        @comment.Item2Line1
+                        <br />
+                        @comment.Item2Line2
+                    </td>
                 </tr>
             }
         </table>

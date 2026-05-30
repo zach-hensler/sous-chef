@@ -1,11 +1,19 @@
 using core;
+using core.Data;
 using core.Models;
 using core.Models.DbModels;
 
 namespace Helpers;
 
+public static class Extensions {
+    public static string Random(this string[] l) {
+        return l[Rand.Primitive.Int(0, l.Length)];
+    }
+}
+
 public static class Rand {
     private static Random _random = new();
+
     public static class Primitive {
         public static int Int() {
             return _random.Next();
@@ -15,18 +23,26 @@ public static class Rand {
             return _random.Next(min, max);
         }
 
+        public static bool Bool(int percentageSuccess = 50) {
+            return Int(0, 100) <= 50;
+        }
+
         public static char Char() {
             return (char)('a' + Int(0, 25));
         }
 
         public static string String(int? length = null) {
-            var realLength = length ?? Int(0, 20);
+            var realLength = length ?? Int(1, 20);
             var s = "";
             for (var i = 0; i <= realLength; i++) {
                 s += Char();
             }
 
             return s;
+        }
+
+        public static string String(int min, int max) {
+            return String(Int(min, max));
         }
 
         public static DateTime Date() {
@@ -36,6 +52,63 @@ public static class Rand {
                 .AddMinutes(-1*Int(0, 12))
                 .AddSeconds(-1*Int(0, 12))
                 .AddMilliseconds(-1*Int(0, 12));
+        }
+    }
+
+    public static class Copy {
+        public static readonly string[] DishAdjectives = ["Easy", "Satisfying", "Crunchy", "Fluffy"];
+        public static readonly string[] DishBase = ["Omelette", "Enchilada", "Pasta", "Taco"];
+
+        public static readonly string[] Verbs = ["Chop", "Prep", "Slice", "Marinate", "Cook"];
+
+        public static readonly string[] IngredientAdjectives = ["Ground", "Whole", "Sliced", "Shredded", "Grated", "Red", "Green", "Yellow", "Fresh", "Frozen", "Pickled", "Ripe", "Raw"];
+        public static readonly string[] MainIngredients = ["Chicken", "Beef", "Pork", "Egg", "Bacon", "Cheese", "Mushroom", "Broccoli"];
+        public static readonly string[] SecondaryIngredients = ["Butter", "Olive Oil", "Garlic", "Onion", "Salt", "Tomato Paste", "Beans"];
+        public static readonly string[] Units = ["cups", "tbsps", "tsps", "ounces", "pounds"];
+        public static string RecipeName() {
+            var name = "";
+            if (Primitive.Bool(20)) {
+                name += DishAdjectives.Random();
+                name += " ";
+            }
+            if (Primitive.Bool()) {
+                name += MainIngredients.Random();
+                name += " ";
+            }
+            if (Primitive.Bool(20)) {
+                name += SecondaryIngredients.Random();
+                name += " ";
+            }
+
+            name += DishBase.Random();
+            return name;
+        }
+
+        public static string IngredientName() {
+            var name = Primitive.Bool() ? MainIngredients.Random() : SecondaryIngredients.Random();
+            return $"{IngredientAdjectives.Random()} {IngredientAdjectives.Random()} {name}";
+        }
+
+        public static string StepName() {
+            return $"{Verbs.Random()} {MainIngredients.Random()}";
+        }
+
+        public static string Sentence() {
+            var sentence = "";
+            for (var i = 0; i < Primitive.Int(4, 10); i++) {
+                sentence += $"{Primitive.String(1, 6)} ";
+            }
+
+            return sentence.Trim() + ".";
+        }
+
+        public static string Paragraph() {
+            var paragraph = "";
+            for (var i = 0; i < Primitive.Int(1, 5); i++) {
+                paragraph += $"{Sentence()} ";
+            }
+
+            return paragraph.Trim();
         }
     }
 
@@ -52,8 +125,8 @@ public static class Rand {
             public static RecipeDb RecipeDb() {
                 return new RecipeDb {
                     RecipeId = new RecipeId(0),
-                    Name = Primitive.String(),
-                    Description = Primitive.String(),
+                    Name = Copy.RecipeName(),
+                    Description = Copy.Paragraph(),
                     TotalTimeMinutes = Primitive.Int(0, 120),
                     EffortLevel = (EffortLevels)Primitive.Int(0, 2),
                     Category = (Categories)Primitive.Int(0, 4),
@@ -67,7 +140,7 @@ public static class Rand {
                     CommentId = 0,
                     VersionId = version,
                     Rating = Primitive.Int(0, 5),
-                    Comment = Primitive.String(),
+                    Comment = Copy.Sentence(),
                     CreatedAt = Primitive.Date()
                 };
             }
@@ -75,7 +148,7 @@ public static class Rand {
             public static RecipeVersionDb RecipeVersionDb(RecipeId recipeId) {
                 return new RecipeVersionDb {
                     VersionId = new VersionId(0),
-                    Message = Primitive.String(),
+                    Message = Copy.Sentence(),
                     RecipeId = recipeId,
                     CreatedAt = Primitive.Date()
                 };
@@ -85,9 +158,9 @@ public static class Rand {
                 return new StepDb {
                     RecipeId = new RecipeId(0),
                     VersionId = new VersionId(0),
-                    Name = Primitive.String(),
+                    Name = Copy.StepName(),
                     StepNumber = idx.ToString(),
-                    Instruction = Primitive.String()
+                    Instruction = Copy.Paragraph()
                 };
             }
 
@@ -95,49 +168,20 @@ public static class Rand {
                 return new RecipeIngredientDb {
                     RecipeId = new RecipeId(0),
                     VersionId = new VersionId(0),
-                    Name = Primitive.String(),
-                    Quantity = Primitive.Int(),
-                    Unit = Primitive.String()
+                    Name = Copy.IngredientName(),
+                    Quantity = Primitive.Int(1, 20),
+                    Unit = Copy.Units.Random()
                 };
             }
 
-            public static class Create {
-                public static CreateStepDb CreateRecipeStepDb() {
-                    return new CreateStepDb {
-                        Name = Primitive.String(),
-                        Instruction = Primitive.String()
-                    };
-                }
-
-                public static CreateIngredientDb CreateRecipeIngredientDb() {
-                    return new CreateIngredientDb {
-                        Name = Primitive.String(),
-                        Quantity = Primitive.Int(),
-                        Unit = Primitive.String()
-                    };
-                }
-
-                public static CreateRecipeDb CreateRecipeDb() {
-                    return new CreateRecipeDb {
-                        Name = Primitive.String(),
-                        Description = Primitive.String(),
-                        EffortLevel = EffortLevels.Easy,
-                        Category = Categories.Uncategorized,
-                        OriginalAuthor = Primitive.String(),
-                        TotalTimeMinutes = Primitive.Int(),
-                        ActiveTimeMinutes = Primitive.Int()
-                    };
-                }
-            }
-        }
-
-        public static class Wishlist {
-            public static AddWishlistDb AddWishlistDb() {
-                return new AddWishlistDb {
-                    Name = Primitive.String(),
+            public static WishlistDb WishlistDb() {
+                return new WishlistDb {
+                    Name = Copy.RecipeName(),
                     Priority = 1,
                     Reference = Primitive.String(),
-                    Completed = false
+                    Completed = false,
+                    WishlistId = new WishlistId(0),
+                    CreatedAt = Primitive.Date()
                 };
             }
         }
@@ -146,16 +190,16 @@ public static class Rand {
             public static CreateRecipeRequest CreateRecipeRequest() {
                 List<CreateStepDb> steps = [];
                 for (var i = 0; i < Primitive.Int(1, 4); i++) {
-                    steps.Add(Db.Create.CreateRecipeStepDb());
+                    steps.Add(Db.RecipeStepDb(i+1).ToCreateStepDb());
                 }
 
                 List<CreateIngredientDb> ingredients = [];
                 for (var i = 0; i < Primitive.Int(1, 4); i++) {
-                    ingredients.Add(Db.Create.CreateRecipeIngredientDb());
+                    ingredients.Add(Db.RecipeIngredientDb().ToCreateIngredientDb());
                 }
             
                 return new CreateRecipeRequest {
-                    Recipe = Db.Create.CreateRecipeDb(),
+                    Recipe = Db.RecipeDb().ToCreateRecipeDb(),
                     Steps = steps,
                     Ingredients = ingredients
                 };
@@ -164,14 +208,14 @@ public static class Rand {
             public static CreateRecipeVersionRequest CreateRecipeVersionRequest(VersionId previousVersion) {
                 return new CreateRecipeVersionRequest {
                     PreviousVersionId = previousVersion,
-                    Recipe = Db.Create.CreateRecipeDb(),
+                    Recipe = Db.RecipeDb().ToCreateRecipeDb(),
                     Steps = [
-                        Db.Create.CreateRecipeStepDb(),
-                        Db.Create.CreateRecipeStepDb()
+                        Db.RecipeStepDb(1).ToCreateStepDb(),
+                        Db.RecipeStepDb(2).ToCreateStepDb(),
                     ],
                     Ingredients = [
-                        Db.Create.CreateRecipeIngredientDb(),
-                        Db.Create.CreateRecipeIngredientDb()
+                        Db.RecipeIngredientDb().ToCreateIngredientDb(),
+                        Db.RecipeIngredientDb().ToCreateIngredientDb()
                     ],
                     Message = Primitive.String()
                 };
