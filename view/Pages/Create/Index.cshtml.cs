@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using core.Models;
 using core.Models.DbModels;
+using core.Models.ServiceModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using services;

@@ -20,6 +20,6 @@ public record RecipeCommentDb {
 public record CreateCommentDb {
     public required VersionId VersionId { get; init; }
     public required int Rating { get; init; }
-    public string? Comment { get; init; }
+    public string? Comment { get; set; }
     public required DateTime CreatedAt { get; init; }
 }

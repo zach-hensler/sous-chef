@@ -44,8 +44,10 @@
                     </div>
                 </a>
                 <div class="recipe-list-chip-container">
+                    @if (recipe.AvgScore != 0) {
+                        <p class="recipe-list-chip">@Math.Round(recipe.AvgScore, 1)/5</p>
+                    }
                     <p class="recipe-list-chip">@recipe.Category</p>
-                    <p class="recipe-list-chip">@Math.Round(recipe.AvgScore, 1)/5</p>
                 </div>
             </div>
         </div>
