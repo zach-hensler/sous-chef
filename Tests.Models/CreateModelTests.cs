@@ -127,6 +127,7 @@ public class CreateModelTests: Sequential {
     [InlineData(1)]
     [InlineData(2)]
     [InlineData(3)]
+    // TODO this test fails sometimes...
     public void ShouldRemoveSteps(int removedIndex) {
         var model = new CreateModel {
             PageContext = Setup.GetPageContext(),

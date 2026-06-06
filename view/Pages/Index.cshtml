@@ -1,4 +1,6 @@
 ﻿@page
+@using core
+@using core.Models.ServiceModels
 @model IndexModel
 @{
     ViewData["Title"] = "Recipes";
@@ -6,10 +8,12 @@
 
 <style>
     .recipe-list-header {
-        width: 100%;
         display: flex;
-        justify-content: space-between;
         align-items: end;
+    }
+    
+    .recipe-list-item {
+        margin: var(--large) var(--small) 0 var(--small);
     }
 
     .recipe-list-container {
@@ -17,17 +21,37 @@
     }
 </style>
 <div>
-    <div class="recipe-list-header">
-        <h1>Recipes</h1>
+    <div class="recipe-list-header" hx-include=".recipe-list-item">
         <select
+            class="recipe-list-item"
+            id="order"
+            name="order"
+            hx-get="/Index?handler=WithFilter"
+            hx-target="#recipe-list-container">
+            <option value="">Select Order</option>
+            <option value="@SortStrategies.Favorites">
+                @SortStrategies.Favorites
+            </option>
+            <option value="@SortStrategies.Newest">
+                @SortStrategies.Newest
+            </option>
+            <option value="@SortStrategies.Oldest">
+                @SortStrategies.Oldest
+            </option>
+            <option value="@SortStrategies.Alphabetical">
+                @SortStrategies.Alphabetical
+            </option>
+        </select>
+        <select
+            class="recipe-list-item"
             id="category"
             name="category"
             hx-get="/Index?handler=WithFilter"
             hx-target="#recipe-list-container">
             <option value="">Select Category</option>
-            <option value="entree">Entree</option>
-            <option value="side">Side</option>
-            <option value="desert">Desert</option>
+            <option value="@Categories.Entree">@Categories.Entree</option>
+            <option value="@Categories.Side">@Categories.Side</option>
+            <option value="@Categories.Desert">@Categories.Desert</option>
         </select>
     </div>
     <div id="recipe-list-container" class="recipe-list-container">

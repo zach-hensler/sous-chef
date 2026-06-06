@@ -57,14 +57,22 @@ public static class Rand {
     }
 
     public static class Copy {
-        public static readonly string[] DishAdjectives = ["Easy", "Satisfying", "Crunchy", "Fluffy"];
-        public static readonly string[] DishBase = ["Omelette", "Enchilada", "Pasta", "Taco"];
+        public static readonly string[] DishAdjectives =
+            ["Easy", "Simple", "Satisfying", "Chewy", "Crunchy", "Fluffy", "Fried", "Fresh"];
+        public static readonly string[] DishBase =
+            ["Omelette", "Enchilada", "Pasta", "Taco", "Potatoes", "Nachos"];
 
         public static readonly string[] Verbs = ["Chop", "Prep", "Slice", "Marinate", "Cook"];
 
-        public static readonly string[] IngredientAdjectives = ["Ground", "Whole", "Sliced", "Shredded", "Grated", "Red", "Green", "Yellow", "Fresh", "Frozen", "Pickled", "Ripe", "Raw"];
-        public static readonly string[] MainIngredients = ["Chicken", "Beef", "Pork", "Egg", "Bacon", "Cheese", "Mushroom", "Broccoli"];
-        public static readonly string[] SecondaryIngredients = ["Butter", "Olive Oil", "Garlic", "Onion", "Salt", "Tomato Paste", "Beans"];
+        public static readonly string[] IngredientAdjectives =
+            ["Ground", "Whole", "Sliced", "Shredded", "Grated",
+                "White", "Green", "Red", "Orange", "Yellow", "Purple", "Rainbow", "Iridescent",
+                "Fresh", "Frozen", "Fried", "Pickled", "Ripe", "Raw", "Organic",
+                "Italian", "Spanish", "Authentic"];
+        public static readonly string[] MainIngredients =
+            ["Chicken", "Beef", "Pork", "Egg", "Bacon", "Cheese", "Mushroom", "Broccoli", "Potato"];
+        public static readonly string[] SecondaryIngredients =
+            ["Butter", "Olive Oil", "Garlic", "Onion", "Salt", "Pepper", "Tomato Paste", "Beans", "Rice", "Pasta", "Tortilla", "Cream"];
         public static readonly string[] Units = ["cups", "tbsps", "tsps", "ounces", "pounds"];
         public static string RecipeName() {
             var name = "";

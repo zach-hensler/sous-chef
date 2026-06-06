@@ -35,7 +35,9 @@
 @if (Model.RecipeData != null) {
     @foreach (var recipe in Model.RecipeData.Items) {
         <div class="recipe-list-container">
-            <hr/>
+            @if (recipe.LatestVersionId != Model.RecipeData.Items.First().LatestVersionId) {
+                <hr/>
+            }
             <div class="recipe-list-item">
                 <a asp-page="/Recipe" asp-route-versionId="@recipe.LatestVersionId">
                     <div class="recipe-list-text">

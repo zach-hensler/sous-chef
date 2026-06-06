@@ -14,17 +14,15 @@ DONE
     - Manage button would launch a dialog or a collapsible section
     - Review button would still be visible
 
+- optional ingredients
+  - add boolean (optional) to db
+  - add checkbox to create
+  - separate "optional" ingredients on details page
+  - separate "optional" ingredients on compare page?
+
 - navbar updates
     - media query, on mobile collapse to hamburger button + "Sous Chef"
         - hamburger button reveals the rest of the options
-
-- Main Feed Updates
-    - Feed "Strategies"
-        - Alphabetical
-        - Last Updates
-        - Last Made
-        - Highest Rated
-        - "Favorites" (most made and highly rated)
 
 - Export Recipe to PDF
 
@@ -37,10 +35,15 @@ DONE
 
 
 ## Unscheduled Ideas (Add it when ya want it)
+- Feed pagination
+  - will need to cap the returned list eventually
 - Searching
     - By name, description, and ingredients
 - Compare Page
     - Add select input to change version
+    - Rename to "History"
+    - Add an intermediary page w/ list of versions
+      - message, created timestamp, link to compare
 - Linked Recipes
     - Link types (similar, pairs with, inspired by)
     - fk to two different recipes

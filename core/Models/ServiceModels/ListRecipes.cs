@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using core.Models.DbModels;
 
 namespace core.Models.ServiceModels;
@@ -15,6 +16,21 @@ public record ListRecipesResponse {
     public required List<RecipeItem> Items { get; init; }
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum SortStrategies {
+    Favorites,
+    Newest,
+    Oldest,
+    Alphabetical
+}
 public record ListRecipesRequest {
+    public ListRecipesRequest() {}
+    public ListRecipesRequest(Categories? category) {
+        CategoryFilter = category;
+    }
+    public ListRecipesRequest(SortStrategies? sort) {
+        SortStrategy = sort;
+    }
     public Categories? CategoryFilter { get; set; }
+    public SortStrategies? SortStrategy { get; set; }
 }

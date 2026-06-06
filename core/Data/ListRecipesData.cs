@@ -6,9 +6,17 @@ namespace core.Data;
 
 public static class ListRecipesData {
     public static async Task<List<ListRecipesResponse.RecipeItem>> Get(ListRecipesRequest request, DbConnection conn) {
+        var orderBy = request.SortStrategy switch {
+            SortStrategies.Alphabetical => "r.name",
+            SortStrategies.Favorites => "AvgScore DESC NULLS LAST",
+            SortStrategies.Newest => "MIN(rv.created_at) DESC",
+            SortStrategies.Oldest => "MIN(rv.created_at)",
+            null => "MAX(rv.created_at) DESC;",
+            _ => throw new ArgumentOutOfRangeException()
+        };
         var categoryFilter = request.CategoryFilter?.ToString();
         return (await conn.QueryAsync<ListRecipesResponse.RecipeItem>(
-            """
+            $"""
                 SELECT
                     r.*,
                     MAX(rv.version_id) as LatestVersionId,
@@ -18,7 +26,7 @@ public static class ListRecipesData {
                 LEFT JOIN recipe_comments c on rv.version_id = c.version_id
                 WHERE (@categoryFilter is null OR r.category = @CategoryFilter)
                 GROUP BY r.recipe_id
-                ORDER BY MAX(rv.created_at) DESC;
+                ORDER BY {orderBy}
                 """,
                 new { categoryFilter }))
             .ToList();
