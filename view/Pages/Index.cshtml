@@ -12,8 +12,8 @@
         align-items: end;
     }
     
-    .recipe-list-item {
-        margin: var(--large) var(--small) 0 var(--small);
+    .recipe-header-item {
+        margin: var(--large) var(--small) var(--small) 0;
     }
 
     .recipe-list-container {
@@ -21,9 +21,9 @@
     }
 </style>
 <div>
-    <div class="recipe-list-header" hx-include=".recipe-list-item">
+    <div class="recipe-list-header" hx-include=".recipe-header-item">
         <select
-            class="recipe-list-item"
+            class="recipe-header-item"
             id="order"
             name="order"
             hx-get="/Index?handler=WithFilter"
@@ -43,7 +43,7 @@
             </option>
         </select>
         <select
-            class="recipe-list-item"
+            class="recipe-header-item"
             id="category"
             name="category"
             hx-get="/Index?handler=WithFilter"
